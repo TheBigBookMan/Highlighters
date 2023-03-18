@@ -12,6 +12,7 @@ module.exports = {
     extend: {
       fontFamily: {
         poppins: ["var(--font-poppins)"],
+        lobster: ["var(--font-lobster)"]
       },
     },
   },

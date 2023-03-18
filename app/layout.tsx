@@ -1,6 +1,6 @@
 import "./globals.css";
 import Nav from "../components/nav/Nav";
-import { Inter, Poppins } from "next/font/google";
+import { Inter, Poppins, Lobster } from "next/font/google";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -8,6 +8,12 @@ const poppins = Poppins({
   weight: ["400"],
   subsets: ["latin"],
   variable: "--font-poppins",
+});
+
+const lobster = Lobster({
+  weight: ["400"],
+  subsets: ["latin"],
+  variable: "--font-lobster",
 });
 
 export const metadata = {
@@ -22,7 +28,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${poppins.variable} font-poppins`}>
+      <body className={`${poppins.variable} font-poppins ${lobster.variable}`}>
         <Nav />
         {children}
       </body>

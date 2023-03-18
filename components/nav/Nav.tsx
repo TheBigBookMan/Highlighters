@@ -23,7 +23,7 @@ const Nav = () => {
   return (
     <div className="py-4 px-4 md:py-8 md:px-16 flex justify-between items-center w-auto">
       <Link href="/">
-        <h1>Highlighters</h1>
+        <h1 className="font-lobster">Highlighters</h1>
       </Link>
       {!user ? (
         <button>
@@ -47,7 +47,10 @@ const Nav = () => {
           </li>
           <li>
             <Link href="/auth">
-              <button onClick={GoogleLogout} className="bg-teal-500 py-2 px-4 rounded-xl text-white hover:bg-teal-600">
+              <button
+                onClick={GoogleLogout}
+                className="bg-teal-500 py-2 px-4 rounded-xl text-white hover:bg-teal-600"
+              >
                 Signout
               </button>
             </Link>

@@ -1,7 +1,9 @@
+import HomeInfo from "../components/home/HomeInfo";
+
 export default function Home() {
   return (
     <main>
-      <h1>hey</h1>
+      <HomeInfo />
     </main>
   );
 }
