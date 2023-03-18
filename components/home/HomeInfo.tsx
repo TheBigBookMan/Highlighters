@@ -2,7 +2,7 @@
 const HomeInfo = () => {
   return (
     <div className="p-20 flex flex-col justify-center items-center">
-      <div className="mx-auto">
+      <div className="flex justify-center items-center gap-4 flex-col">
         <h1 className="font-lobster font-bold text-4xl">Highlighters</h1>
         <h1>
           Highlighters is a social media app where users upload a moment from
