@@ -1,9 +1,10 @@
-const Login = () => {
+import Login from "@/components/auth/Login";
+const LoginPage = () => {
   return (
-    <div>
-      <h1>Login</h1>
+    <div className="mx-auto p-8 max-w-[800px]">
+      <Login />
     </div>
   );
 };
 
-export default Login;
+export default LoginPage;
