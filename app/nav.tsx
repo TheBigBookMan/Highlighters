@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const Nav = () => {
   return (
-    <div className="p-4 flex justify-between items-center w-auto">
+    <div className="py-4 px-4 md:py-8 md:px-16 flex justify-between items-center w-auto">
       <Link href="/">
         <h1>Highlighters</h1>
       </Link>
@@ -17,9 +17,11 @@ const Nav = () => {
             <p>Newsfeed</p>
           </Link>
         </li>
-        <li className="bg-teal-500 py-2 px-4 rounded-xl text-white">
+        <li>
           <Link href="/auth">
-            <p>Sign In</p>
+            <p className="bg-teal-500 py-2 px-4 rounded-xl text-white hover:bg-teal-600">
+              Sign In
+            </p>
           </Link>
         </li>
       </ul>

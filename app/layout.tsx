@@ -1,5 +1,14 @@
 import "./globals.css";
 import Nav from "./nav";
+import { Inter, Poppins } from "next/font/google";
+
+const inter = Inter({ subsets: ["latin"] });
+
+const poppins = Poppins({
+  weight: ["400"],
+  subsets: ["latin"],
+  variable: "--font-poppins",
+});
 
 export const metadata = {
   title: "Highlighters",
@@ -13,7 +22,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
+      <body className={`${poppins.variable} font-poppins`}>
         <Nav />
         {children}
       </body>
