@@ -6,6 +6,9 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import { CgProfile } from "react-icons/cg";
+import { BiNews, BiEditAlt } from "react-icons/bi";
+import { FaUserFriends } from "react-icons/fa";
 
 const Nav = () => {
   const [openNav, setOpenNav] = useState<boolean>(false);
@@ -60,7 +63,15 @@ const Nav = () => {
               </Link>
             </li>
           </ul>
-          <div className="px-6 md:hidden relative">
+
+          <div className="flex gap-4 md:hidden relative">
+            <Link
+              href="/createpost"
+              className="bg-teal-500 flex gap-2 items-center px-4 rounded-xl text-white hover:bg-teal-600"
+            >
+              <BiEditAlt className="text-black text-2xl" />
+              <p>Post</p>
+            </Link>
             <img
               onClick={() => setOpenNav(!openNav)}
               src={user.photoURL}
@@ -73,13 +84,33 @@ const Nav = () => {
               <div className="flex flex-col justify-between p-2 gap-2 md:hidden absolute w-[180px] h-[240px] bg-white shadow-xl rounded-bl-xl top-16 -right-4 transition">
                 <ul className="flex flex-col gap-4">
                   <li>
-                    <Link onClick={() => setOpenNav(false)} href="/profile">
+                    <Link
+                      className="flex gap-2 items-center"
+                      onClick={() => setOpenNav(false)}
+                      href="/profile"
+                    >
+                      <CgProfile className="text-teal-500 text-xl" />
                       <p>Profile</p>
                     </Link>
                   </li>
                   <li>
-                    <Link onClick={() => setOpenNav(false)} href="/newsfeed">
+                    <Link
+                      className="flex gap-2 items-center"
+                      onClick={() => setOpenNav(false)}
+                      href="/newsfeed"
+                    >
+                      <BiNews className="text-teal-500 text-xl" />
                       <p>Newsfeed</p>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      className="flex gap-2 items-center"
+                      onClick={() => setOpenNav(false)}
+                      href="/friends"
+                    >
+                      <FaUserFriends className="text-teal-500 text-xl" />
+                      <p>Friends</p>
                     </Link>
                   </li>
                 </ul>
