@@ -30,7 +30,7 @@ const MyPosts = () => {
       </div>
       {user && (
         <ul className="flex flex-wrap justify-center sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          <li className="flex flex-col border-2 items-center gap-2 max-h-[600px] w-[300px]">
+          <li className="flex flex-col shadow-xl rounded-lg p-2 items-center gap-2 max-h-[600px] w-[300px]">
             {/* !! might need to add in a ternary for if there is no photo and just leave blank without an image */}
             <img src={user?.photoURL} alt="pic" className="w-60 h-60" />
             <h1 className="font-bold text-teal-500">Hiking the amazon</h1>
@@ -44,39 +44,16 @@ const MyPosts = () => {
               commodi sint officiis labore autem, doloribus magni consequatur!
             </p>
           </li>
-          <li className="flex flex-col border-2 items-center gap-2 w-full max-h-[600px] max-w-[300px]">
+          <li className="flex flex-col shadow-xl rounded-lg p-2 items-center gap-2 max-h-[600px] w-[300px]">
             {/* !! might need to add in a ternary for if there is no photo and just leave blank without an image */}
             <img src={user?.photoURL} alt="pic" className="w-60 h-60" />
             <h1 className="font-bold text-teal-500">Hiking the amazon</h1>
             <p>23/03/2021</p>
             <p className="max-h-[200px] overflow-y-auto scrollbar-thin scrollbar-thumb-rounded scrollbar-track-rounded scrollbar-thumb-teal-500 scrollbar-track-gray-200">
-              Lorem ipsum
+              Lorem ipsum dolor sit
             </p>
           </li>
-          <li className="flex flex-col items-center gap-2 w-full max-h-[600px] max-w-[300px]">
-            {/* !! might need to add in a ternary for if there is no photo and just leave blank without an image */}
-            <img src={user?.photoURL} alt="pic" className="w-60 h-60" />
-            <h1 className="font-bold text-teal-500">Hiking the amazon</h1>
-            <p>23/03/2021</p>
-            <p className="max-h-[200px] overflow-y-auto scrollbar-thin scrollbar-thumb-rounded scrollbar-track-rounded scrollbar-thumb-teal-500 scrollbar-track-gray-200">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta
-              corporis, incidunt voluptates esse aspernatur hic suscipit, quos
-              commodi sint officiis labore autem, doloribus magni consequatur!
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta
-              corporis, incidunt voluptates esse aspernatur hic suscipit, quos
-              commodi sint officiis labore autem, doloribus magni consequatur!
-            </p>
-          </li>
-          <li className="flex flex-col border-2 items-center gap-2 w-full max-h-[600px] max-w-[300px]">
-            {/* !! might need to add in a ternary for if there is no photo and just leave blank without an image */}
-            <img src={user?.photoURL} alt="pic" className="w-60 h-60" />
-            <h1 className="font-bold text-teal-500">Hiking the amazon</h1>
-            <p>23/03/2021</p>
-            <p className="max-h-[200px] overflow-y-auto scrollbar-thin scrollbar-thumb-rounded scrollbar-track-rounded scrollbar-thumb-teal-500 scrollbar-track-gray-200">
-              Lorem ipsum
-            </p>
-          </li>
-          <li className="flex flex-col items-center gap-2 w-full max-h-[600px] max-w-[300px]">
+          <li className="flex flex-col shadow-xl rounded-lg p-2 items-center gap-2 max-h-[600px] w-[300px]">
             {/* !! might need to add in a ternary for if there is no photo and just leave blank without an image */}
             <img src={user?.photoURL} alt="pic" className="w-60 h-60" />
             <h1 className="font-bold text-teal-500">Hiking the amazon</h1>
@@ -90,16 +67,7 @@ const MyPosts = () => {
               commodi sint officiis labore autem, doloribus magni consequatur!
             </p>
           </li>
-          <li className="flex flex-col border-2 items-center gap-2 w-full max-h-[600px] max-w-[300px]">
-            {/* !! might need to add in a ternary for if there is no photo and just leave blank without an image */}
-            <img src={user?.photoURL} alt="pic" className="w-60 h-60" />
-            <h1 className="font-bold text-teal-500">Hiking the amazon</h1>
-            <p>23/03/2021</p>
-            <p className="max-h-[200px] overflow-y-auto scrollbar-thin scrollbar-thumb-rounded scrollbar-track-rounded scrollbar-thumb-teal-500 scrollbar-track-gray-200">
-              Lorem ipsum
-            </p>
-          </li>
-          <li className="flex flex-col items-center gap-2 w-full max-h-[600px] max-w-[300px]">
+          <li className="flex flex-col shadow-xl rounded-lg p-2 items-center gap-2 max-h-[600px] w-[300px]">
             {/* !! might need to add in a ternary for if there is no photo and just leave blank without an image */}
             <img src={user?.photoURL} alt="pic" className="w-60 h-60" />
             <h1 className="font-bold text-teal-500">Hiking the amazon</h1>
