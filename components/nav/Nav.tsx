@@ -28,7 +28,9 @@ const Nav = () => {
   return (
     <div className="py-4 px-4 md:py-8 md:px-16 flex justify-between items-center w-auto">
       <Link href="/">
-        <h1 className="font-lobster text-teal-500 md:text-3xl">Highlighters</h1>
+        <h1 className="font-lobster text-teal-500 text-xl md:text-3xl">
+          Highlighters
+        </h1>
       </Link>
 
       {!user ? (

@@ -29,7 +29,7 @@ const CreatePostPage = () => {
   };
 
   return (
-    <div className="p-2 flex flex-col gap-2 max-w-[500px]  mx-auto">
+    <div className="p-2 flex flex-col gap-2 max-w-[700px]  mx-auto">
       <h1 className="font-bold text-teal-500 text-2xl">Post</h1>
       <p className="text-sm">
         Create a Highlight for your timeframe, or use an already made Highlight.
