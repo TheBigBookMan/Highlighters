@@ -12,9 +12,9 @@ module.exports = {
     extend: {
       fontFamily: {
         poppins: ["var(--font-poppins)"],
-        lobster: ["var(--font-lobster)"]
+        lobster: ["var(--font-lobster)"],
       },
     },
   },
-  plugins: [],
+  plugins: [require("tailwind-scrollbar")({ nocompatible: true })],
 };
