@@ -5,8 +5,10 @@ import { auth } from "../../utils/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { signOut } from "firebase/auth";
 import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 
 const Nav = () => {
+  const [openNav, setOpenNav] = useState<boolean>(false);
   const route = useRouter();
   const [user, loading] = useAuthState(auth);
   console.log(user);
@@ -25,6 +27,7 @@ const Nav = () => {
       <Link href="/">
         <h1 className="font-lobster text-teal-500 md:text-3xl">Highlighters</h1>
       </Link>
+
       {!user ? (
         <button>
           <Link href="/auth">
@@ -34,28 +37,69 @@ const Nav = () => {
           </Link>
         </button>
       ) : (
-        <ul className="flex items-center gap-4">
-          <li>
-            <Link href="/profile">
-              <p>Profile</p>
-            </Link>
-          </li>
-          <li>
-            <Link href="/newsfeed">
-              <p>Newsfeed</p>
-            </Link>
-          </li>
-          <li>
-            <Link href="/auth">
-              <button
-                onClick={GoogleLogout}
-                className="bg-teal-500 py-2 px-4 rounded-xl text-white hover:bg-teal-600"
-              >
-                Signout
-              </button>
-            </Link>
-          </li>
-        </ul>
+        <>
+          <ul className="hidden md:flex items-center gap-4">
+            <li>
+              <Link href="/profile">
+                <p>Profile</p>
+              </Link>
+            </li>
+            <li>
+              <Link href="/newsfeed">
+                <p>Newsfeed</p>
+              </Link>
+            </li>
+            <li>
+              <Link href="/auth">
+                <button
+                  onClick={GoogleLogout}
+                  className="bg-teal-500 py-2 px-4 rounded-xl text-white hover:bg-teal-600"
+                >
+                  Signout
+                </button>
+              </Link>
+            </li>
+          </ul>
+          <div className="px-6 md:hidden relative">
+            <img
+              onClick={() => setOpenNav(!openNav)}
+              src={user.photoURL}
+              alt="profile pic"
+              className={`w-12 h-12 rounded-full cursor-pointer shadow-xl hover:border-2 hover:border-teal-500 ${
+                openNav && "border-2 border-teal-500 hover:border-none"
+              }`}
+            />
+            {openNav && (
+              <div className="flex flex-col justify-between p-2 gap-2 md:hidden absolute w-[180px] h-[240px] bg-white shadow-xl rounded-bl-xl top-16 -right-4 transition">
+                <ul className="flex flex-col gap-4">
+                  <li>
+                    <Link onClick={() => setOpenNav(false)} href="/profile">
+                      <p>Profile</p>
+                    </Link>
+                  </li>
+                  <li>
+                    <Link onClick={() => setOpenNav(false)} href="/newsfeed">
+                      <p>Newsfeed</p>
+                    </Link>
+                  </li>
+                </ul>
+                <div className="border-t pt-2 w-full">
+                  <Link href="/auth">
+                    <button
+                      onClick={() => {
+                        GoogleLogout;
+                        setOpenNav(false);
+                      }}
+                      className="bg-teal-500 py-2 px-4 rounded-xl text-white hover:bg-teal-600"
+                    >
+                      Signout
+                    </button>
+                  </Link>
+                </div>
+              </div>
+            )}
+          </div>
+        </>
       )}
     </div>
   );
