@@ -4,7 +4,7 @@ import Link from "next/link";
 import { auth } from "../../utils/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { signOut } from "firebase/auth";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { CgProfile } from "react-icons/cg";
 import { BiNews, BiEditAlt } from "react-icons/bi";
@@ -13,8 +13,8 @@ import { FaUserFriends } from "react-icons/fa";
 const Nav = () => {
   const [openNav, setOpenNav] = useState<boolean>(false);
   const route = useRouter();
+  const searchPath = usePathname();
   const [user, loading] = useAuthState(auth);
-  console.log(user);
 
   const GoogleLogout = async () => {
     try {
@@ -83,7 +83,11 @@ const Nav = () => {
             {openNav && (
               <div className="flex flex-col justify-between p-2 gap-2 md:hidden absolute w-[180px] h-[240px] bg-white shadow-xl rounded-bl-xl top-16 -right-4 transition">
                 <ul className="flex flex-col gap-4">
-                  <li>
+                  <li
+                    className={`hover:bg-teal-100 p-1 pl-2 rounded-xl transition cursor-pointer ${
+                      searchPath === "/profile" && "bg-teal-100 "
+                    }`}
+                  >
                     <Link
                       className="flex gap-2 items-center"
                       onClick={() => setOpenNav(false)}
@@ -93,7 +97,11 @@ const Nav = () => {
                       <p>Profile</p>
                     </Link>
                   </li>
-                  <li>
+                  <li
+                    className={`hover:bg-teal-100 p-1 pl-2 rounded-xl transition cursor-pointer ${
+                      searchPath === "/newsfeed" && "bg-teal-100 "
+                    }`}
+                  >
                     <Link
                       className="flex gap-2 items-center"
                       onClick={() => setOpenNav(false)}
@@ -103,7 +111,11 @@ const Nav = () => {
                       <p>Newsfeed</p>
                     </Link>
                   </li>
-                  <li>
+                  <li
+                    className={`hover:bg-teal-100 p-1 pl-2 rounded-xl transition cursor-pointer ${
+                      searchPath === "/friends" && "bg-teal-100 "
+                    }`}
+                  >
                     <Link
                       className="flex gap-2 items-center"
                       onClick={() => setOpenNav(false)}
