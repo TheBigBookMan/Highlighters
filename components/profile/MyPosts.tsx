@@ -4,6 +4,8 @@ const hardcode = ["Daily", "Weekly", "Monthly", "Yearly"];
 import { useState, useEffect } from "react";
 import { auth } from "@/utils/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { FiThumbsUp, FiThumbsDown } from "react-icons/fi";
+import { SlSpeech } from "react-icons/sl";
 import Image from "next/image";
 
 const MyPosts = () => {
@@ -34,7 +36,21 @@ const MyPosts = () => {
             {/* !! might need to add in a ternary for if there is no photo and just leave blank without an image */}
             <img src={user?.photoURL} alt="pic" className="w-60 h-60" />
             <h1 className="font-bold text-teal-500">Hiking the amazon</h1>
-            <p>23/03/2021</p>
+            <p className="text-sm">23/03/2021</p>
+            <div className="flex items-center gap-4">
+              <div className="flex gap-1 items-center">
+                <SlSpeech className="text-xl cursor-pointer hover:text-teal-500" />
+                <p>435</p>
+              </div>
+              <div className="flex gap-1 items-center">
+                <FiThumbsUp className="text-lg " />
+                <p>234</p>
+              </div>
+              <div className="flex gap-1 items-center">
+                <FiThumbsDown className="text-lg " />
+                <p>234</p>
+              </div>
+            </div>
             <p className="max-h-[200px] overflow-y-auto scrollbar-thin scrollbar-thumb-rounded scrollbar-track-rounded scrollbar-thumb-teal-500 scrollbar-track-gray-200">
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta
               corporis, incidunt voluptates esse aspernatur hic suscipit, quos

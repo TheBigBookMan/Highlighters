@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { FiThumbsUp, FiThumbsDown } from "react-icons/fi";
 import { HiThumbDown, HiThumbUp } from "react-icons/hi";
+import { SlSpeech } from "react-icons/sl";
 const hardcode = ["All", "Daily", "Weekly", "Monthly", "Yearly"];
 
 //? use this to get the database newsfeed stuff
@@ -39,8 +40,13 @@ const Newsfeed = () => {
             Posted by:{" "}
             <span className="font-bold text-teal-500">ANdy Kyrakou</span>
           </h1>
+          <p>23/03/2021</p>
+
           <div className="flex gap-4">
-            <p>23/03/2021</p>
+            <div className="flex gap-1 items-center">
+              <SlSpeech className="text-xl cursor-pointer hover:text-teal-500" />
+              <p>435</p>
+            </div>
             <div className="flex gap-1 items-center">
               {/* if the post has the user clicking on dislike then render the colored one- HiThumbUp */}
               <FiThumbsUp className="text-lg hover:text-teal-500 cursor-pointer" />
