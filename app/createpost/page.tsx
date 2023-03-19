@@ -1,6 +1,7 @@
 "use client";
 import { ChangeEvent, useState } from "react";
 import { toast } from "react-toastify";
+import UsePost from "@/components/createpost/UsePost";
 import "react-toastify/dist/ReactToastify.css";
 
 const CreatePostPage = () => {
@@ -28,11 +29,18 @@ const CreatePostPage = () => {
   };
 
   return (
-    <div className="p-2  max-w-[500px]  mx-auto">
-      <h1 className="font-bold text-teal-500 text-2xl">Create Post</h1>
-
+    <div className="p-2 flex flex-col gap-2 max-w-[500px]  mx-auto">
+      <h1 className="font-bold text-teal-500 text-2xl">Post</h1>
+      <p className="text-sm">
+        Create a Highlight for your timeframe, or use an already made Highlight.
+        If you would like to use an already made highlight for your timeframe,
+        then select below. For example- if a highlight you posted for a weekly
+        highlight was the highlight of your month, then reuse that one for the
+        monthly!
+      </p>
       <form className="shadow-xl rounded-lg flex flex-col gap-2 p-2">
-        <h1 className="font-bold text-teal-500">Post Title:</h1>
+        <h1 className="font-bold text-teal-500 text-xl">Create Highlight</h1>
+        <h1 className="font-bold text-teal-500">Title:</h1>
         <input
           onChange={(e) => handleChange(e)}
           className="bg-gray-100 rounded-xl pl-2"
@@ -41,7 +49,7 @@ const CreatePostPage = () => {
           placeholder="title..."
           value={postForm.title}
         />
-        <h1 className="font-bold text-teal-500">Post Image:</h1>
+        <h1 className="font-bold text-teal-500">Image:</h1>
         <input type="file" name="image" onChange={(e) => fileChosen(e)} />
         <h1 className="font-bold text-teal-500">Description:</h1>
         <textarea
@@ -88,6 +96,7 @@ const CreatePostPage = () => {
           Create Highlight
         </button>
       </form>
+      <UsePost />
     </div>
   );
 };
