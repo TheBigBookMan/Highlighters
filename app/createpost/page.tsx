@@ -8,7 +8,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
 import "react-toastify/dist/ReactToastify.css";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 
 const CreatePostPage = () => {
   const [user, loading] = useAuthState(auth);
@@ -20,7 +20,7 @@ const CreatePostPage = () => {
     friends: [],
     location: "",
     timeframe: "Daily",
-    date: "",
+    timestamp: null,
     userId: "",
   });
 
@@ -61,17 +61,9 @@ const CreatePostPage = () => {
     }
   };
 
-  const setDate = () => {
-    let today: any = new Date();
-    today = today.toLocaleDateString();
-    setPostForm({ ...postForm, date: today });
-    return;
-  };
-
   const createPost = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await setDate();
       if (!postForm.title) {
         toast.error("Post needs to have a title");
         return;
@@ -80,6 +72,7 @@ const CreatePostPage = () => {
       await addDoc(collectionRef, {
         ...postForm,
         userId: user?.uid,
+        timestamp: serverTimestamp(),
       });
       toast.success("Post successfully been created! ✅");
       console.log(postForm);

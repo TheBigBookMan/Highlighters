@@ -2,15 +2,43 @@
 
 const hardcode = ["Daily", "Weekly", "Monthly", "Yearly"];
 import { useState, useEffect } from "react";
-import { auth } from "@/utils/firebase";
+import { auth, db } from "@/utils/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { FiThumbsUp, FiThumbsDown } from "react-icons/fi";
 import { SlSpeech } from "react-icons/sl";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
 
 const MyPosts = () => {
+  const route = useRouter();
   const [user, loading] = useAuthState(auth);
   const [timeframe, setTimeframe] = useState<string>("Daily");
+  const [posts, setPosts] = useState<Post[] | null>([]);
+
+  const getData = async () => {
+    if (loading) return;
+    if (!user) return route.push("/auth/login");
+
+    try {
+      const collectionRef = collection(db, "posts");
+      const q = query(collectionRef, where("userId", "==", user.uid));
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        let lists: any = [];
+        snapshot.docs.forEach((doc) => {
+          lists.push({ ...doc.data(), id: doc.id });
+        });
+        setPosts([...lists]);
+      });
+      return unsubscribe;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, [user, loading]);
 
   return (
     <div className="shadow-xl rounded-lg h-full w-full p-4 flex flex-col gap-4">

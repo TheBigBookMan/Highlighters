@@ -11,7 +11,7 @@ declare global {
     friends: string[];
     location: string;
     timeframe: string;
-    date: string;
+    timestamp: Date | null;
     userId: string;
   }
 
