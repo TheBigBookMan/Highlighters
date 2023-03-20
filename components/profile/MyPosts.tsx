@@ -14,7 +14,17 @@ const MyPosts = () => {
   const route = useRouter();
   const [user, loading] = useAuthState(auth);
   const [timeframe, setTimeframe] = useState<string>("Daily");
-  const [posts, setPosts] = useState<Post[] | null>([]);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
+
+  const filteredTimeframe = () => {
+    if (posts.length > 0) {
+      const filteredList = posts.filter((post) => {
+        return post.timeframe === timeframe;
+      });
+      setFilteredPosts([...filteredList]);
+    }
+  };
 
   const getData = async () => {
     if (loading) return;
@@ -25,10 +35,14 @@ const MyPosts = () => {
       const q = query(collectionRef, where("userId", "==", user.uid));
       const unsubscribe = onSnapshot(q, (snapshot) => {
         let lists: any = [];
-        snapshot.docs.forEach((doc) => {
-          lists.push({ ...doc.data(), id: doc.id });
+        snapshot.docs.forEach(async (doc) => {
+          await lists.push({ ...doc.data(), id: doc.id });
+        });
+        const filteredList = lists.filter((post: any) => {
+          return post.timeframe === "Daily";
         });
         setPosts([...lists]);
+        setFilteredPosts([...filteredList]);
       });
       return unsubscribe;
     } catch (err) {
@@ -39,6 +53,10 @@ const MyPosts = () => {
   useEffect(() => {
     getData();
   }, [user, loading]);
+
+  useEffect(() => {
+    filteredTimeframe();
+  }, [timeframe]);
 
   return (
     <div className="shadow-xl rounded-lg h-full w-full p-4 flex flex-col gap-4">
@@ -60,7 +78,12 @@ const MyPosts = () => {
       </div>
       {user && (
         <ul className="flex flex-wrap justify-center sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {posts?.map((post) => (
+          {filteredPosts.length === 0 && (
+            <h1 className="font-bold text-teal-500">
+              Create Highlights to view them on your profile!
+            </h1>
+          )}
+          {filteredPosts?.map((post) => (
             <li
               key={post.id}
               className="flex flex-col shadow-xl rounded-lg p-2 items-center gap-2 max-h-[600px] w-[300px]"
