@@ -1,13 +1,12 @@
 "use client";
 import { auth } from "@/utils/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useState, useEffect } from "react";
 
 const Bio = () => {
   const [user, loading] = useAuthState(auth);
 
   return (
-    <div className="flex gap-4 h-[140px] w-full shadow-xl rounded-xl p-2">
+    <div className="flex gap-4 md:px-16 h-[140px] w-full shadow-xl rounded-xl p-2">
       {loading ? (
         <h1>Loading...</h1>
       ) : (
