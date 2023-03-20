@@ -8,12 +8,17 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
 import "react-toastify/dist/ReactToastify.css";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import {
+  Timestamp,
+  addDoc,
+  collection,
+  serverTimestamp,
+} from "firebase/firestore";
 
 const CreatePostPage = () => {
   const [user, loading] = useAuthState(auth);
   const [imageChosen, setImageChosen] = useState<ImageFile | null>(null);
-  const [postForm, setPostForm] = useState<Post>({
+  const [postForm, setPostForm] = useState<FormPost>({
     title: "",
     image: "",
     description: "",
@@ -22,6 +27,9 @@ const CreatePostPage = () => {
     timeframe: "Daily",
     timestamp: null,
     userId: "",
+    comments: 0,
+    likes: 0,
+    dislikes: 0,
   });
 
   const handleChange = (
@@ -72,7 +80,7 @@ const CreatePostPage = () => {
       await addDoc(collectionRef, {
         ...postForm,
         userId: user?.uid,
-        timestamp: serverTimestamp(),
+        timestamp: Timestamp.fromDate(new Date()),
       });
       toast.success("Post successfully been created! ✅");
       console.log(postForm);

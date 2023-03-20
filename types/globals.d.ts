@@ -4,7 +4,7 @@ declare module "react";
 declare module "react/jsx-runtime";
 
 declare global {
-  interface Post {
+  interface FormPost {
     title: string;
     image: string;
     description: string;
@@ -13,6 +13,12 @@ declare global {
     timeframe: string;
     timestamp: Date | null;
     userId: string;
+    likes: number;
+    dislikes: number;
+    comments: number;
+  }
+  interface Post extends FormPost {
+    id: string;
   }
 
   interface ImageFile {
