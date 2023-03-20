@@ -1,10 +1,14 @@
 "use client";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { toast } from "react-toastify";
 import UsePost from "@/components/createpost/UsePost";
 import "react-toastify/dist/ReactToastify.css";
+import { db, storage } from "@/utils/firebase";
+import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
+import { v4 } from "uuid";
 
 const CreatePostPage = () => {
+  const [imageChosen, setImageChosen] = useState<ImageFile | null>(null);
   const [postForm, setPostForm] = useState<Post>({
     title: "",
     image: "",
@@ -24,8 +28,32 @@ const CreatePostPage = () => {
 
   const fileChosen = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    console.log(e.target.files);
-    // TODO this will need to go to s3 bucket or maybe the firebase as image bucket
+    if (e.target.files[0]) {
+      setImageChosen(e.target.files[0]);
+    } else return;
+  };
+
+  // ? I think the iamge upload will save the pic as a url in the bucket and then use that url as the string for the image object
+
+  const createPost = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // console.log(postForm);
+    //? check if image was uploaded, if not then leave empty
+
+    if (imageChosen) {
+      try {
+        const imageRef = ref(storage, `images/${imageChosen.name + v4()}`);
+        const imageUrl = await uploadBytes(imageRef, imageChosen);
+        // const bucketURL =
+        //   (await imageUrl.ref?.location.bucket) + imageUrl.ref?.location.path;
+        // console.log(bucketURL);
+
+        const photoUrl = await getDownloadURL(imageRef);
+        console.log(photoUrl);
+      } catch (err) {
+        console.log(err);
+      }
+    }
   };
 
   return (
@@ -38,7 +66,10 @@ const CreatePostPage = () => {
         highlight was the highlight of your month, then reuse that one for the
         monthly!
       </p>
-      <form className="shadow-xl rounded-lg flex flex-col gap-2 p-2">
+      <form
+        onSubmit={(e) => createPost(e)}
+        className="shadow-xl rounded-lg flex flex-col gap-2 p-2"
+      >
         <h1 className="font-bold text-teal-500 text-xl">Create Highlight</h1>
         <h1 className="font-bold text-teal-500">Title:</h1>
         <input
@@ -92,7 +123,10 @@ const CreatePostPage = () => {
           <option value="Yearly">Yearly</option>
         </select>
 
-        <button className="bg-teal-500 py-2 px-4 rounded-xl text-white hover:bg-teal-600">
+        <button
+          type="submit"
+          className="bg-teal-500 py-2 px-4 rounded-xl text-white hover:bg-teal-600"
+        >
           Create Highlight
         </button>
       </form>

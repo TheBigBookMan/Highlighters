@@ -13,4 +13,13 @@ declare global {
     timeframe: string;
     date: string;
   }
+
+  interface ImageFile {
+    lastModified: number;
+    lastModifiedDate: object;
+    name: string;
+    size: number;
+    type: string;
+    webkitRelativePath: string;
+  }
 }
