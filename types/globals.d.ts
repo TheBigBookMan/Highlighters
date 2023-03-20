@@ -12,6 +12,7 @@ declare global {
     location: string;
     timeframe: string;
     date: string;
+    userId: string;
   }
 
   interface ImageFile {

@@ -3,12 +3,15 @@ import { ChangeEvent, FormEvent, MouseEventHandler, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import UsePost from "@/components/createpost/UsePost";
 import "react-toastify/dist/ReactToastify.css";
-import { db, storage } from "@/utils/firebase";
+import { db, storage, auth } from "@/utils/firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
 import "react-toastify/dist/ReactToastify.css";
+import { addDoc, collection } from "firebase/firestore";
 
 const CreatePostPage = () => {
+  const [user, loading] = useAuthState(auth);
   const [imageChosen, setImageChosen] = useState<ImageFile | null>(null);
   const [postForm, setPostForm] = useState<Post>({
     title: "",
@@ -16,8 +19,9 @@ const CreatePostPage = () => {
     description: "",
     friends: [],
     location: "",
-    timeframe: "",
+    timeframe: "Daily",
     date: "",
+    userId: "",
   });
 
   const handleChange = (
@@ -37,8 +41,6 @@ const CreatePostPage = () => {
     } else return;
   };
 
-  // ? I think the iamge upload will save the pic as a url in the bucket and then use that url as the string for the image object
-
   const getImageURL = async (e) => {
     e.preventDefault();
     if (imageChosen) {
@@ -47,8 +49,6 @@ const CreatePostPage = () => {
         const imageUrl = await uploadBytes(imageRef, imageChosen);
         const photoUrl = await getDownloadURL(imageRef);
         setPostForm({ ...postForm, image: photoUrl });
-        console.log(photoUrl);
-        console.log(postForm);
         toast.success("Image uploaded! 💫");
         return;
       } catch (err) {
@@ -61,12 +61,31 @@ const CreatePostPage = () => {
     }
   };
 
+  const setDate = () => {
+    let today: any = new Date();
+    today = today.toLocaleDateString();
+    setPostForm({ ...postForm, date: today });
+    return;
+  };
+
   const createPost = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    // ? create date for the date property dd/mm/yy
-
-    console.log(postForm);
+    try {
+      await setDate();
+      if (!postForm.title) {
+        toast.error("Post needs to have a title");
+        return;
+      }
+      const collectionRef = collection(db, "posts");
+      await addDoc(collectionRef, {
+        ...postForm,
+        userId: user?.uid,
+      });
+      toast.success("Post successfully been created! ✅");
+      console.log(postForm);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
