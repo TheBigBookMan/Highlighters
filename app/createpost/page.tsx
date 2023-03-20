@@ -1,11 +1,12 @@
 "use client";
-import { ChangeEvent, FormEvent, useState } from "react";
-import { toast } from "react-toastify";
+import { ChangeEvent, FormEvent, MouseEventHandler, useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
 import UsePost from "@/components/createpost/UsePost";
 import "react-toastify/dist/ReactToastify.css";
 import { db, storage } from "@/utils/firebase";
 import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
+import "react-toastify/dist/ReactToastify.css";
 
 const CreatePostPage = () => {
   const [imageChosen, setImageChosen] = useState<ImageFile | null>(null);
@@ -20,7 +21,10 @@ const CreatePostPage = () => {
   });
 
   const handleChange = (
-    e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>
+    e:
+      | ChangeEvent<HTMLInputElement>
+      | ChangeEvent<HTMLSelectElement>
+      | ChangeEvent<HTMLTextAreaElement>
   ) => {
     e.preventDefault();
     setPostForm({ ...postForm, [e.target.name]: e.target.value });
@@ -35,29 +39,40 @@ const CreatePostPage = () => {
 
   // ? I think the iamge upload will save the pic as a url in the bucket and then use that url as the string for the image object
 
-  const createPost = async (e: FormEvent<HTMLFormElement>) => {
+  const getImageURL = async (e) => {
     e.preventDefault();
-    // console.log(postForm);
-    //? check if image was uploaded, if not then leave empty
-
     if (imageChosen) {
       try {
         const imageRef = ref(storage, `images/${imageChosen.name + v4()}`);
         const imageUrl = await uploadBytes(imageRef, imageChosen);
-        // const bucketURL =
-        //   (await imageUrl.ref?.location.bucket) + imageUrl.ref?.location.path;
-        // console.log(bucketURL);
-
         const photoUrl = await getDownloadURL(imageRef);
+        setPostForm({ ...postForm, image: photoUrl });
         console.log(photoUrl);
+        console.log(postForm);
+        toast.success("Image uploaded! 💫");
+        return;
       } catch (err) {
+        toast.error("Image could not upload, please try again. ❌");
         console.log(err);
       }
+    } else {
+      toast.error("No image selected!");
+      return;
     }
+  };
+
+  const createPost = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    // ? create date for the date property dd/mm/yy
+
+    console.log(postForm);
   };
 
   return (
     <div className="p-2 flex flex-col gap-2 max-w-[700px]  mx-auto">
+      <ToastContainer limit={1} />
+
       <h1 className="font-bold text-teal-500 text-2xl">Post</h1>
       <p className="text-sm">
         Create a Highlight for your timeframe, or use an already made Highlight.
@@ -66,10 +81,7 @@ const CreatePostPage = () => {
         highlight was the highlight of your month, then reuse that one for the
         monthly!
       </p>
-      <form
-        onSubmit={(e) => createPost(e)}
-        className="shadow-xl rounded-lg flex flex-col gap-2 p-2"
-      >
+      <form className="shadow-xl rounded-lg flex flex-col gap-2 p-2">
         <h1 className="font-bold text-teal-500 text-xl">Create Highlight</h1>
         <h1 className="font-bold text-teal-500">Title:</h1>
         <input
@@ -81,7 +93,15 @@ const CreatePostPage = () => {
           value={postForm.title}
         />
         <h1 className="font-bold text-teal-500">Image:</h1>
-        <input type="file" name="image" onChange={(e) => fileChosen(e)} />
+        <div className="flex justify-between items-center">
+          <input type="file" name="image" onChange={(e) => fileChosen(e)} />
+          <button
+            onClick={getImageURL}
+            className="bg-teal-500 py-2 px-4 rounded-xl text-white hover:bg-teal-600"
+          >
+            Upload
+          </button>
+        </div>
         <h1 className="font-bold text-teal-500">Description:</h1>
         <textarea
           onChange={(e) => handleChange(e)}
@@ -124,6 +144,7 @@ const CreatePostPage = () => {
         </select>
 
         <button
+          onClick={(e) => createPost(e)}
           type="submit"
           className="bg-teal-500 py-2 px-4 rounded-xl text-white hover:bg-teal-600"
         >

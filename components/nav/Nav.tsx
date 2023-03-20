@@ -16,7 +16,8 @@ const Nav = () => {
   const searchPath = usePathname();
   const [user, loading] = useAuthState(auth);
 
-  const GoogleLogout = async () => {
+  const GoogleLogout = async (e) => {
+    e.preventDefault();
     try {
       await signOut(auth);
       route.push("/auth");
@@ -131,8 +132,8 @@ const Nav = () => {
                 <div className="border-t pt-2 w-full">
                   <Link href="/auth">
                     <button
-                      onClick={() => {
-                        GoogleLogout;
+                      onClick={(e) => {
+                        GoogleLogout(e);
                         setOpenNav(false);
                       }}
                       className="bg-teal-500 py-2 px-4 rounded-xl text-white hover:bg-teal-600"
