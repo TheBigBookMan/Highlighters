@@ -1,10 +1,10 @@
 import Post from "@/components/post/Post";
 
-const PostPage = ({ searchParams }) => {
+const PostPage = ({ params }: Params) => {
   return (
     <div>
       <h1>MPost</h1>
-      <Post postId={searchParams.id} />
+      <Post params={params} />
     </div>
   );
 };

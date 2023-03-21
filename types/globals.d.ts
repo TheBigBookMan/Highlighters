@@ -29,4 +29,8 @@ declare global {
     type: string;
     webkitRelativePath: string;
   }
+
+  interface Params {
+    params: string;
+  }
 }

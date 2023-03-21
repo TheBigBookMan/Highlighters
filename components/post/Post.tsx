@@ -4,7 +4,8 @@ import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
-const Post = ({ postId }) => {
+const Post = ({ params }: Params) => {
+  const postId = params?.post;
   const route = useRouter();
   const [postData, setPostData] = useState<Post | null>(null);
 
@@ -12,9 +13,10 @@ const Post = ({ postId }) => {
     try {
       const docRef = doc(db, "posts", postId);
       const docSnap = await getDoc(docRef);
-      const docData = docSnap.data();
-      setPostData({ ...docData });
-      console.log(docData);
+      if (docSnap) {
+        const docData = docSnap.data();
+        setPostData({ ...docData });
+      }
     } catch (err) {
       console.log(err);
     }
@@ -23,6 +25,8 @@ const Post = ({ postId }) => {
   useEffect(() => {
     getData();
   }, []);
+
+  console.log(postData);
 
   //? router  not getting params from url
   return (
