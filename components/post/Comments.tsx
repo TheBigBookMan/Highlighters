@@ -32,8 +32,19 @@ const Comments = ({ params }: Params) => {
   console.log(comments);
 
   return (
-    <div className="shadow-xl rounded-lg p-2">
+    <div className="shadow-xl rounded-lg p-2 flex flex-col gap-2">
       <h1 className="font-bold text-teal-500 text-lg">Comments</h1>
+      <form className="flex flex-col gap-2">
+        <textarea
+          className="bg-gray-100 border-2 rounded-lg p-1"
+          cols={3}
+          rows={3}
+          placeholder="Add comment..."
+        ></textarea>
+        <button className="bg-teal-500 w-[100px] py-2 px-4 rounded-xl text-white hover:bg-teal-600">
+          Add
+        </button>
+      </form>
       {comments.length === 0 ? (
         <h1>No comments...</h1>
       ) : (
