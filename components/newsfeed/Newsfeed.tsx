@@ -1,18 +1,46 @@
 "use client";
-
-import { auth } from "@/utils/firebase";
-import { useState } from "react";
+import { auth, db } from "@/utils/firebase";
+import { useState, useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { FiThumbsUp, FiThumbsDown } from "react-icons/fi";
 import { HiThumbDown, HiThumbUp } from "react-icons/hi";
 import { SlSpeech } from "react-icons/sl";
+import { useRouter } from "next/navigation";
+import { collection, onSnapshot } from "firebase/firestore";
 const hardcode = ["All", "Daily", "Weekly", "Monthly", "Yearly"];
 
 //? use this to get the database newsfeed stuff
 
 const Newsfeed = () => {
+  const route = useRouter();
   const [user, loading] = useAuthState(auth);
+  const [newsfeedData, setNewsfeedData] = useState<Post[]>([]);
   const [timeframe, setTimeframe] = useState<string>("All");
+
+  console.log(newsfeedData);
+
+  const getData = async () => {
+    // if (loading) return;
+    // if (!user) return route.push("/auth/login");
+    try {
+      const collectionRef = collection(db, "posts");
+      // todo add in a query for having a friend related id
+      const unsubscribe = onSnapshot(collectionRef, (snapshot) => {
+        let lists: any = [];
+        snapshot.docs.forEach(async (doc) => {
+          await lists.push({ ...doc.data(), id: doc });
+        });
+        setNewsfeedData([...lists]);
+      });
+      return unsubscribe;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   return (
     <div className="shadow-xl rounded-lg h-full w-full p-4 flex flex-col gap-4">
@@ -32,41 +60,41 @@ const Newsfeed = () => {
         </ul>
       </div>
       <ul className="flex flex-wrap justify-center sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        <li className="flex flex-col shadow-xl rounded-lg p-2 items-center gap-2 max-h-[600px] w-[300px]">
-          {/* !! might need to add in a ternary for if there is no photo and just leave blank without an image */}
-          <img src={user?.photoURL} alt="pic" className="w-60 h-60" />
-          <h1 className="font-bold text-teal-500">Hiking the amazon</h1>
-          <h1>
-            Posted by:{" "}
-            <span className="font-bold text-teal-500">ANdy Kyrakou</span>
-          </h1>
-          <p>23/03/2021</p>
+        {newsfeedData.map((item, idx) => (
+          <li
+            key={item.id + idx}
+            className="flex flex-col shadow-xl rounded-lg p-2 items-center gap-2 max-h-[600px] w-[300px]"
+          >
+            {/* !! might need to add in a ternary for if there is no photo and just leave blank without an image */}
+            <img src={item.image} alt={item.title} className="w-60 h-60" />
+            <h1 className="font-bold text-teal-500">{item.title}</h1>
+            <h1>
+              Posted by:{" "}
+              <span className="font-bold text-teal-500">{item.userName}</span>
+            </h1>
+            <p>{item.date}</p>
 
-          <div className="flex gap-4">
-            <div className="flex gap-1 items-center">
-              <SlSpeech className="text-xl cursor-pointer hover:text-teal-500" />
-              <p>435</p>
+            <div className="flex gap-4">
+              <div className="flex gap-1 items-center">
+                <SlSpeech className="text-xl cursor-pointer hover:text-teal-500" />
+                <p>{item.comments}</p>
+              </div>
+              <div className="flex gap-1 items-center">
+                {/* if the post has the user clicking on dislike then render the colored one- HiThumbUp */}
+                <FiThumbsUp className="text-lg hover:text-teal-500 cursor-pointer" />
+                <p>{item.likes}</p>
+              </div>
+              <div className="flex gap-1 items-center">
+                {/* if the post has the user clicking on dislike then render the colored one- HiThumbDown */}
+                <FiThumbsDown className="text-lg hover:text-teal-500 cursor-pointer" />
+                <p>{item.dislikes}</p>
+              </div>
             </div>
-            <div className="flex gap-1 items-center">
-              {/* if the post has the user clicking on dislike then render the colored one- HiThumbUp */}
-              <FiThumbsUp className="text-lg hover:text-teal-500 cursor-pointer" />
-              <p>234</p>
-            </div>
-            <div className="flex gap-1 items-center">
-              {/* if the post has the user clicking on dislike then render the colored one- HiThumbDown */}
-              <FiThumbsDown className="text-lg hover:text-teal-500 cursor-pointer" />
-              <p>234</p>
-            </div>
-          </div>
-          <p className="max-h-[200px] overflow-y-auto scrollbar-thin scrollbar-thumb-rounded scrollbar-track-rounded scrollbar-thumb-teal-500 scrollbar-track-gray-200">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta
-            corporis, incidunt voluptates esse aspernatur hic suscipit, quos
-            commodi sint officiis labore autem, doloribus magni consequatur!
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta
-            corporis, incidunt voluptates esse aspernatur hic suscipit, quos
-            commodi sint officiis labore autem, doloribus magni consequatur!
-          </p>
-        </li>
+            <p className="max-h-[200px] overflow-y-auto scrollbar-thin scrollbar-thumb-rounded scrollbar-track-rounded scrollbar-thumb-teal-500 scrollbar-track-gray-200">
+              {item.description}
+            </p>
+          </li>
+        ))}
       </ul>
     </div>
   );
