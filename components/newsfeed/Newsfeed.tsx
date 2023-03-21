@@ -15,9 +15,23 @@ const Newsfeed = () => {
   const route = useRouter();
   const [user, loading] = useAuthState(auth);
   const [newsfeedData, setNewsfeedData] = useState<Post[]>([]);
+  const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
   const [timeframe, setTimeframe] = useState<string>("All");
 
   console.log(newsfeedData);
+
+  const filteredTimeframe = () => {
+    if (newsfeedData.length > 0) {
+      if (timeframe === "All") {
+        setFilteredPosts([...newsfeedData]);
+      } else {
+        const filteredList = newsfeedData.filter((post) => {
+          return post.timeframe === timeframe;
+        });
+        setFilteredPosts([...filteredList]);
+      }
+    }
+  };
 
   const getData = async () => {
     // if (loading) return;
@@ -30,7 +44,9 @@ const Newsfeed = () => {
         snapshot.docs.forEach(async (doc) => {
           await lists.push({ ...doc.data(), id: doc });
         });
+
         setNewsfeedData([...lists]);
+        setFilteredPosts([...lists]);
       });
       return unsubscribe;
     } catch (err) {
@@ -41,6 +57,10 @@ const Newsfeed = () => {
   useEffect(() => {
     getData();
   }, []);
+
+  useEffect(() => {
+    filteredTimeframe();
+  }, [timeframe]);
 
   return (
     <div className="shadow-xl rounded-lg h-full w-full p-4 flex flex-col gap-4">
@@ -60,7 +80,7 @@ const Newsfeed = () => {
         </ul>
       </div>
       <ul className="flex flex-wrap justify-center sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {newsfeedData.map((item, idx) => (
+        {filteredPosts.map((item, idx) => (
           <li
             key={item.id + idx}
             className="flex flex-col shadow-xl rounded-lg p-2 items-center gap-2 max-h-[600px] w-[300px]"
