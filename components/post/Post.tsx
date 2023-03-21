@@ -30,8 +30,10 @@ const Post = ({ params }: Params) => {
 
   //? router  not getting params from url
   return (
-    <div>
-      <h1>Postsss</h1>
+    <div className="flex flex-col gap-2">
+      <p>{postData?.timeframe}</p>
+      <p>{postData?.date}</p>
+      <h1 className="font-bold text-xl text-teal-500">{postData?.title}</h1>
     </div>
   );
 };

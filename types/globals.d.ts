@@ -10,7 +10,7 @@ declare global {
     description: string;
     friends: string[];
     location: string;
-    timeframe: string;
+    date: string;
     timestamp: Date | null;
     userId: string;
     likes: number;
@@ -18,6 +18,7 @@ declare global {
     comments: number;
   }
   interface Post extends FormPost {
+    post: any;
     id: string;
   }
 
@@ -30,7 +31,10 @@ declare global {
     webkitRelativePath: string;
   }
 
+  type Post = {
+    post: string;
+  };
   interface Params {
-    params: string;
+    params: Post;
   }
 }

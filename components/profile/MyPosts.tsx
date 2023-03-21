@@ -90,11 +90,7 @@ const MyPosts = () => {
                 {/* !! might need to add in a ternary for if there is no photo and just leave blank without an image */}
                 <img src={post.image} alt={post.title} className="w-60 h-60" />
                 <h1 className="font-bold text-teal-500">{post.title}</h1>
-                <p className="text-sm">
-                  {new Date(post.timestamp.seconds * 1000)
-                    .toISOString()
-                    .slice(0, 10)}
-                </p>
+                <p className="text-sm">{post.date}</p>
                 <div className="flex items-center gap-4">
                   <div className="flex gap-1 items-center">
                     <SlSpeech className="text-xl" />

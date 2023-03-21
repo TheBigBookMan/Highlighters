@@ -76,11 +76,13 @@ const CreatePostPage = () => {
         toast.error("Post needs to have a title");
         return;
       }
+      let today: Date | string = new Date();
+      today = today.toLocaleDateString();
       const collectionRef = collection(db, "posts");
       await addDoc(collectionRef, {
         ...postForm,
         userId: user?.uid,
-        timestamp: Timestamp.fromDate(new Date()),
+        date: today,
       });
       toast.success("Post successfully been created! ✅");
       console.log(postForm);
