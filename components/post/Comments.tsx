@@ -19,6 +19,7 @@ const Comments = ({ params }: Params) => {
         });
         setComments([...lists]);
       });
+      return unsubscribe;
     } catch (err) {
       console.log(err);
     }
@@ -33,6 +34,17 @@ const Comments = ({ params }: Params) => {
   return (
     <div className="shadow-xl rounded-lg p-2">
       <h1 className="font-bold text-teal-500 text-lg">Comments</h1>
+      {comments.length === 0 ? (
+        <h1>No comments...</h1>
+      ) : (
+        <ul className="flex flex-col gap-2">
+          {comments.map((comment) => (
+            <li className="border-2 rounded" key={comment.id}>
+              <p>{comment.comment}</p>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };
