@@ -70,7 +70,7 @@ const CreatePostPage = () => {
     }
   };
 
-  const createPost = async (e: FormEvent<HTMLFormElement>) => {
+  const createPost = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
       if (!postForm.title) {

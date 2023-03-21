@@ -45,5 +45,7 @@ declare global {
     id: string;
     userId: string;
     userName: string;
+    userImage: string;
+    date: string;
   }
 }

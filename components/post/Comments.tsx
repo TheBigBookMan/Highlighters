@@ -4,8 +4,10 @@ import {
   addDoc,
   collection,
   doc,
+  getDoc,
   onSnapshot,
   query,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
@@ -18,7 +20,6 @@ const Comments = ({ params }: Params) => {
   const selectedPostId = params?.post;
   const [comments, setComments] = useState<Comment[]>([]);
   const [writeComment, setWriteComment] = useState<string>("");
-  console.log(selectedPostId);
 
   const getData = async () => {
     try {
@@ -37,21 +38,48 @@ const Comments = ({ params }: Params) => {
     }
   };
 
-  const createComment = async (e) => {
+  //!!
+  //!! add in a function that after the comment gets made, will then update the post with the comment amount-- add 1
+  //!!
+
+  const updateCommentCount = async () => {
+    try {
+      const docRef = doc(db, "posts", selectedPostId);
+      const docSnap = await getDoc(docRef);
+      console.log(docSnap.data());
+
+      const commentData = docSnap.data();
+      const updatedPost = {
+        ...commentData,
+        comments: commentData.comments + 1,
+      };
+
+      await updateDoc(docRef, updatedPost);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const createComment = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (writeComment === "") {
       toast.error("Need to input a comment.❌");
       return;
     }
     try {
+      let today: Date | string = new Date();
+      today = today.toLocaleDateString();
       const collectionRef = collection(db, "comments");
       const newComment = await addDoc(collectionRef, {
         comment: writeComment,
         postId: selectedPostId,
         userName: user?.displayName,
+        userImage: user?.photoURL,
+        date: today,
       });
       toast.success("Post successful!✅");
       setWriteComment("");
+      updateCommentCount();
     } catch (err) {
       console.log(err);
     }
@@ -60,8 +88,6 @@ const Comments = ({ params }: Params) => {
   useEffect(() => {
     getData();
   }, []);
-
-  console.log(comments);
 
   return (
     <div className="shadow-xl rounded-lg p-2 flex flex-col gap-2">
@@ -88,8 +114,24 @@ const Comments = ({ params }: Params) => {
       ) : (
         <ul className="flex flex-col gap-2">
           {comments.map((comment, idx) => (
-            <li className="border-2 rounded" key={comment.id + idx}>
-              <p>{comment.comment}</p>
+            <li
+              className="border-2 rounded h-[100px] max-w-[500px] flex gap-2"
+              key={comment.id + idx}
+            >
+              <img
+                src={comment.userImage}
+                alt={comment.userName}
+                className="h-full  rounded"
+              />
+              <div className="flex flex-col">
+                <div className="flex  gap-4 items-center">
+                  <h1 className="font-bold text-teal-500">
+                    {comment.userName}
+                  </h1>
+                  <p className="text-sm">{comment.date}</p>
+                </div>
+                <p className="overflow-y-auto">{comment.comment}</p>
+              </div>
             </li>
           ))}
         </ul>
