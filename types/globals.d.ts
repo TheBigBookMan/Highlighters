@@ -11,11 +11,12 @@ declare global {
     friends: string[];
     location: string;
     date: string;
-    timestamp: Date | null;
+    timeframe: string;
     userId: string;
     likes: number;
     dislikes: number;
     comments: number;
+    userName: string;
   }
   interface Post extends FormPost {
     post: any;
@@ -36,5 +37,13 @@ declare global {
   };
   interface Params {
     params: Post;
+  }
+
+  interface Comment {
+    comment: string;
+    postId: string;
+    id: string;
+    userId: string;
+    userName: string;
   }
 }

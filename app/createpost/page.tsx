@@ -25,11 +25,12 @@ const CreatePostPage = () => {
     friends: [],
     location: "",
     timeframe: "Daily",
-    timestamp: null,
+    date: "",
     userId: "",
     comments: 0,
     likes: 0,
     dislikes: 0,
+    userName: "",
   });
 
   const handleChange = (
@@ -83,6 +84,7 @@ const CreatePostPage = () => {
         ...postForm,
         userId: user?.uid,
         date: today,
+        userName: user?.displayName,
       });
       toast.success("Post successfully been created! ✅");
       console.log(postForm);
