@@ -38,10 +38,6 @@ const Comments = ({ params }: Params) => {
     }
   };
 
-  //!!
-  //!! add in a function that after the comment gets made, will then update the post with the comment amount-- add 1
-  //!!
-
   const updateCommentCount = async () => {
     try {
       const docRef = doc(db, "posts", selectedPostId);
@@ -90,7 +86,7 @@ const Comments = ({ params }: Params) => {
   }, []);
 
   return (
-    <div className="shadow-xl rounded-lg p-2 flex flex-col gap-2">
+    <div className="shadow-xl rounded-lg max-w-[600px]  p-2 flex flex-col gap-2">
       <ToastContainer limit={1} />
       <h1 className="font-bold text-teal-500 text-lg">Comments</h1>
       <form className="flex flex-col gap-2">
@@ -112,10 +108,10 @@ const Comments = ({ params }: Params) => {
       {comments.length === 0 ? (
         <h1>No comments...</h1>
       ) : (
-        <ul className="flex flex-col gap-2">
+        <ul className="flex flex-col gap-2 h-[540px] overflow-y-auto">
           {comments.map((comment, idx) => (
             <li
-              className="border-2 rounded h-[100px] max-w-[500px] flex gap-2"
+              className="border-2 rounded h-[100px]  flex gap-2"
               key={comment.id + idx}
             >
               <img

@@ -33,7 +33,7 @@ const Post = ({ params }: Params) => {
   //!!
 
   return (
-    <div className="flex flex-col gap-4 shadow-xl p-2 rounded-lg">
+    <div className="flex flex-col max-w-[600px]  gap-4 shadow-xl p-2 rounded-lg">
       <div className="flex gap-2 items-center">
         <p>{postData?.timeframe} Highlight:</p>
         <h1 className="font-bold text-xl text-teal-500">{postData?.title}</h1>
