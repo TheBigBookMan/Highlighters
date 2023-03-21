@@ -2,7 +2,7 @@
 import { ChangeEvent, FormEvent, MouseEventHandler, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import UsePost from "@/components/createpost/UsePost";
-import "react-toastify/dist/ReactToastify.css";
+
 import { db, storage, auth } from "@/utils/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
