@@ -47,12 +47,42 @@ const Nav = () => {
           <ul className="hidden md:flex items-center gap-4">
             <li>
               <Link href="/profile">
-                <p>Profile</p>
+                <p
+                  className={`${
+                    searchPath === "/profile" && "text-teal-500 font-bold"
+                  }`}
+                >
+                  Profile
+                </p>
               </Link>
             </li>
             <li>
               <Link href="/newsfeed">
-                <p>Newsfeed</p>
+                <p
+                  className={`${
+                    searchPath === "/newsfeed" && "text-teal-500 font-bold"
+                  }`}
+                >
+                  Newsfeed
+                </p>
+              </Link>
+            </li>
+            <li>
+              <Link href="/friends">
+                <p
+                  className={`${
+                    searchPath === "/friends" && "text-teal-500 font-bold"
+                  }`}
+                >
+                  Friends
+                </p>
+              </Link>
+            </li>
+            <li>
+              <Link href="/createpost">
+                <button className="bg-teal-500 cursor-pointer hover:bg-teal-600 rounded-full px-4 py-2">
+                  <BiEditAlt className="text-black text-2xl" />
+                </button>
               </Link>
             </li>
             <li>
