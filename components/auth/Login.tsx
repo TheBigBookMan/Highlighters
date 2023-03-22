@@ -2,26 +2,85 @@
 
 import { FcGoogle } from "react-icons/fc";
 import { signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
-import { auth } from "../../utils/firebase";
+import { auth, db } from "../../utils/firebase";
 import { useRouter } from "next/navigation";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
 
 const Login = () => {
   const route = useRouter();
   const [user, loading] = useAuthState(auth);
+  const [newUser, setNewUser] = useState<string>("");
   const googleProvider = new GoogleAuthProvider();
+
+  const createUserDoc = async () => {
+    try {
+      const collectionRef = collection(db, "users");
+      await addDoc(collectionRef, {
+        displayName: user.displayName,
+        email: user.email,
+        image: user.photoURL,
+        userId: user.uid,
+        friends: [],
+      });
+      console.log("YAYY");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const checkUser = async () => {
+    try {
+      const collectionRef = collection(db, "users");
+      const q = query(collectionRef, where("userId", "==", user?.uid));
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        let userData;
+        snapshot.docs.forEach(async (doc) => {
+          userData = doc.data();
+          console.log(userData);
+        });
+
+        if (userData) {
+          console.log("no match");
+          setNewUser(userData?.userId);
+        } else {
+          console.log("Match");
+        }
+      });
+
+      if (newUser === "") {
+        createUserDoc();
+      }
+      return unsubscribe;
+      // createUserDoc();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const GoogleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
-      route.push("/");
     } catch (err) {
+      toast.error("Failed to long, please try again");
       console.log(err);
     }
   };
 
   useEffect(() => {
     if (user) {
+      checkUser();
+
       route.push("/");
     } else {
       console.log("Login");
@@ -30,6 +89,7 @@ const Login = () => {
 
   return (
     <div className="shadow-xl mt-32 p-10 text-gray-700 rounded-lg">
+      <ToastContainer limit={1} />
       <h2 className="text-2l font-medium">Join Today</h2>
       <div className="py-4">
         <h3 className="py-4">Sign in with a provider</h3>

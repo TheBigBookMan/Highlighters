@@ -29,7 +29,7 @@ const MyPosts = () => {
 
   const getData = async () => {
     if (loading) return;
-    if (!user) return route.push("/auth/login");
+    if (!user) return route.push("/auth");
 
     try {
       const collectionRef = collection(db, "posts");
