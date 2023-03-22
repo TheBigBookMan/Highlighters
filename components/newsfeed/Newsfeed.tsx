@@ -7,6 +7,7 @@ import { HiThumbDown, HiThumbUp } from "react-icons/hi";
 import { SlSpeech } from "react-icons/sl";
 import { useRouter } from "next/navigation";
 import { collection, onSnapshot } from "firebase/firestore";
+import Link from "next/link";
 const hardcode = ["All", "Daily", "Weekly", "Monthly", "Yearly"];
 
 //? use this to get the database newsfeed stuff
@@ -17,8 +18,6 @@ const Newsfeed = () => {
   const [newsfeedData, setNewsfeedData] = useState<Post[]>([]);
   const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
   const [timeframe, setTimeframe] = useState<string>("All");
-
-  console.log(newsfeedData);
 
   const filteredTimeframe = () => {
     if (newsfeedData.length > 0) {
@@ -80,40 +79,39 @@ const Newsfeed = () => {
         </ul>
       </div>
       <ul className="flex flex-wrap justify-center sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {filteredPosts.map((item, idx) => (
-          <li
-            key={item.id + idx}
-            className="flex flex-col shadow-xl rounded-lg p-2 items-center gap-2 max-h-[600px] w-[300px]"
-          >
-            {/* !! might need to add in a ternary for if there is no photo and just leave blank without an image */}
-            <img src={item.image} alt={item.title} className="w-60 h-60" />
-            <h1 className="font-bold text-teal-500">{item.title}</h1>
-            <h1>
-              Posted by:{" "}
-              <span className="font-bold text-teal-500">{item.userName}</span>
-            </h1>
-            <p>{item.date}</p>
+        {filteredPosts?.map((post, idx) => (
+          <Link key={post.id + idx} href={`/post/${post?.id}`}>
+            <li className="flex flex-col shadow-xl rounded-lg p-2 items-center gap-2 max-h-[600px] w-[300px] group hover:bg-teal-100 cursor-pointer">
+              {/* !! might need to add in a ternary for if there is no photo and just leave blank without an image */}
+              <img src={post.image} alt={post.title} className="w-60 h-60" />
+              <h1 className="font-bold text-teal-500">{post.title}</h1>
+              <h1>
+                Posted by:{" "}
+                <span className="font-bold text-teal-500">{post.userName}</span>
+              </h1>
+              <p>{post.date}</p>
 
-            <div className="flex gap-4">
-              <div className="flex gap-1 items-center">
-                <SlSpeech className="text-xl cursor-pointer hover:text-teal-500" />
-                <p>{item.comments}</p>
+              <div className="flex gap-4">
+                <div className="flex gap-1 items-center">
+                  <SlSpeech className="text-xl" />
+                  <p>{post.comments}</p>
+                </div>
+                <div className="flex gap-1 items-center">
+                  {/* if the post has the user clicking on dislike then render the colored one- HiThumbUp */}
+                  <FiThumbsUp className="text-lg hover:text-teal-500 cursor-pointer" />
+                  <p>{post.likes}</p>
+                </div>
+                <div className="flex gap-1 items-center">
+                  {/* if the post has the user clicking on dislike then render the colored one- HiThumbDown */}
+                  <FiThumbsDown className="text-lg hover:text-teal-500 cursor-pointer" />
+                  <p>{post.dislikes}</p>
+                </div>
               </div>
-              <div className="flex gap-1 items-center">
-                {/* if the post has the user clicking on dislike then render the colored one- HiThumbUp */}
-                <FiThumbsUp className="text-lg hover:text-teal-500 cursor-pointer" />
-                <p>{item.likes}</p>
-              </div>
-              <div className="flex gap-1 items-center">
-                {/* if the post has the user clicking on dislike then render the colored one- HiThumbDown */}
-                <FiThumbsDown className="text-lg hover:text-teal-500 cursor-pointer" />
-                <p>{item.dislikes}</p>
-              </div>
-            </div>
-            <p className="max-h-[200px] overflow-y-auto scrollbar-thin scrollbar-thumb-rounded scrollbar-track-rounded scrollbar-thumb-teal-500 scrollbar-track-gray-200">
-              {item.description}
-            </p>
-          </li>
+              <p className="max-h-[200px] overflow-y-auto scrollbar-thin scrollbar-thumb-rounded scrollbar-track-rounded scrollbar-thumb-teal-500 scrollbar-track-gray-200">
+                {post.description}
+              </p>
+            </li>
+          </Link>
         ))}
       </ul>
     </div>
