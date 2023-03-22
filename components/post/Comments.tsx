@@ -108,7 +108,7 @@ const Comments = ({ params }: Params) => {
       {comments.length === 0 ? (
         <h1>No comments...</h1>
       ) : (
-        <ul className="flex flex-col gap-2 h-[540px] overflow-y-auto">
+        <ul className="flex flex-col gap-2 h-[540px] overflow-y-auto scrollbar-thin scrollbar-thumb-rounded scrollbar-track-rounded scrollbar-thumb-teal-500 scrollbar-track-gray-200">
           {comments.map((comment, idx) => (
             <li
               className="border-2 rounded h-[100px]  flex gap-2"
@@ -126,7 +126,9 @@ const Comments = ({ params }: Params) => {
                   </h1>
                   <p className="text-sm">{comment.date}</p>
                 </div>
-                <p className="overflow-y-auto">{comment.comment}</p>
+                <p className="overflow-y-auto scrollbar-thin scrollbar-thumb-rounded scrollbar-track-rounded scrollbar-thumb-teal-500 scrollbar-track-gray-200">
+                  {comment.comment}
+                </p>
               </div>
             </li>
           ))}

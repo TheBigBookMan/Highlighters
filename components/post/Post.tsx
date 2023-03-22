@@ -28,10 +28,6 @@ const Post = ({ params }: Params) => {
     getData();
   }, []);
 
-  //!!!
-  //!! make the comments in bottom and then when larger screen put to the right
-  //!!
-
   return (
     <div className="flex flex-col max-w-[600px]  gap-4 shadow-xl p-2 rounded-lg">
       <div className="flex gap-2 items-center">
