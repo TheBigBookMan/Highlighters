@@ -33,7 +33,6 @@ const Login = () => {
         userId: user.uid,
         friends: [],
       });
-      console.log("YAYY");
     } catch (err) {
       console.log(err);
     }
@@ -51,18 +50,13 @@ const Login = () => {
         });
 
         if (userData) {
-          console.log("no match");
-          setNewUser(userData?.userId);
+          return;
         } else {
-          console.log("Match");
+          createUserDoc();
         }
       });
 
-      if (newUser === "") {
-        createUserDoc();
-      }
       return unsubscribe;
-      // createUserDoc();
     } catch (err) {
       console.log(err);
     }
@@ -80,7 +74,6 @@ const Login = () => {
   useEffect(() => {
     if (user) {
       checkUser();
-
       route.push("/");
     } else {
       console.log("Login");
