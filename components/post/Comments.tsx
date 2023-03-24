@@ -133,7 +133,7 @@ const Comments = ({ params }: Params) => {
         <ul className="flex flex-col gap-2 h-[540px] overflow-y-auto scrollbar-thin scrollbar-thumb-rounded scrollbar-track-rounded scrollbar-thumb-teal-500 scrollbar-track-gray-200">
           {comments.map((comment, idx) => (
             <li
-              className="border-2 rounded h-[100px]  flex gap-2"
+              className="border-2 rounded h-[100px]  flex gap-2 break-words"
               key={comment.id + idx}
             >
               <Link
@@ -143,7 +143,7 @@ const Comments = ({ params }: Params) => {
                 <img
                   src={comment.userImage}
                   alt={comment.userName}
-                  className="h-full  rounded"
+                  className="h-full min-w-[100px] rounded"
                 />
               </Link>
               <div className="flex flex-col">
