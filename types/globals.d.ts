@@ -43,11 +43,13 @@ declare global {
     webkitRelativePath: string;
   }
 
-  type Post = {
-    post: string;
+  type Parameters = {
+    post: string | null;
+    user: string | null;
   };
+
   interface Params {
-    params: Post;
+    params: Parameters;
   }
 
   interface Comment {
