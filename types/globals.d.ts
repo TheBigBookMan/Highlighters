@@ -4,6 +4,17 @@ declare module "react";
 declare module "react/jsx-runtime";
 
 declare global {
+  interface User {
+    id: string;
+    displayName: string;
+    email: string;
+    image: string;
+    googleId: string;
+    friends: string[];
+    description: string;
+    posts: number;
+  }
+
   interface FormPost {
     title: string;
     image: string;

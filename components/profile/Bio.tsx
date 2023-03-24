@@ -1,23 +1,65 @@
 "use client";
-import { auth } from "@/utils/firebase";
-import { useState } from "react";
+import { auth, db } from "@/utils/firebase";
+import {
+  collection,
+  doc,
+  onSnapshot,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
+import { useState, useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { BiEditAlt } from "react-icons/bi";
 import { TiTickOutline } from "react-icons/ti";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Bio = () => {
   const [user, loading] = useAuthState(auth);
   const [editMode, setEditMode] = useState<boolean>(false);
   const [description, setDescription] = useState<string>("");
-  console.log(user);
+  const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
 
-  const addDescription = (e) => {
+  const updateLoggedInUser = async () => {
+    try {
+      const collectionRef = collection(db, "users");
+      const q = query(collectionRef, where("googleId", "==", user?.uid));
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        let userData;
+        snapshot.docs.forEach(async (doc) => {
+          userData = doc.data();
+          setLoggedInUser({ ...userData, id: doc.id });
+        });
+      });
+      return unsubscribe;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const addDescription = async (e) => {
     e.preventDefault();
     //? add to user collection description
+    try {
+      const docRef = doc(db, "users", loggedInUser?.id);
+      const updatedData = { ...loggedInUser, description };
+      await updateDoc(docRef, updatedData);
+      toast.success("Descripton updated");
+    } catch (err) {
+      console.log(err);
+    }
   };
+
+  useEffect(() => {
+    if (user) {
+      updateLoggedInUser();
+    }
+  }, [user]);
 
   return (
     <div className="flex gap-4 md:px-16 h-[140px] w-full shadow-xl rounded-xl p-2">
+      <ToastContainer limit={1} />
       {loading ? (
         <h1>Loading...</h1>
       ) : (
@@ -35,7 +77,10 @@ const Bio = () => {
               </div>
               {editMode ? (
                 <TiTickOutline
-                  onClick={() => setEditMode(false)}
+                  onClick={(e) => {
+                    setEditMode(false);
+                    addDescription(e);
+                  }}
                   className="text-teal-500 hover:bg-gray-200 hover:text-3xl cursor-pointer hover:rounded-xl text-2xl"
                 />
               ) : (
@@ -46,12 +91,14 @@ const Bio = () => {
               )}
             </div>
             {!editMode ? (
-              <p className="overflow-x-auto scrollbar-thin scrollbar-thumb-rounded scrollbar-track-rounded scrollbar-thumb-teal-500 scrollbar-track-gray-200">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                Maiores quas laborum laboriosam vitae nihil iste hic ad unde
-                minima dignissimos quos et, molestias dolore quasi modi
-                pariatur. Fugiat excepturi illo modi. Quidem quod doloremque
-                sapiente, officia porro adipisci impedit eaque?
+              <p
+                className={`overflow-x-auto scrollbar-thin scrollbar-thumb-rounded scrollbar-track-rounded scrollbar-thumb-teal-500 scrollbar-track-gray-200 ${
+                  !loggedInUser?.description && "text-gray-400"
+                }`}
+              >
+                {!loggedInUser?.description
+                  ? "Insert description..."
+                  : loggedInUser.description}
               </p>
             ) : (
               <textarea
@@ -60,11 +107,9 @@ const Bio = () => {
                 rows={3}
                 className="rounded-lg p-2 bg-gray-200 overflow-x-auto scrollbar-thin scrollbar-thumb-rounded scrollbar-track-rounded scrollbar-thumb-teal-500 scrollbar-track-gray-200 w-full "
               >
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-                Maiores quas laborum laboriosam vitae nihil iste hic ad unde
-                minima dignissimos quos et, molestias dolore quasi modi
-                pariatur. Fugiat excepturi illo modi. Quidem quod doloremque
-                sapiente, officia porro adipisci impedit eaque?
+                {!loggedInUser?.description
+                  ? "Insert description..."
+                  : loggedInUser.description}
               </textarea>
             )}
           </div>

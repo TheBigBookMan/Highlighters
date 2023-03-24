@@ -5,7 +5,7 @@ import { signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
 import { auth, db } from "../../utils/firebase";
 import { useRouter } from "next/navigation";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import {
   addDoc,
@@ -20,18 +20,17 @@ import {
 const Login = () => {
   const route = useRouter();
   const [user, loading] = useAuthState(auth);
-  const [newUser, setNewUser] = useState<string>("");
   const googleProvider = new GoogleAuthProvider();
 
   const createUserDoc = async () => {
     try {
       const collectionRef = collection(db, "users");
       await addDoc(collectionRef, {
-        displayName: user.displayName,
-        email: user.email,
-        image: user.photoURL,
-        userId: user.uid,
+        displayName: user?.displayName,
+        email: user?.email,
+        image: user?.photoURL,
         friends: [],
+        googleId: user?.uid,
       });
     } catch (err) {
       console.log(err);
@@ -41,7 +40,7 @@ const Login = () => {
   const checkUser = async () => {
     try {
       const collectionRef = collection(db, "users");
-      const q = query(collectionRef, where("userId", "==", user?.uid));
+      const q = query(collectionRef, where("googleId", "==", user?.uid));
       const unsubscribe = onSnapshot(q, (snapshot) => {
         let userData;
         snapshot.docs.forEach(async (doc) => {
