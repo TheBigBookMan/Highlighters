@@ -10,6 +10,7 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { toast, ToastContainer } from "react-toastify";
@@ -20,6 +21,7 @@ const Comments = ({ params }: Params) => {
   const selectedPostId = params?.post;
   const [comments, setComments] = useState<Comment[]>([]);
   const [writeComment, setWriteComment] = useState<string>("");
+  const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
 
   const getData = async () => {
     try {
@@ -56,6 +58,23 @@ const Comments = ({ params }: Params) => {
     }
   };
 
+  const updateUser = async () => {
+    try {
+      const collectionUsersRef = collection(db, "users");
+      const q = query(collectionUsersRef, where("googleId", "==", user?.uid));
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        let userData;
+        snapshot.docs.forEach(async (doc) => {
+          userData = doc.data();
+          setLoggedInUser({ ...userData, id: doc.id });
+        });
+      });
+      return unsubscribe;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const createComment = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (writeComment === "") {
@@ -63,6 +82,8 @@ const Comments = ({ params }: Params) => {
       return;
     }
     try {
+      updateUser();
+      console.log(loggedInUser);
       let today: Date | string = new Date();
       today = today.toLocaleDateString();
       const collectionRef = collection(db, "comments");
@@ -72,6 +93,7 @@ const Comments = ({ params }: Params) => {
         userName: user?.displayName,
         userImage: user?.photoURL,
         date: today,
+        userId: loggedInUser?.id,
       });
       toast.success("Post successful!✅");
       setWriteComment("");
@@ -114,11 +136,16 @@ const Comments = ({ params }: Params) => {
               className="border-2 rounded h-[100px]  flex gap-2"
               key={comment.id + idx}
             >
-              <img
-                src={comment.userImage}
-                alt={comment.userName}
+              <Link
                 className="h-full  rounded"
-              />
+                href={`/user/${comment.userId}`}
+              >
+                <img
+                  src={comment.userImage}
+                  alt={comment.userName}
+                  className="h-full  rounded"
+                />
+              </Link>
               <div className="flex flex-col">
                 <div className="flex  gap-4 items-center">
                   <h1 className="font-bold text-teal-500">
