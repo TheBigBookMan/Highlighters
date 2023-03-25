@@ -37,6 +37,7 @@ const CreatePostPage = () => {
     timeframe: "Daily",
     date: "",
     userId: "",
+    googleId: "",
     comments: 0,
     likes: 0,
     dislikes: 0,
@@ -112,6 +113,7 @@ const CreatePostPage = () => {
         userId: loggedInUser?.id,
         date: today,
         userName: user?.displayName,
+        googleId: user?.uid,
       });
       toast.success("Post successfully been created! ✅");
       console.log(postForm);

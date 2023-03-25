@@ -82,8 +82,6 @@ const Comments = ({ params }: Params) => {
       return;
     }
     try {
-      updateUser();
-      console.log(loggedInUser);
       let today: Date | string = new Date();
       today = today.toLocaleDateString();
       const collectionRef = collection(db, "comments");
@@ -105,7 +103,10 @@ const Comments = ({ params }: Params) => {
 
   useEffect(() => {
     getData();
-  }, []);
+    if (user) {
+      updateUser();
+    }
+  }, [user]);
 
   return (
     <div className="shadow-xl rounded-lg max-w-[600px]  p-2 flex flex-col gap-2">

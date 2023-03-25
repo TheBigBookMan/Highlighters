@@ -33,7 +33,7 @@ const MyPosts = () => {
 
     try {
       const collectionRef = collection(db, "posts");
-      const q = query(collectionRef, where("userId", "==", user.uid));
+      const q = query(collectionRef, where("googleId", "==", user.uid));
       const unsubscribe = onSnapshot(q, (snapshot) => {
         let lists: any = [];
         snapshot.docs.forEach(async (doc) => {

@@ -24,6 +24,7 @@ declare global {
     date: string;
     timeframe: string;
     userId: string;
+    googleId: string;
     likes: number;
     dislikes: number;
     comments: number;
