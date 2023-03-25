@@ -1,5 +1,11 @@
 "use client";
-import { ChangeEvent, FormEvent, MouseEventHandler, useState } from "react";
+import {
+  ChangeEvent,
+  FormEvent,
+  MouseEventHandler,
+  useEffect,
+  useState,
+} from "react";
 import { toast, ToastContainer } from "react-toastify";
 import UsePost from "@/components/createpost/UsePost";
 
@@ -12,12 +18,16 @@ import {
   Timestamp,
   addDoc,
   collection,
+  onSnapshot,
+  query,
   serverTimestamp,
+  where,
 } from "firebase/firestore";
 
 const CreatePostPage = () => {
   const [user, loading] = useAuthState(auth);
   const [imageChosen, setImageChosen] = useState<ImageFile | null>(null);
+  const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
   const [postForm, setPostForm] = useState<FormPost>({
     title: "",
     image: "",
@@ -41,6 +51,23 @@ const CreatePostPage = () => {
   ) => {
     e.preventDefault();
     setPostForm({ ...postForm, [e.target.name]: e.target.value });
+  };
+
+  const updateLoggedInUser = async () => {
+    try {
+      const collectionRef = collection(db, "users");
+      const q = query(collectionRef, where("googleId", "==", user?.uid));
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        let userData;
+        snapshot.docs.forEach(async (doc) => {
+          userData = doc.data();
+          setLoggedInUser({ ...userData, id: doc.id });
+        });
+      });
+      return unsubscribe;
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const fileChosen = (e: ChangeEvent<HTMLInputElement>) => {
@@ -82,7 +109,7 @@ const CreatePostPage = () => {
       const collectionRef = collection(db, "posts");
       await addDoc(collectionRef, {
         ...postForm,
-        userId: user?.uid,
+        userId: loggedInUser?.id,
         date: today,
         userName: user?.displayName,
       });
@@ -92,6 +119,12 @@ const CreatePostPage = () => {
       console.log(err);
     }
   };
+
+  useEffect(() => {
+    if (user) {
+      updateLoggedInUser();
+    }
+  }, [user]);
 
   return (
     <div className="p-2 flex flex-col gap-2 max-w-[700px]  mx-auto">
