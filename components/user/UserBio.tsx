@@ -46,6 +46,8 @@ const UserBio = ({ params }: Params) => {
           const followingData = userData?.following;
           if (followingData.includes(userId)) {
             setIsFollowing(true);
+          } else {
+            setIsFollowing(false);
           }
           setLoggedInUser({ ...userData, id: doc.id });
         });
@@ -73,6 +75,25 @@ const UserBio = ({ params }: Params) => {
     }
   };
 
+  const unfollowUser = async (e) => {
+    e.preventDefault();
+    try {
+      const docRef = doc(db, "users", loggedInUser?.id);
+      const docSnap = await getDoc(docRef);
+      const userInfo = docSnap.data();
+      const userFollowing = userInfo?.following;
+      const idIndex = userFollowing.indexOf(userId);
+      const updatedFollowing = userFollowing.splice(idIndex, 1);
+      const updatedInfo = {
+        ...loggedInUser,
+        following: [...userFollowing],
+      };
+      await updateDoc(docRef, updatedInfo);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     if (userId) {
       getData();
@@ -82,8 +103,6 @@ const UserBio = ({ params }: Params) => {
     }
   }, [user]);
 
-  console.log(loggedInUser);
-  console.log(userInfo);
   return (
     <div className="flex gap-4 md:px-16 h-[140px] w-full shadow-xl rounded-xl p-2">
       <img
@@ -99,7 +118,10 @@ const UserBio = ({ params }: Params) => {
                 {userInfo?.displayName}
               </h1>
               {isFollowing ? (
-                <button className="flex gap-2 items-center bg-red-400 w-[120px] py-1 px-4 rounded-xl text-white hover:bg-red-600">
+                <button
+                  onClick={unfollowUser}
+                  className="flex gap-2 items-center bg-red-400 w-[120px] py-1 px-4 rounded-xl text-white hover:bg-red-600"
+                >
                   <SlUserUnfollow />
                   Unfollow
                 </button>
