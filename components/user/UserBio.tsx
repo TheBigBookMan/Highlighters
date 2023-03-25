@@ -6,6 +6,7 @@ import {
   getDoc,
   onSnapshot,
   query,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { useState, useEffect } from "react";
@@ -19,6 +20,7 @@ const UserBio = ({ params }: Params) => {
   const userId = params.user;
   const [userInfo, setUserInfo] = useState<User | undefined>();
   const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
+  const [isFollowing, setIsFollowing] = useState<boolean>(false);
 
   const getData = async () => {
     try {
@@ -41,6 +43,10 @@ const UserBio = ({ params }: Params) => {
         let userData;
         snapshot.docs.forEach(async (doc) => {
           userData = doc.data();
+          const followingData = userData?.following;
+          if (followingData.includes(userId)) {
+            setIsFollowing(true);
+          }
           setLoggedInUser({ ...userData, id: doc.id });
         });
       });
@@ -50,11 +56,18 @@ const UserBio = ({ params }: Params) => {
     }
   };
 
-  const followUser = async (e) => {
+  const followUser = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     try {
       const docRef = doc(db, "users", loggedInUser?.id);
       const docSnap = await getDoc(docRef);
+      const userInfo = docSnap.data();
+      const userFollowing = userInfo?.following;
+      const updatedFollowing = {
+        ...loggedInUser,
+        following: [...userFollowing, userId],
+      };
+      await updateDoc(docRef, updatedFollowing);
     } catch (err) {
       console.log(err);
     }
@@ -69,7 +82,6 @@ const UserBio = ({ params }: Params) => {
     }
   }, [user]);
 
-  let follows = false;
   console.log(loggedInUser);
   console.log(userInfo);
   return (
@@ -86,13 +98,16 @@ const UserBio = ({ params }: Params) => {
               <h1 className="font-bold text-teal-500">
                 {userInfo?.displayName}
               </h1>
-              {follows ? (
+              {isFollowing ? (
                 <button className="flex gap-2 items-center bg-red-400 w-[120px] py-1 px-4 rounded-xl text-white hover:bg-red-600">
                   <SlUserUnfollow />
                   Unfollow
                 </button>
               ) : (
-                <button className="flex gap-2 items-center bg-teal-500 w-[120px] py-1 px-4 rounded-xl text-white hover:bg-teal-600">
+                <button
+                  onClick={followUser}
+                  className="flex gap-2 items-center bg-teal-500 w-[120px] py-1 px-4 rounded-xl text-white hover:bg-teal-600"
+                >
                   <SlUserFollow />
                   Follow
                 </button>
