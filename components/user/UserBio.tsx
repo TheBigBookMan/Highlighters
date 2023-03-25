@@ -1,13 +1,24 @@
 "use client";
 import { db } from "@/utils/firebase";
-import { doc, getDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  onSnapshot,
+  query,
+  where,
+} from "firebase/firestore";
 import { useState, useEffect } from "react";
 import { SlUserFollow, SlUserUnfollow } from "react-icons/sl";
+import { auth } from "@/utils/firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 // !!! fix params shouldnt be null on global for params
 const UserBio = ({ params }: Params) => {
+  const [user, loading] = useAuthState(auth);
   const userId = params.user;
   const [userInfo, setUserInfo] = useState<User | undefined>();
+  const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
 
   const getData = async () => {
     try {
@@ -22,14 +33,44 @@ const UserBio = ({ params }: Params) => {
     }
   };
 
+  const updateUser = async () => {
+    try {
+      const collectionUsersRef = collection(db, "users");
+      const q = query(collectionUsersRef, where("googleId", "==", user?.uid));
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        let userData;
+        snapshot.docs.forEach(async (doc) => {
+          userData = doc.data();
+          setLoggedInUser({ ...userData, id: doc.id });
+        });
+      });
+      return unsubscribe;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const followUser = async (e) => {
+    e.preventDefault();
+    try {
+      const docRef = doc(db, "users", loggedInUser?.id);
+      const docSnap = await getDoc(docRef);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     if (userId) {
       getData();
     }
-  }, []);
+    if (user) {
+      updateUser();
+    }
+  }, [user]);
 
   let follows = false;
-
+  console.log(loggedInUser);
   console.log(userInfo);
   return (
     <div className="flex gap-4 md:px-16 h-[140px] w-full shadow-xl rounded-xl p-2">

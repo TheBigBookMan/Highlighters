@@ -44,7 +44,6 @@ const Comments = ({ params }: Params) => {
     try {
       const docRef = doc(db, "posts", selectedPostId);
       const docSnap = await getDoc(docRef);
-      console.log(docSnap.data());
 
       const commentData = docSnap.data();
       const updatedPost = {

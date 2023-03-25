@@ -10,7 +10,8 @@ declare global {
     email: string;
     image: string;
     googleId: string;
-    friends: string[];
+    followedBy: string[];
+    following: string[];
     description: string;
     posts: number;
   }

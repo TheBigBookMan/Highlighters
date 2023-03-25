@@ -29,7 +29,8 @@ const Login = () => {
         displayName: user?.displayName,
         email: user?.email,
         image: user?.photoURL,
-        friends: [],
+        followedBy: [],
+        following: [],
         googleId: user?.uid,
       });
     } catch (err) {
