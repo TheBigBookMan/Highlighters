@@ -58,6 +58,22 @@ const UserBio = ({ params }: Params) => {
     }
   };
 
+  const followedByUser = async () => {
+    try {
+      const docRef = doc(db, "users", userId);
+      const docSnap = await getDoc(docRef);
+      const userInfo = docSnap.data();
+      const userFollowedBy = userInfo?.followedBy;
+      const updatedFollowedBy = {
+        ...userInfo,
+        followedBy: [...userFollowedBy, loggedInUser?.id],
+      };
+      await updateDoc(docRef, updatedFollowedBy);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const followUser = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     try {
@@ -70,6 +86,7 @@ const UserBio = ({ params }: Params) => {
         following: [...userFollowing, userId],
       };
       await updateDoc(docRef, updatedFollowing);
+      followedByUser();
     } catch (err) {
       console.log(err);
     }
@@ -83,7 +100,7 @@ const UserBio = ({ params }: Params) => {
       const userInfo = docSnap.data();
       const userFollowing = userInfo?.following;
       const idIndex = userFollowing.indexOf(userId);
-      const updatedFollowing = userFollowing.splice(idIndex, 1);
+      userFollowing.splice(idIndex, 1);
       const updatedInfo = {
         ...loggedInUser,
         following: [...userFollowing],

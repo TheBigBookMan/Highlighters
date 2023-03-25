@@ -84,7 +84,6 @@ const Post = ({ params }: Params) => {
       console.log(err);
     }
   };
-  console.log(postData);
 
   useEffect(() => {
     getData();
