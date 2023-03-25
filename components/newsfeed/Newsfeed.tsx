@@ -41,6 +41,7 @@ const Newsfeed = () => {
       const unsubscribe = onSnapshot(collectionRef, (snapshot) => {
         let lists: any = [];
         snapshot.docs.forEach(async (doc) => {
+          console.log(doc.data());
           await lists.push({ ...doc.data(), id: doc.id });
         });
 

@@ -63,7 +63,7 @@ const UserPosts = ({ params }: Params) => {
   return (
     <div className="shadow-xl rounded-lg h-full w-full p-4 flex flex-col gap-4">
       <div className="flex flex-col border-b">
-        <h1 className="font-bold text-2xl text-teal-500">My Posts</h1>
+        <h1 className="font-bold text-2xl text-teal-500">Posts</h1>
         <ul className="flex gap-2">
           {hardcode.map((time) => (
             <li

@@ -26,8 +26,7 @@ declare global {
     timeframe: string;
     userId: string;
     googleId: string;
-    likes: number;
-    dislikes: number;
+    likedByUsers: string[];
     comments: number;
     userName: string;
   }

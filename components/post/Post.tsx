@@ -1,6 +1,6 @@
 "use client";
 import { db } from "@/utils/firebase";
-import { doc, getDoc, onSnapshot } from "firebase/firestore";
+import { doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { FiThumbsUp, FiThumbsDown } from "react-icons/fi";
@@ -14,15 +14,33 @@ const Post = ({ params }: Params) => {
   const getData = async () => {
     try {
       const docRef = doc(db, "posts", postId);
-      const docSnap = await getDoc(docRef);
-      if (docSnap) {
-        const docData = docSnap.data();
-        setPostData({ ...docData });
-      }
+      const unsubscribe = onSnapshot(docRef, (snapshot) => {
+        setPostData({ ...snapshot.data() });
+      });
+      // const docSnap = await getDoc(docRef);
+      // if (docSnap) {
+      //   const docData = docSnap.data();
+      //   setPostData({ ...docData });
+      // }
+      return unsubscribe;
     } catch (err) {
       console.log(err);
     }
   };
+
+  const likeButton = async (e) => {
+    e.preventDefault();
+    try {
+      const docRef = doc(db, "posts", postId);
+      const updateLikes = postData?.likedByUsers;
+      // ???? need to set logged in user and get userId to then add to the array of likedByUsers so then can make a ternary for the like button so users cant make multiple likes
+      // const updatedDoc = { ...postData, [...updateLikes] };
+      // await updateDoc(docRef, updatedDoc);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  console.log(postData);
 
   useEffect(() => {
     getData();
@@ -43,12 +61,11 @@ const Post = ({ params }: Params) => {
             <p>{postData?.comments}</p>
           </div>
           <div className="flex gap-1 items-center">
-            <FiThumbsUp className="text-lg " />
+            <FiThumbsUp
+              onClick={likeButton}
+              className="text-lg cursor-pointer hover:text-teal-500"
+            />
             <p>{postData?.likes}</p>
-          </div>
-          <div className="flex gap-1 items-center">
-            <FiThumbsDown className="text-lg " />
-            <p>{postData?.dislikes}</p>
           </div>
         </div>
       </div>
