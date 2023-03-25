@@ -1,15 +1,26 @@
 "use client";
-import { db } from "@/utils/firebase";
-import { doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
+import { auth, db } from "@/utils/firebase";
+import {
+  collection,
+  doc,
+  getDoc,
+  onSnapshot,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { FiThumbsUp, FiThumbsDown } from "react-icons/fi";
 import { SlSpeech } from "react-icons/sl";
 
 const Post = ({ params }: Params) => {
+  const [user, loading] = useAuthState(auth);
   const postId = params?.post;
   const route = useRouter();
   const [postData, setPostData] = useState<Post | null>(null);
+  const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
 
   const getData = async () => {
     try {
@@ -28,14 +39,32 @@ const Post = ({ params }: Params) => {
     }
   };
 
+  const updateUser = async () => {
+    try {
+      const collectionUsersRef = collection(db, "users");
+      const q = query(collectionUsersRef, where("googleId", "==", user?.uid));
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        let userData;
+        snapshot.docs.forEach(async (doc) => {
+          userData = doc.data();
+          setLoggedInUser({ ...userData, id: doc.id });
+        });
+      });
+      return unsubscribe;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const likeButton = async (e) => {
     e.preventDefault();
     try {
       const docRef = doc(db, "posts", postId);
-      const updateLikes = postData?.likedByUsers;
+      const updateLikes = [...postData?.likedByUsers, loggedInUser?.id];
       // ???? need to set logged in user and get userId to then add to the array of likedByUsers so then can make a ternary for the like button so users cant make multiple likes
-      // const updatedDoc = { ...postData, [...updateLikes] };
-      // await updateDoc(docRef, updatedDoc);
+
+      const updatedDoc = { ...postData, likedByUsers: [...updateLikes] };
+      await updateDoc(docRef, updatedDoc);
     } catch (err) {
       console.log(err);
     }
@@ -44,7 +73,10 @@ const Post = ({ params }: Params) => {
 
   useEffect(() => {
     getData();
-  }, []);
+    if (user) {
+      updateUser();
+    }
+  }, [user]);
 
   return (
     <div className="flex flex-col max-w-[600px]  gap-4 shadow-xl p-2 rounded-lg">
