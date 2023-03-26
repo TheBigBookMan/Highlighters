@@ -74,6 +74,21 @@ const UserBio = ({ params }: Params) => {
     }
   };
 
+  const unfollowedByUser = async () => {
+    try {
+      const docRef = doc(db, "users", userId);
+      const docSnap = await getDoc(docRef);
+      const userInfo = docSnap.data();
+      const userFollowedBy = userInfo?.followedBy;
+      const idIndex = userFollowedBy.indexOf(loggedInUser?.id);
+      userFollowedBy.splice(idIndex, 1);
+      const updatedInfo = { ...userInfo, followedBy: [...userFollowedBy] };
+      await updateDoc(docRef, updatedInfo);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const followUser = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     try {
@@ -106,6 +121,7 @@ const UserBio = ({ params }: Params) => {
         following: [...userFollowing],
       };
       await updateDoc(docRef, updatedInfo);
+      unfollowedByUser();
     } catch (err) {
       console.log(err);
     }
