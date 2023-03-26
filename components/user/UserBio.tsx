@@ -21,6 +21,7 @@ const UserBio = ({ params }: Params) => {
   const [userInfo, setUserInfo] = useState<User | undefined>();
   const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
   const [isFollowing, setIsFollowing] = useState<boolean>(false);
+  const [isFollowedBy, setIsFollowedBy] = useState<boolean>(false);
 
   const getData = async () => {
     try {
@@ -28,6 +29,7 @@ const UserBio = ({ params }: Params) => {
       const docSnap = await getDoc(docRef);
       if (docSnap) {
         const docData = docSnap.data();
+        if (!docData) return;
         setUserInfo({ ...docData });
       }
     } catch (err) {
@@ -43,13 +45,22 @@ const UserBio = ({ params }: Params) => {
         let userData;
         snapshot.docs.forEach(async (doc) => {
           userData = doc.data();
+          setLoggedInUser({ ...userData, id: doc.id });
           const followingData = userData?.following;
           if (followingData.includes(userId)) {
             setIsFollowing(true);
           } else {
             setIsFollowing(false);
           }
-          setLoggedInUser({ ...userData, id: doc.id });
+
+          const followedByData = userData?.followedBy;
+          if (followedByData.includes(userId)) {
+            console.log("TR");
+            setIsFollowedBy(true);
+          } else {
+            console.log("FARL");
+            setIsFollowedBy(false);
+          }
         });
       });
       return unsubscribe;
@@ -128,11 +139,9 @@ const UserBio = ({ params }: Params) => {
   };
 
   useEffect(() => {
-    if (userId) {
-      getData();
-    }
     if (user) {
       updateUser();
+      getData();
     }
   }, [user]);
 
@@ -167,6 +176,7 @@ const UserBio = ({ params }: Params) => {
                   Follow
                 </button>
               )}
+              {isFollowedBy && <h1 className="text-sm">Follows You</h1>}
             </div>
             <p
               className={`overflow-x-auto scrollbar-thin scrollbar-thumb-rounded scrollbar-track-rounded scrollbar-thumb-teal-500 scrollbar-track-gray-200`}
