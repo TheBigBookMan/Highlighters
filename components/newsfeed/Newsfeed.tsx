@@ -102,12 +102,7 @@ const Newsfeed = () => {
                 <div className="flex gap-1 items-center">
                   {/* if the post has the user clicking on dislike then render the colored one- HiThumbUp */}
                   <FiThumbsUp className="text-lg hover:text-teal-500 cursor-pointer" />
-                  <p>{post.likes}</p>
-                </div>
-                <div className="flex gap-1 items-center">
-                  {/* if the post has the user clicking on dislike then render the colored one- HiThumbDown */}
-                  <FiThumbsDown className="text-lg hover:text-teal-500 cursor-pointer" />
-                  <p>{post.dislikes}</p>
+                  <p>{post.likedByUsers.length}</p>
                 </div>
               </div>
               <p className="max-h-[200px] overflow-y-auto scrollbar-thin scrollbar-thumb-rounded scrollbar-track-rounded scrollbar-thumb-teal-500 scrollbar-track-gray-200">
