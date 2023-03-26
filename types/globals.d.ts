@@ -20,7 +20,6 @@ declare global {
     title: string;
     image: string;
     description: string;
-    friends: string[];
     location: string;
     date: string;
     timeframe: string;

@@ -9,10 +9,11 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { FiThumbsUp, FiThumbsDown } from "react-icons/fi";
+import { FiThumbsUp } from "react-icons/fi";
 import { SlSpeech } from "react-icons/sl";
 
 const Post = ({ params }: Params) => {
@@ -20,7 +21,7 @@ const Post = ({ params }: Params) => {
   const postId = params?.post;
   const route = useRouter();
   const [postData, setPostData] = useState<Post | null>(null);
-  const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
+  const [loggedInUser, setLoggedInUser] = useState<User | undefined>();
 
   const getData = async () => {
     try {
@@ -76,7 +77,7 @@ const Post = ({ params }: Params) => {
       const docRef = doc(db, "posts", postId);
       const currentLikes = postData?.likedByUsers;
       const indexOfId = currentLikes?.indexOf(loggedInUser?.id);
-      if (!indexOfId) return;
+      if (indexOfId === undefined) return;
       currentLikes?.splice(indexOfId, 1);
       const updatedDoc = { ...postData, likedByUsers: [...currentLikes] };
       await updateDoc(docRef, updatedDoc);
@@ -94,9 +95,7 @@ const Post = ({ params }: Params) => {
 
   return (
     <div className="flex flex-col max-w-[600px]  gap-4 shadow-xl p-2 rounded-lg">
-      {!loggedInUser ? (
-        <h1>Loading...</h1>
-      ) : (
+      {postData && loggedInUser && (
         <>
           <div className="flex gap-2 items-center">
             <p>{postData?.timeframe} Highlight:</p>
@@ -104,7 +103,15 @@ const Post = ({ params }: Params) => {
               {postData?.title}
             </h1>
           </div>
-          <p>Posted by: {postData?.userName}</p>
+          <p>
+            Posted by:{" "}
+            <Link
+              href={`/user/${postData?.userId}`}
+              className="text-teal-500 font-bold cursor-pointer"
+            >
+              {postData?.userName}
+            </Link>
+          </p>
           <div className="flex gap-6">
             <p>{postData?.date}</p>
             <div className="flex gap-2">

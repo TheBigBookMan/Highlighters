@@ -32,15 +32,13 @@ const CreatePostPage = () => {
     title: "",
     image: "",
     description: "",
-    friends: [],
     location: "",
     timeframe: "Daily",
     date: "",
     userId: "",
     googleId: "",
     comments: 0,
-    likes: 0,
-    dislikes: 0,
+    likedByUsers: [],
     userName: "",
   });
 

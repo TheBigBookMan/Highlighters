@@ -55,10 +55,8 @@ const UserBio = ({ params }: Params) => {
 
           const followedByData = userData?.followedBy;
           if (followedByData.includes(userId)) {
-            console.log("TR");
             setIsFollowedBy(true);
           } else {
-            console.log("FARL");
             setIsFollowedBy(false);
           }
         });
