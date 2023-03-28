@@ -3,6 +3,7 @@ import { auth, db } from "@/utils/firebase";
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   onSnapshot,
@@ -19,6 +20,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { commentFilter } from "@/utils/filterposts";
+import { ImBin } from "react-icons/im";
 
 const Comments = ({ params }: Params) => {
   const [user, loading] = useAuthState(auth);
@@ -139,6 +141,17 @@ const Comments = ({ params }: Params) => {
     }
   };
 
+  const deleteComment = async (e, commentId: string) => {
+    e.preventDefault();
+    try {
+      const docRef = doc(db, "comments", commentId.id);
+      await deleteDoc(docRef);
+      toast.success("Successfully deleted comment ✅");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     filterSelection();
   }, [selectedFilter]);
@@ -221,6 +234,10 @@ const Comments = ({ params }: Params) => {
 
                     <p>{comment?.likedByUsers.length}</p>
                   </div>
+                  <ImBin
+                    onClick={(e) => deleteComment(e, comment.id)}
+                    className="text-lg cursor-pointer hover:text-red-400"
+                  />
                 </div>
                 <p className="text-sm text-gray-500">{comment.date}</p>
                 <p className="overflow-y-auto scrollbar-thin scrollbar-thumb-rounded scrollbar-track-rounded scrollbar-thumb-teal-500 scrollbar-track-gray-200">
