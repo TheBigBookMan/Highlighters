@@ -8,7 +8,6 @@ const NewsfeedPage = () => {
   // throw Error("Newsfeed not load");
   return (
     <div className="p-2">
-      <h1 className="font-bold text-2xl text-teal-500">Newsfeed</h1>
       <Newsfeed />
     </div>
   );

@@ -14,6 +14,7 @@ import { BiEditAlt } from "react-icons/bi";
 import { TiTickOutline } from "react-icons/ti";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Circles } from "react-loader-spinner";
 
 const Bio = () => {
   const [user, loading] = useAuthState(auth);
@@ -61,7 +62,15 @@ const Bio = () => {
     <div className="flex gap-4 md:px-16 h-[140px] w-full shadow-xl rounded-xl p-2">
       <ToastContainer limit={1} />
       {loading ? (
-        <h1>Loading...</h1>
+        <Circles
+          height="80"
+          width="80"
+          color="#4fa94d"
+          ariaLabel="circles-loading"
+          wrapperStyle={{}}
+          wrapperClass=""
+          visible={true}
+        />
       ) : (
         <>
           <img
