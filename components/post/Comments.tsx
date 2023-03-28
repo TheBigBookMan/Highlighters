@@ -8,6 +8,7 @@ import {
   onSnapshot,
   orderBy,
   query,
+  serverTimestamp,
   updateDoc,
   where,
 } from "firebase/firestore";
@@ -16,6 +17,7 @@ import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { commentFilter } from "@/utils/filterposts";
 
 const Comments = ({ params }: Params) => {
   const [user, loading] = useAuthState(auth);
@@ -23,6 +25,7 @@ const Comments = ({ params }: Params) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [writeComment, setWriteComment] = useState<string>("");
   const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
+  const [selectedFilter, setSelectedFilter] = useState<string>("Most Recent");
 
   const getData = async () => {
     try {
@@ -30,7 +33,7 @@ const Comments = ({ params }: Params) => {
       const q = query(
         collectionRef,
         where("postId", "==", selectedPostId),
-        orderBy("time", "asc")
+        orderBy("createdAt", "desc")
       );
       const unsubscribe = onSnapshot(q, (snapshot) => {
         let lists: any = [];
@@ -45,21 +48,9 @@ const Comments = ({ params }: Params) => {
     }
   };
 
-  const updateCommentCount = async () => {
-    try {
-      const docRef = doc(db, "posts", selectedPostId);
-      const docSnap = await getDoc(docRef);
-
-      const commentData = docSnap.data();
-      const updatedPost = {
-        ...commentData,
-        comments: commentData.comments + 1,
-      };
-
-      await updateDoc(docRef, updatedPost);
-    } catch (err) {
-      console.log(err);
-    }
+  const filterSelection = async () => {
+    const returnedList = await commentFilter(comments, selectedFilter);
+    setComments([...returnedList]);
   };
 
   const updateUser = async () => {
@@ -96,14 +87,18 @@ const Comments = ({ params }: Params) => {
         userImage: user?.photoURL,
         date: today,
         userId: loggedInUser?.id,
+        createdAt: serverTimestamp(),
       });
       toast.success("Post successful!✅");
       setWriteComment("");
-      updateCommentCount();
     } catch (err) {
       console.log(err);
     }
   };
+
+  useEffect(() => {
+    filterSelection();
+  }, [selectedFilter]);
 
   useEffect(() => {
     getData();
@@ -115,7 +110,19 @@ const Comments = ({ params }: Params) => {
   return (
     <div className="shadow-xl rounded-lg max-w-[600px]  p-2 flex flex-col gap-2">
       <ToastContainer limit={1} />
-      <h1 className="font-bold text-teal-500 text-lg">Comments</h1>
+      <div className="flex gap-2">
+        <h1 className="font-bold text-teal-500 text-lg">Comments</h1>
+        <select
+          value={selectedFilter}
+          onChange={(e) => setSelectedFilter(e.target.value)}
+          className="bg-gray-200 rounded-xl"
+        >
+          <option value="Most Recent">Most Recent</option>
+          <option value="Least Recent">Least Recent</option>
+          <option value="Top Rated">Top Rated</option>
+          <option value="Least Rated">Least Rated</option>
+        </select>
+      </div>
       <form className="flex flex-col gap-2">
         <textarea
           onChange={(e) => setWriteComment(e.target.value)}

@@ -61,5 +61,6 @@ declare global {
     userName: string;
     userImage: string;
     date: string;
+    createdAt: Date | string;
   }
 }
