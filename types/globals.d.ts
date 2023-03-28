@@ -28,6 +28,7 @@ declare global {
     likedByUsers: string[];
     comments: number;
     userName: string;
+    time: Date | string;
   }
   interface Post extends FormPost {
     post: any;

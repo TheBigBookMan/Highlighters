@@ -40,6 +40,7 @@ const CreatePostPage = () => {
     comments: 0,
     likedByUsers: [],
     userName: "",
+    time: ""
   });
 
   const handleChange = (
@@ -112,6 +113,7 @@ const CreatePostPage = () => {
         date: today,
         userName: user?.displayName,
         googleId: user?.uid,
+        time: Timestamp.now(),
       });
       toast.success("Post successfully been created! ✅");
       console.log(postForm);

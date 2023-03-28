@@ -98,11 +98,7 @@ const MyPosts = () => {
                   </div>
                   <div className="flex gap-1 items-center">
                     <FiThumbsUp className="text-lg " />
-                    <p>{post.likes}</p>
-                  </div>
-                  <div className="flex gap-1 items-center">
-                    <FiThumbsDown className="text-lg " />
-                    <p>{post.dislikes}</p>
+                    <p>{post.likedByUsers.length}</p>
                   </div>
                 </div>
                 <p className="max-h-[200px] overflow-y-auto scrollbar-thin scrollbar-thumb-rounded scrollbar-track-rounded scrollbar-thumb-teal-500 scrollbar-track-gray-200">
