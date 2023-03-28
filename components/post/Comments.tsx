@@ -13,6 +13,7 @@ import {
   where,
 } from "firebase/firestore";
 import Link from "next/link";
+import { FiThumbsUp } from "react-icons/fi";
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { toast, ToastContainer } from "react-toastify";
@@ -88,9 +89,26 @@ const Comments = ({ params }: Params) => {
         date: today,
         userId: loggedInUser?.id,
         createdAt: serverTimestamp(),
+        likedByUsers: [],
       });
       toast.success("Post successful!✅");
       setWriteComment("");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const likeButton = async (e) => {
+    e.preventDefault();
+    try {
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const unlikeButton = async (e) => {
+    e.preventDefault();
+    try {
     } catch (err) {
       console.log(err);
     }
@@ -163,8 +181,23 @@ const Comments = ({ params }: Params) => {
                   <h1 className="font-bold text-teal-500">
                     {comment.userName}
                   </h1>
-                  <p className="text-sm">{comment.date}</p>
+                  <div className="flex gap-1 items-center">
+                    {comment?.likedByUsers.includes(loggedInUser?.id) ? (
+                      <FiThumbsUp
+                        onClick={unlikeButton}
+                        className="text-lg cursor-pointer text-teal-500 hover:text-black"
+                      />
+                    ) : (
+                      <FiThumbsUp
+                        onClick={likeButton}
+                        className="text-lg cursor-pointer hover:text-teal-500"
+                      />
+                    )}
+
+                    <p>{comment?.likedByUsers.length}</p>
+                  </div>
                 </div>
+                <p className="text-sm text-gray-500">{comment.date}</p>
                 <p className="overflow-y-auto scrollbar-thin scrollbar-thumb-rounded scrollbar-track-rounded scrollbar-thumb-teal-500 scrollbar-track-gray-200">
                   {comment.comment}
                 </p>

@@ -62,5 +62,6 @@ declare global {
     userImage: string;
     date: string;
     createdAt: Date | string;
+    likedByUsers: string[];
   }
 }
