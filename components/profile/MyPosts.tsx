@@ -16,6 +16,7 @@ import {
   where,
 } from "firebase/firestore";
 import Link from "next/link";
+import { userFilter } from "@/utils/filterposts";
 
 const MyPosts = () => {
   const route = useRouter();
@@ -25,32 +26,17 @@ const MyPosts = () => {
   const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
   const [selectedFilter, setSelectedFilter] = useState<string>("Most Recent");
 
-  const filteredTimeframe = () => {
+  const filteredTimeframe = async () => {
     if (posts.length > 0) {
       const filteredList = posts.filter((post) => {
         return post.timeframe === timeframe;
       });
-      userFilter(filteredList);
+      const returnFilteredLists = await userFilter(
+        filteredList,
+        selectedFilter
+      );
+      setFilteredPosts([...returnFilteredLists]);
     }
-  };
-
-  const userFilter = async (list: Post[]) => {
-    if (selectedFilter === "Most Recent") {
-      list = list;
-    } else if (selectedFilter === "Least Recent") {
-      list = list.sort((item1, item2) => {
-        return Number(item1.createdAt) - Number(item2.createdAt);
-      });
-    } else if (selectedFilter === "Top Rated") {
-      list = list.sort((item1, item2) => {
-        return item2.likedByUsers.length - item1.likedByUsers.length;
-      });
-    } else if (selectedFilter === "Least Rated") {
-      list = list.sort((item1, item2) => {
-        return item1.likedByUsers.length - item2.likedByUsers.length;
-      });
-    }
-    setFilteredPosts([...list]);
   };
 
   const getData = async () => {

@@ -8,6 +8,7 @@ import { SlSpeech } from "react-icons/sl";
 import { useRouter } from "next/navigation";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import Link from "next/link";
+import { userFilter } from "@/utils/filterposts";
 const hardcode = ["All", "Daily", "Weekly", "Monthly", "Yearly"];
 
 //? use this to get the database newsfeed stuff
@@ -18,16 +19,19 @@ const Newsfeed = () => {
   const [newsfeedData, setNewsfeedData] = useState<Post[]>([]);
   const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
   const [timeframe, setTimeframe] = useState<string>("All");
+  const [selectedFilter, setSelectedFilter] = useState<string>("Most Recent");
 
-  const filteredTimeframe = () => {
+  const filteredTimeframe = async () => {
     if (newsfeedData.length > 0) {
       if (timeframe === "All") {
-        setFilteredPosts([...newsfeedData]);
+        const userList = await userFilter(newsfeedData, selectedFilter);
+        setFilteredPosts([...userList]);
       } else {
         const filteredList = newsfeedData.filter((post) => {
           return post.timeframe === timeframe;
         });
-        setFilteredPosts([...filteredList]);
+        const userList = await userFilter(filteredList, selectedFilter);
+        setFilteredPosts([...userList]);
       }
     }
   };
@@ -60,25 +64,40 @@ const Newsfeed = () => {
 
   useEffect(() => {
     filteredTimeframe();
-  }, [timeframe]);
+  }, [timeframe, selectedFilter]);
 
   return (
     <div className="shadow-xl rounded-lg h-full w-full p-4 flex flex-col gap-4">
-      <div className="flex flex-col border-b">
-        <ul className="flex gap-2">
-          {hardcode.map((time) => (
-            <li
-              onClick={() => setTimeframe(time)}
-              key={time}
-              className={`${
-                timeframe === time && "font-bold text-teal-500"
-              } cursor-pointer`}
-            >
-              {time}
-            </li>
-          ))}
-        </ul>
+      <div className="flex gap-2">
+        <h1 className="font-bold text-2xl text-teal-500">Newsfeed</h1>
+        <select
+          value={selectedFilter}
+          onChange={(e) => setSelectedFilter(e.target.value)}
+          className="bg-gray-200 rounded-xl"
+        >
+          <option value="Most Recent">Most Recent</option>
+          <option value="Least Recent">Least Recent</option>
+          <option value="Top Rated">Top Rated</option>
+          <option value="Least Rated">Least Rated</option>
+        </select>
       </div>
+      <ul className="flex gap-2 border-b">
+        {hardcode.map((time) => (
+          <li
+            onClick={() => {
+              setSelectedFilter("Most Recent");
+              setTimeframe(time);
+            }}
+            key={time}
+            className={`${
+              timeframe === time && "font-bold text-teal-500"
+            } cursor-pointer`}
+          >
+            {time}
+          </li>
+        ))}
+      </ul>
+
       <ul className="flex flex-wrap justify-center sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {filteredPosts?.map((post, idx) => (
           <Link key={post.id + idx} href={`/post/${post?.id}`}>
