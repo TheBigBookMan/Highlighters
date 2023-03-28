@@ -30,8 +30,27 @@ const MyPosts = () => {
       const filteredList = posts.filter((post) => {
         return post.timeframe === timeframe;
       });
-      setFilteredPosts([...filteredList]);
+      userFilter(filteredList);
     }
+  };
+
+  const userFilter = async (list: Post[]) => {
+    if (selectedFilter === "Most Recent") {
+      list = list;
+    } else if (selectedFilter === "Least Recent") {
+      list = list.sort((item1, item2) => {
+        return Number(item1.createdAt) - Number(item2.createdAt);
+      });
+    } else if (selectedFilter === "Top Rated") {
+      list = list.sort((item1, item2) => {
+        return item2.likedByUsers.length - item1.likedByUsers.length;
+      });
+    } else if (selectedFilter === "Least Rated") {
+      list = list.sort((item1, item2) => {
+        return item1.likedByUsers.length - item2.likedByUsers.length;
+      });
+    }
+    setFilteredPosts([...list]);
   };
 
   const getData = async () => {
@@ -64,11 +83,11 @@ const MyPosts = () => {
 
   useEffect(() => {
     getData();
-  }, [user, loading]);
+  }, [user]);
 
   useEffect(() => {
     filteredTimeframe();
-  }, [timeframe]);
+  }, [timeframe, selectedFilter]);
 
   return (
     <div className="shadow-xl rounded-lg h-full w-full p-4 flex flex-col gap-4">
@@ -83,15 +102,15 @@ const MyPosts = () => {
             <option value="Most Recent">Most Recent</option>
             <option value="Least Recent">Least Recent</option>
             <option value="Top Rated">Top Rated</option>
-            <option value="Least Rated">Least Recent</option>
+            <option value="Least Rated">Least Rated</option>
           </select>
         </div>
         <ul className="flex gap-2">
           {hardcode.map((time) => (
             <li
               onClick={() => {
-                setTimeframe(time);
                 setSelectedFilter("Most Recent");
+                setTimeframe(time);
               }}
               key={time}
               className={`${
