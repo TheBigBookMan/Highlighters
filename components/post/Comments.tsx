@@ -98,15 +98,28 @@ const Comments = ({ params }: Params) => {
     }
   };
 
-  const likeButton = async (e) => {
+  const likeButton = async (
+    e: MouseEvent<HTMLButtonElement>,
+    commentId: string
+  ) => {
     e.preventDefault();
     try {
+      const docRef = doc(db, "comments", commentId.id);
+      const docSnap = await getDoc(docRef);
+      if (docSnap) {
+        let updatedData;
+        const data = docSnap.data();
+        const updatedLikes = [...data?.likedByUsers, loggedInUser?.id];
+        updatedData = { ...data, likedByUsers: [...updatedLikes] };
+        await updateDoc(docRef, updatedData);
+      }
+      return;
     } catch (err) {
       console.log(err);
     }
   };
 
-  const unlikeButton = async (e) => {
+  const unlikeButton = async (e, commentId: string) => {
     e.preventDefault();
     try {
     } catch (err) {
@@ -184,12 +197,12 @@ const Comments = ({ params }: Params) => {
                   <div className="flex gap-1 items-center">
                     {comment?.likedByUsers.includes(loggedInUser?.id) ? (
                       <FiThumbsUp
-                        onClick={unlikeButton}
+                        onClick={(e) => unlikeButton(e, comment.id)}
                         className="text-lg cursor-pointer text-teal-500 hover:text-black"
                       />
                     ) : (
                       <FiThumbsUp
-                        onClick={likeButton}
+                        onClick={(e) => likeButton(e, comment.id)}
                         className="text-lg cursor-pointer hover:text-teal-500"
                       />
                     )}

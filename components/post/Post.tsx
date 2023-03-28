@@ -62,7 +62,6 @@ const Post = ({ params }: Params) => {
     try {
       const docRef = doc(db, "posts", postId);
       const updateLikes = [...postData?.likedByUsers, loggedInUser?.id];
-      // ???? need to set logged in user and get userId to then add to the array of likedByUsers so then can make a ternary for the like button so users cant make multiple likes
 
       const updatedDoc = { ...postData, likedByUsers: [...updateLikes] };
       await updateDoc(docRef, updatedDoc);
