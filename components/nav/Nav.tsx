@@ -68,7 +68,8 @@ const Nav = () => {
               </Link>
             </li>
             <li>
-              <Link href="/friends">
+              <Link href="/#">
+                {/* <Link href="/friends"> */}
                 <p
                   className={`${
                     searchPath === "/friends" && "text-teal-500 font-bold"

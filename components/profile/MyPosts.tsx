@@ -23,6 +23,7 @@ const MyPosts = () => {
   const [timeframe, setTimeframe] = useState<string>("Daily");
   const [posts, setPosts] = useState<Post[]>([]);
   const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
+  const [selectedFilter, setSelectedFilter] = useState<string>("Most Recent");
 
   const filteredTimeframe = () => {
     if (posts.length > 0) {
@@ -72,11 +73,26 @@ const MyPosts = () => {
   return (
     <div className="shadow-xl rounded-lg h-full w-full p-4 flex flex-col gap-4">
       <div className="flex flex-col border-b">
-        <h1 className="font-bold text-2xl text-teal-500">My Posts</h1>
+        <div className="flex gap-2">
+          <h1 className="font-bold text-2xl text-teal-500">My Posts</h1>
+          <select
+            value={selectedFilter}
+            onChange={(e) => setSelectedFilter(e.target.value)}
+            className="bg-gray-200 rounded-xl"
+          >
+            <option value="Most Recent">Most Recent</option>
+            <option value="Least Recent">Least Recent</option>
+            <option value="Top Rated">Top Rated</option>
+            <option value="Least Rated">Least Recent</option>
+          </select>
+        </div>
         <ul className="flex gap-2">
           {hardcode.map((time) => (
             <li
-              onClick={() => setTimeframe(time)}
+              onClick={() => {
+                setTimeframe(time);
+                setSelectedFilter("Most Recent");
+              }}
               key={time}
               className={`${
                 timeframe === time && "font-bold text-teal-500"
