@@ -6,7 +6,7 @@ import { FiThumbsUp, FiThumbsDown } from "react-icons/fi";
 import { HiThumbDown, HiThumbUp } from "react-icons/hi";
 import { SlSpeech } from "react-icons/sl";
 import { useRouter } from "next/navigation";
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import Link from "next/link";
 const hardcode = ["All", "Daily", "Weekly", "Monthly", "Yearly"];
 
@@ -37,8 +37,9 @@ const Newsfeed = () => {
     // if (!user) return route.push("/auth/login");
     try {
       const collectionRef = collection(db, "posts");
+      const q = query(collectionRef, orderBy("createdAt", "desc"));
       // todo add in a query for having a friend related id
-      const unsubscribe = onSnapshot(collectionRef, (snapshot) => {
+      const unsubscribe = onSnapshot(q, (snapshot) => {
         let lists: any = [];
         snapshot.docs.forEach(async (doc) => {
           await lists.push({ ...doc.data(), id: doc.id });
