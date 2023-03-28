@@ -107,10 +107,9 @@ const Comments = ({ params }: Params) => {
       const docRef = doc(db, "comments", commentId.id);
       const docSnap = await getDoc(docRef);
       if (docSnap) {
-        let updatedData;
         const data = docSnap.data();
         const updatedLikes = [...data?.likedByUsers, loggedInUser?.id];
-        updatedData = { ...data, likedByUsers: [...updatedLikes] };
+        const updatedData = { ...data, likedByUsers: [...updatedLikes] };
         await updateDoc(docRef, updatedData);
       }
       return;
@@ -122,6 +121,19 @@ const Comments = ({ params }: Params) => {
   const unlikeButton = async (e, commentId: string) => {
     e.preventDefault();
     try {
+      const docRef = doc(db, "comments", commentId.id);
+      const docSnap = await getDoc(docRef);
+      if (docSnap) {
+        const data = docSnap.data();
+        const currentLikes = data?.likedByUsers;
+        const indexOfId = currentLikes?.indexOf(loggedInUser?.id);
+        if (indexOfId === undefined) return;
+        currentLikes?.splice(indexOfId, 1);
+
+        const updatedData = { ...data, likedByUsers: [...currentLikes] };
+        await updateDoc(docRef, updatedData);
+      }
+      return;
     } catch (err) {
       console.log(err);
     }
