@@ -8,7 +8,13 @@ import { FiThumbsUp, FiThumbsDown } from "react-icons/fi";
 import { SlSpeech } from "react-icons/sl";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { collection, onSnapshot, query, where } from "firebase/firestore";
+import {
+  collection,
+  onSnapshot,
+  orderBy,
+  query,
+  where,
+} from "firebase/firestore";
 import Link from "next/link";
 
 const MyPosts = () => {
@@ -33,7 +39,11 @@ const MyPosts = () => {
 
     try {
       const collectionRef = collection(db, "posts");
-      const q = query(collectionRef, where("googleId", "==", user.uid));
+      const q = query(
+        collectionRef,
+        where("googleId", "==", user.uid),
+        orderBy("createdAt", "desc")
+      );
       const unsubscribe = onSnapshot(q, (snapshot) => {
         let lists: any = [];
         snapshot.docs.forEach(async (doc) => {
@@ -88,7 +98,11 @@ const MyPosts = () => {
             <Link key={post.id} href={`/post/${post.id}`}>
               <li className="group hover:bg-teal-100 cursor-pointer transition flex flex-col shadow-xl rounded-lg p-2 items-center gap-2 max-h-[600px] w-[300px]">
                 {/* !! might need to add in a ternary for if there is no photo and just leave blank without an image */}
-                <img src={post.image} alt={post.title} className="w-60 h-60" />
+                <img
+                  src={post.image}
+                  alt={post.title}
+                  className="w-60 h-60 rounded-lg"
+                />
                 <h1 className="font-bold text-teal-500">{post.title}</h1>
                 <p className="text-sm">{post.date}</p>
                 <div className="flex items-center gap-4">

@@ -86,7 +86,11 @@ const Newsfeed = () => {
               className="flex flex-col shadow-xl rounded-lg p-2 items-center gap-2 max-h-[600px] w-[300px] group hover:bg-teal-100 cursor-pointer"
             >
               {/* !! might need to add in a ternary for if there is no photo and just leave blank without an image */}
-              <img src={post.image} alt={post.title} className="w-60 h-60" />
+              <img
+                src={post.image}
+                alt={post.title}
+                className="w-60 h-60 rounded-lg"
+              />
               <h1 className="font-bold text-teal-500">{post.title}</h1>
               <h1>
                 Posted by:{" "}

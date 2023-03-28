@@ -6,6 +6,7 @@ import {
   doc,
   getDoc,
   onSnapshot,
+  orderBy,
   query,
   updateDoc,
   where,
@@ -26,7 +27,11 @@ const Comments = ({ params }: Params) => {
   const getData = async () => {
     try {
       const collectionRef = collection(db, "comments");
-      const q = query(collectionRef, where("postId", "==", selectedPostId));
+      const q = query(
+        collectionRef,
+        where("postId", "==", selectedPostId),
+        orderBy("time", "asc")
+      );
       const unsubscribe = onSnapshot(q, (snapshot) => {
         let lists: any = [];
         snapshot.docs.forEach(async (doc) => {
