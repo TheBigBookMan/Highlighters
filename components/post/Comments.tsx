@@ -131,7 +131,6 @@ const Comments = ({ params }: Params) => {
         const indexOfId = currentLikes?.indexOf(loggedInUser?.id);
         if (indexOfId === undefined) return;
         currentLikes?.splice(indexOfId, 1);
-
         const updatedData = { ...data, likedByUsers: [...currentLikes] };
         await updateDoc(docRef, updatedData);
       }
@@ -234,10 +233,12 @@ const Comments = ({ params }: Params) => {
 
                     <p>{comment?.likedByUsers.length}</p>
                   </div>
-                  <ImBin
-                    onClick={(e) => deleteComment(e, comment.id)}
-                    className="text-lg cursor-pointer hover:text-red-400"
-                  />
+                  {comment.userId === loggedInUser?.id && (
+                    <ImBin
+                      onClick={(e) => deleteComment(e, comment.id)}
+                      className="text-lg cursor-pointer hover:text-red-400"
+                    />
+                  )}
                 </div>
                 <p className="text-sm text-gray-500">{comment.date}</p>
                 <p className="overflow-y-auto scrollbar-thin scrollbar-thumb-rounded scrollbar-track-rounded scrollbar-thumb-teal-500 scrollbar-track-gray-200">
