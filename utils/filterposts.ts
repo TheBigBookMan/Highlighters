@@ -1,7 +1,9 @@
 // * Function for user to select filter
 export const userFilter = async (list: Post[], selectedFilter: string) => {
   if (selectedFilter === "Most Recent") {
-    list = list;
+    list = list.sort((item1, item2) => {
+      return Number(item2.createdAt) - Number(item1.createdAt);
+    });
   } else if (selectedFilter === "Least Recent") {
     list = list.sort((item1, item2) => {
       return Number(item1.createdAt) - Number(item2.createdAt);
@@ -23,7 +25,9 @@ export const commentFilter = async (
   selectedFilter: string
 ) => {
   if (selectedFilter === "Most Recent") {
-    list = list;
+    list = list.sort((item1, item2) => {
+      return Number(item2.createdAt) - Number(item1.createdAt);
+    });
   } else if (selectedFilter === "Least Recent") {
     list = list.sort((item1, item2) => {
       return Number(item1.createdAt) - Number(item2.createdAt);
