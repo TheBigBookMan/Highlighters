@@ -217,16 +217,30 @@ const CreatePostPage = () => {
           placeholder="location..."
           value={postForm.location}
         />
-        <h1 className="font-bold text-teal-500">Timeframe:</h1>
+        <div className="flex flex-col ">
+          <h1 className="font-bold text-teal-500">Timeframe:</h1>
+          <p className="text-sm">If option invalid then it's on cooldown</p>
+        </div>
         <select
           onChange={(e) => handleChange(e)}
           value={postForm.timeframe}
           name="timeframe"
         >
-          <option value="Daily">Daily</option>
-          <option value="Weekly">Weekly</option>
-          <option value="Monthly">Monthly</option>
-          <option value="Yearly">Yearly</option>
+          <option disabled={loggedInUser?.dailyPosted === true} value="Daily">
+            Daily
+          </option>
+          <option disabled={loggedInUser?.weeklyPosted === true} value="Weekly">
+            Weekly
+          </option>
+          <option
+            disabled={loggedInUser?.monthlyPosted === true}
+            value="Monthly"
+          >
+            Monthly
+          </option>
+          <option disabled={loggedInUser?.yearlyPosted === true} value="Yearly">
+            Yearly
+          </option>
         </select>
 
         <button
