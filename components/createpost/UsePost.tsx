@@ -1,11 +1,59 @@
 "use client";
-import { useState } from "react";
+import { auth, db } from "@/utils/firebase";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
+import { useState, useEffect } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 
-const UsePost = () => {
+const UsePost = (loggedInUser: User | null) => {
+  const [user, loading] = useAuthState(auth);
+  const userId = loggedInUser?.id;
   const [selectedPost, setSelectedPost] = useState<string>("Post1");
   const [selectedTimeframe, setSelectedTimeframe] = useState<string>("Daily");
   const [selectedUploadTimeframe, setSelectedUploadTimeframe] =
     useState<string>("Weekly");
+  const [usersPosts, setUsersPosts] = useState<Post[]>([]);
+  const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
+
+  const filteredTimeframe = async () => {
+    if (usersPosts.length > 0) {
+      const filteredList = usersPosts.filter((post) => {
+        return post.timeframe === selectedTimeframe;
+      });
+
+      setFilteredPosts([...filteredList]);
+    }
+  };
+
+  const getData = async () => {
+    try {
+      const collectionRef = collection(db, "posts");
+      const q = query(collectionRef, where("googleId", "==", user?.uid));
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        let userData: any = [];
+        snapshot.docs.forEach(async (doc) => {
+          userData.push({ ...doc.data(), id: doc.id });
+        });
+        const filteredList = userData.filter((post: any) => {
+          return post.timeframe === "Daily";
+        });
+        setUsersPosts([...userData]);
+        setFilteredPosts([...filteredList]);
+      });
+      return unsubscribe;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    if (user) {
+      getData();
+    }
+  }, [user]);
+
+  useEffect(() => {
+    filteredTimeframe();
+  }, [selectedTimeframe]);
 
   return (
     <div className="shadow-xl rounded-lg flex flex-col gap-2 p-2">
@@ -28,10 +76,9 @@ const UsePost = () => {
           className="w-full"
           value={selectedPost}
         >
-          <option value="post1">Post 1</option>
-          <option value="post2">Post 2</option>
-          <option value="post3">Post 3</option>
-          <option value="post4">Post 4</option>
+          {filteredPosts?.map((post) => (
+            <option value={post.title}>{post.title}</option>
+          ))}
         </select>
         <h1 className="font-bold text-teal-500">
           Select Timeframe To Upload To:
@@ -41,9 +88,18 @@ const UsePost = () => {
           onChange={(e) => setSelectedUploadTimeframe(e.target.value)}
           className="w-full"
         >
-          <option value="Weekly">Weekly</option>
-          <option value="Monthly">Monthly</option>
-          <option value="Yearly">Yearly</option>
+          <option value="Weekly" disabled={loggedInUser?.weeklyPosted === true}>
+            Weekly
+          </option>
+          <option
+            value="Monthly"
+            disabled={loggedInUser?.monthlyPosted === true}
+          >
+            Monthly
+          </option>
+          <option value="Yearly" disabled={loggedInUser?.yearlyPosted === true}>
+            Yearly
+          </option>
         </select>
         <button className="bg-teal-500 py-2 px-4 rounded-xl text-white hover:bg-teal-600">
           Select
