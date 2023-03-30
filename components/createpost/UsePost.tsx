@@ -1,13 +1,21 @@
 "use client";
 import { auth, db } from "@/utils/firebase";
-import { collection, onSnapshot, query, where } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  onSnapshot,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import { useState, useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 const UsePost = (loggedInUser: User | null) => {
   const [user, loading] = useAuthState(auth);
   const userId = loggedInUser?.id;
-  const [selectedPost, setSelectedPost] = useState<string>("Post1");
+  const [selectedPost, setSelectedPost] = useState<string>();
   const [selectedTimeframe, setSelectedTimeframe] = useState<string>("Daily");
   const [selectedUploadTimeframe, setSelectedUploadTimeframe] =
     useState<string>("Weekly");
@@ -45,6 +53,20 @@ const UsePost = (loggedInUser: User | null) => {
     }
   };
 
+  const updatePostTimeframe = async (e) => {
+    e.preventDefault();
+    try {
+      const docRef = doc(db, "posts", selectedPost);
+      const docSnap = await getDoc(docRef);
+      if (!docSnap) return;
+      const docData = docSnap.data();
+      const updatedData = { ...docData, timeframe: selectedUploadTimeframe };
+      await updateDoc(docRef, updatedData);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     if (user) {
       getData();
@@ -74,10 +96,10 @@ const UsePost = (loggedInUser: User | null) => {
         <select
           onChange={(e) => setSelectedPost(e.target.value)}
           className="w-full"
-          value={selectedPost}
+          // value={selectedPost}
         >
           {filteredPosts?.map((post) => (
-            <option value={post.title}>{post.title}</option>
+            <option value={post.id}>{post.title}</option>
           ))}
         </select>
         <h1 className="font-bold text-teal-500">
@@ -101,7 +123,10 @@ const UsePost = (loggedInUser: User | null) => {
             Yearly
           </option>
         </select>
-        <button className="bg-teal-500 py-2 px-4 rounded-xl text-white hover:bg-teal-600">
+        <button
+          onClick={(e) => updatePostTimeframe(e)}
+          className="bg-teal-500 py-2 px-4 rounded-xl text-white hover:bg-teal-600"
+        >
           Select
         </button>
       </form>
