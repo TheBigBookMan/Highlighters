@@ -129,7 +129,7 @@ const MyPosts = () => {
                 <div className="flex items-center gap-4">
                   <div className="flex gap-1 items-center">
                     <SlSpeech className="text-xl" />
-                    <p>{post.comments}</p>
+                    <p>{post.comments.length}</p>
                   </div>
                   <div className="flex gap-1 items-center">
                     <FiThumbsUp className="text-lg " />

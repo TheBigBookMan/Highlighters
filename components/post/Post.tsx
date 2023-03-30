@@ -15,7 +15,6 @@ import { useState, useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { FiThumbsUp } from "react-icons/fi";
 import { SlSpeech } from "react-icons/sl";
-import { AiOutlineEdit } from "react-icons/ai";
 
 const Post = ({ params }: Params) => {
   const [user, loading] = useAuthState(auth);
@@ -100,9 +99,6 @@ const Post = ({ params }: Params) => {
           <div className="flex gap-2 items-center">
             <p>{postData?.timeframe} Highlight:</p>
             <h1 className="font-bold text-teal-500">{postData?.title}</h1>
-            {postData.userId === loggedInUser?.id && (
-              <AiOutlineEdit className="text-lg hover:text-teal-500 cursor-pointer" />
-            )}
           </div>
           <p>
             Posted by:{" "}
@@ -118,7 +114,7 @@ const Post = ({ params }: Params) => {
             <div className="flex gap-2">
               <div className="flex gap-1 items-center">
                 <SlSpeech className="text-xl" />
-                <p>{postData?.comments}</p>
+                <p>{postData?.comments.length}</p>
               </div>
               <div className="flex gap-1 items-center">
                 {postData?.likedByUsers.includes(loggedInUser?.id) ? (

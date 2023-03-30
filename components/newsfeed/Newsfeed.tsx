@@ -121,7 +121,7 @@ const Newsfeed = () => {
               <div className="flex gap-4">
                 <div className="flex gap-1 items-center">
                   <SlSpeech className="text-xl" />
-                  <p>{post.comments}</p>
+                  <p>{post.comments.length}</p>
                 </div>
                 <div className="flex gap-1 items-center">
                   {/* if the post has the user clicking on dislike then render the colored one- HiThumbUp */}

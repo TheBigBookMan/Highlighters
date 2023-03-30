@@ -26,7 +26,7 @@ declare global {
     userId: string;
     googleId: string;
     likedByUsers: string[];
-    comments: number;
+    comments: string[];
     userName: string;
     createdAt: Date | string;
   }

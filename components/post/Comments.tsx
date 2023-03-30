@@ -73,6 +73,21 @@ const Comments = ({ params }: Params) => {
     }
   };
 
+  const updatePostDoc = async (commentId: string) => {
+    try {
+      const docRef = doc(db, "posts", selectedPostId);
+      const docSnap = await getDoc(docRef);
+      if (docSnap) {
+        const docData = docSnap.data();
+        const updatedComments = [...docData?.comments, commentId];
+        const updatedData = { ...docData, comments: [...updatedComments] };
+        await updateDoc(docRef, updatedData);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const createComment = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (writeComment === "") {
@@ -94,6 +109,7 @@ const Comments = ({ params }: Params) => {
         likedByUsers: [],
       });
       toast.success("Post successful!✅");
+      updatePostDoc(newComment.id);
       setWriteComment("");
     } catch (err) {
       console.log(err);

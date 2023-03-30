@@ -37,7 +37,7 @@ const CreatePostPage = () => {
     date: "",
     userId: "",
     googleId: "",
-    comments: 0,
+    comments: [],
     likedByUsers: [],
     userName: "",
     createdAt: "",
