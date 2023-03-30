@@ -18,9 +18,12 @@ import {
   Timestamp,
   addDoc,
   collection,
+  doc,
+  getDoc,
   onSnapshot,
   query,
   serverTimestamp,
+  updateDoc,
   where,
 } from "firebase/firestore";
 
@@ -97,6 +100,29 @@ const CreatePostPage = () => {
     }
   };
 
+  const updateUserInfo = async () => {
+    try {
+      const docRef = doc(db, "users", loggedInUser?.id);
+      const docSnap = await getDoc(docRef);
+      if (!docSnap) return;
+      const docData = docSnap.data();
+      if (!docData) return;
+      let updatedData;
+      if (postForm.timeframe === "Daily") {
+        updatedData = { ...docData, dailyPosted: true };
+      } else if (postForm.timeframe === "Weekly") {
+        updatedData = { ...docData, weeklyPosted: true };
+      } else if (postForm.timeframe === "Monthly") {
+        updatedData = { ...docData, monthlyPosted: true };
+      } else if (postForm.timeframe === "Yearly") {
+        updatedData = { ...docData, yearlyPosted: true };
+      }
+      await updateDoc(docRef, updatedData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const createPost = async (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
@@ -116,6 +142,7 @@ const CreatePostPage = () => {
         createdAt: serverTimestamp(),
       });
       toast.success("Post successfully been created! ✅");
+      updateUserInfo();
       console.log(postForm);
     } catch (err) {
       console.log(err);

@@ -101,16 +101,14 @@ const Newsfeed = () => {
       <ul className="flex flex-wrap justify-center sm:grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {filteredPosts?.map((post, idx) => (
           <Link key={post.id + idx} href={`/post/${post?.id}`}>
-            <li
-              // onClick={() => route.push(`/post/${post?.id}`)}
-              className="flex flex-col shadow-xl rounded-lg p-2 items-center gap-2 max-h-[600px] w-[300px] group hover:bg-teal-100 cursor-pointer"
-            >
-              {/* !! might need to add in a ternary for if there is no photo and just leave blank without an image */}
-              <img
-                src={post.image}
-                alt={post.title}
-                className="w-60 h-60 rounded-lg"
-              />
+            <li className="flex flex-col shadow-xl rounded-lg p-2 items-center gap-2 max-h-[600px] w-[300px] group hover:bg-teal-100 cursor-pointer">
+              {post.image && (
+                <img
+                  src={post.image}
+                  alt={post.title}
+                  className="w-60 h-60 rounded-lg"
+                />
+              )}
               <h1 className="font-bold text-teal-500">{post.title}</h1>
               <h1>
                 Posted by:{" "}

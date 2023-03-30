@@ -14,6 +14,10 @@ declare global {
     following: string[];
     description: string;
     posts: number;
+    dailyPosted: boolean;
+    weeklyPosted: boolean;
+    monthlyPosted: boolean;
+    yearlyPosted: boolean;
   }
 
   interface FormPost {

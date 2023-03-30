@@ -32,6 +32,10 @@ const Login = () => {
         followedBy: [],
         following: [],
         googleId: user?.uid,
+        dailyPosted: false,
+        weeklyPosted: false,
+        monthlyPosted: false,
+        yearlyPosted: false,
       });
     } catch (err) {
       console.log(err);

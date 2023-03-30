@@ -118,12 +118,13 @@ const MyPosts = () => {
           {filteredPosts?.map((post) => (
             <Link key={post.id} href={`/post/${post.id}`}>
               <li className="group hover:bg-teal-100 cursor-pointer transition flex flex-col shadow-xl rounded-lg p-2 items-center gap-2 max-h-[600px] w-[300px]">
-                {/* !! might need to add in a ternary for if there is no photo and just leave blank without an image */}
-                <img
-                  src={post.image}
-                  alt={post.title}
-                  className="w-60 h-60 rounded-lg"
-                />
+                {post.image && (
+                  <img
+                    src={post.image}
+                    alt={post.title}
+                    className="w-60 h-60 rounded-lg"
+                  />
+                )}
                 <h1 className="font-bold text-teal-500">{post.title}</h1>
                 <p className="text-sm">{post.date}</p>
                 <div className="flex items-center gap-4">
