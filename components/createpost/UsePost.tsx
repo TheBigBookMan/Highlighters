@@ -99,7 +99,9 @@ const UsePost = (loggedInUser: User | null) => {
           // value={selectedPost}
         >
           {filteredPosts?.map((post) => (
-            <option value={post.id}>{post.title}</option>
+            <option key={post.id} value={post.id}>
+              {post.title}
+            </option>
           ))}
         </select>
         <h1 className="font-bold text-teal-500">

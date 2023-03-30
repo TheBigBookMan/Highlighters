@@ -149,6 +149,8 @@ const CreatePostPage = () => {
     }
   };
 
+  // ? create a useeffect that checks the date everytime the user comes to post page and then compare it with the last post from each timeframe to see if the time range is out of the timeframe range
+
   useEffect(() => {
     if (user) {
       updateLoggedInUser();
