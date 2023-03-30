@@ -110,9 +110,14 @@ const UsePost = (loggedInUser: User | null) => {
           onChange={(e) => setSelectedUploadTimeframe(e.target.value)}
           className="w-full"
         >
-          <option value="Weekly" disabled={loggedInUser?.weeklyPosted === true}>
-            Weekly
-          </option>
+          {selectedTimeframe != "Monthly" && (
+            <option
+              value="Weekly"
+              disabled={loggedInUser?.weeklyPosted === true}
+            >
+              Weekly
+            </option>
+          )}
           <option
             value="Monthly"
             disabled={loggedInUser?.monthlyPosted === true}
