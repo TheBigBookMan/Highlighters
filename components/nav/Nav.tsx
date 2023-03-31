@@ -15,6 +15,7 @@ const Nav = () => {
   const route = useRouter();
   const searchPath = usePathname();
   const [user, loading] = useAuthState(auth);
+  const [searchInput, setSearchInput] = useState<string>("");
 
   const GoogleLogout = async (e) => {
     e.preventDefault();
@@ -68,7 +69,7 @@ const Nav = () => {
               </Link>
             </li>
             <li>
-                <Link href="/friends">
+              <Link href="/friends">
                 <p
                   className={`${
                     searchPath === "/friends" && "text-teal-500 font-bold"
@@ -157,6 +158,15 @@ const Nav = () => {
                       <FaUserFriends className="text-teal-500 text-xl" />
                       <p>Friends</p>
                     </Link>
+                  </li>
+                  <li>
+                    <input
+                      onChange={(e) => setSearchInput(e.target.value)}
+                      value={searchInput}
+                      type="text"
+                      className="w-full bg-gray-200 rounded-lg pl-2"
+                      placeholder="Search..."
+                    />
                   </li>
                 </ul>
                 <div className="border-t pt-2 w-full">
