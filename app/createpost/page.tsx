@@ -181,6 +181,7 @@ const CreatePostPage = () => {
           value={postForm.title}
         />
         <h1 className="font-bold text-teal-500">Image:</h1>
+        <p className="text-sm">Click upload</p>
         <div className="flex justify-between items-center">
           <input type="file" name="image" onChange={(e) => fileChosen(e)} />
           <button

@@ -6,7 +6,14 @@ import { FiThumbsUp, FiThumbsDown } from "react-icons/fi";
 import { HiThumbDown, HiThumbUp } from "react-icons/hi";
 import { SlSpeech } from "react-icons/sl";
 import { useRouter } from "next/navigation";
-import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import {
+  collection,
+  getDoc,
+  onSnapshot,
+  orderBy,
+  query,
+  where,
+} from "firebase/firestore";
 import Link from "next/link";
 import { userFilter } from "@/utils/filterposts";
 const hardcode = ["All", "Daily", "Weekly", "Monthly", "Yearly"];
@@ -20,6 +27,7 @@ const Newsfeed = () => {
   const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
   const [timeframe, setTimeframe] = useState<string>("All");
   const [selectedFilter, setSelectedFilter] = useState<string>("Most Recent");
+  const [followingData, setFollowingData] = useState<string[]>([]);
 
   const filteredTimeframe = async () => {
     if (newsfeedData.length > 0) {
@@ -36,13 +44,35 @@ const Newsfeed = () => {
     }
   };
 
+  const getUsersFollowingList = async () => {
+    try {
+      const collectionRef = collection(db, "users");
+      const q = query(collectionRef, where("googleId", "==", user?.uid));
+
+      const unsubscribe = onSnapshot(q, (snapshot) => {
+        let userData;
+        snapshot.docs.forEach(async (doc) => {
+          userData = doc.data();
+        });
+        if (userData === undefined) return;
+        setFollowingData([...userData.following]);
+      });
+      return unsubscribe;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const getData = async () => {
     // if (loading) return;
     // if (!user) return route.push("/auth/login");
     try {
       const collectionRef = collection(db, "posts");
-      const q = query(collectionRef, orderBy("createdAt", "desc"));
-      // todo add in a query for having a friend related id
+      const q = query(
+        collectionRef,
+        where("userId", "in", followingData),
+        orderBy("createdAt", "desc")
+      );
       const unsubscribe = onSnapshot(q, (snapshot) => {
         let lists: any = [];
         snapshot.docs.forEach(async (doc) => {
@@ -59,8 +89,16 @@ const Newsfeed = () => {
   };
 
   useEffect(() => {
-    getData();
-  }, []);
+    if (user) {
+      getUsersFollowingList();
+    }
+  }, [user, loading]);
+
+  useEffect(() => {
+    if (followingData.length > 0) {
+      getData();
+    }
+  }, [followingData]);
 
   useEffect(() => {
     filteredTimeframe();
