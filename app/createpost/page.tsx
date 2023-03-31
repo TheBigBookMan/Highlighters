@@ -143,7 +143,6 @@ const CreatePostPage = () => {
       });
       toast.success("Post successfully been created! ✅");
       updateUserInfo();
-      console.log(postForm);
     } catch (err) {
       console.log(err);
     }

@@ -16,7 +16,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { dailyTimer, test } from "./../../utils/timers";
+import { dailyTimer } from "./../../utils/timers";
 
 const Login = () => {
   const route = useRouter();
@@ -38,7 +38,7 @@ const Login = () => {
         monthlyPosted: false,
         yearlyPosted: false,
       });
-      test(createdUser.id);
+      dailyTimer(createdUser.id);
     } catch (err) {
       console.log(err);
     }
