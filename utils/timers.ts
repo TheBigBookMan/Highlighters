@@ -1,24 +1,28 @@
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "./firebase";
 
-const resetDaily = async (userId: string) => {
-  console.log("RESET HERE");
+const resetTimer = async (userId: string, timeframe: string) => {
   try {
-    console.log(userId);
     const docRef = doc(db, "users", userId);
     const docSnap = await getDoc(docRef);
     if (!docSnap) return;
     const docData = docSnap.data();
-    const updatedData = { ...docData, dailyPosted: false };
+    let updatedData;
+    if (timeframe === "daily") {
+      updatedData = { ...docData, dailyPosted: false };
+    } else if (timeframe === "weekly") {
+      updatedData = { ...docData, weeklyPosted: false };
+    } else if (timeframe === "monthly") {
+      updatedData = { ...docData, monthlyPosted: false };
+    } else if (timeframe === "yearly") {
+      updatedData = { ...docData, yearlyPosted: false };
+    }
     await updateDoc(docRef, updatedData);
   } catch (err) {
     console.log(err);
   }
 };
 
-// !!!
-// !! the timers actually wont be set until i post?? Double rethink that because if its not executing the code right when creating then its fine
-//!!
 export const dailyTimer = (userId: string) => {
   const now = new Date();
   let millisTill11: any =
@@ -28,15 +32,71 @@ export const dailyTimer = (userId: string) => {
     millisTill11 += 86400000; // it's after 11:59pm, try again tomorrow
   }
   setTimeout(function () {
-    console.log("init one");
-    resetDaily(userId);
+    resetTimer(userId, "daily");
     setInterval(function () {
-      console.log("THIS HAPPENS EVERY 24 hours");
-      resetDaily(userId);
+      resetTimer(userId, "daily");
     }, 86400000); // repeat every 24 hours
     // }, 1000 * 60 * 1); // repeat every minute
   }, millisTill11);
   // }, 1000 * 60 * 1);
+};
+
+export const weeklyTimer = (userId: string) => {
+  const now = new Date();
+  const sunday = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate() + (7 - now.getDay()),
+    23,
+    59,
+    0,
+    0
+  );
+  let millisTillSunday = sunday.getTime() - now.getTime();
+  if (millisTillSunday < 0) {
+    millisTillSunday += 604800000; // it's after Sunday 11:59pm, try again next Sunday
+  }
+  setTimeout(function () {
+    resetTimer(userId, "weekly");
+    setInterval(function () {
+      resetTimer(userId, "weekly");
+    }, 604800000); // repeat every week
+  }, millisTillSunday);
+};
+
+export const monthlyTimer = (userId: string) => {
+  const now = new Date();
+  const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+  const lastDayOfMonthAt1159pm = new Date(
+    lastDayOfMonth.getFullYear(),
+    lastDayOfMonth.getMonth(),
+    lastDayOfMonth.getDate(),
+    23,
+    59,
+    0,
+    0
+  );
+  const millisTillEndOfMonth = lastDayOfMonthAt1159pm.getTime() - now.getTime();
+
+  setTimeout(function () {
+    resetTimer(userId, "monthly");
+    setInterval(function () {
+      resetTimer(userId, "monthly");
+    }, 1000 * 60 * 60 * 24 * 30); // repeat every month
+  }, millisTillEndOfMonth);
+};
+
+export const yearlyTimer = (userId: string) => {
+  const now = new Date();
+  const december31 = new Date(now.getFullYear(), 11, 31, 23, 59, 0, 0);
+  const millisTillDecember31 = december31.getTime() - now.getTime();
+
+  setTimeout(function () {
+    resetTimer(userId, "yearly");
+    setInterval(function () {
+      resetTimer(userId, "yearly");
+    }, 1000 * 60 * 60 * 24 * 365); // repeat every year
+  }, millisTillDecember31);
 };
 
 // export const test = (userId: string) => {
