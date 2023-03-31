@@ -16,6 +16,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
+import { dailyTimer, test } from "./../../utils/timers";
 
 const Login = () => {
   const route = useRouter();
@@ -25,7 +26,7 @@ const Login = () => {
   const createUserDoc = async () => {
     try {
       const collectionRef = collection(db, "users");
-      await addDoc(collectionRef, {
+      const createdUser = await addDoc(collectionRef, {
         displayName: user?.displayName,
         email: user?.email,
         image: user?.photoURL,
@@ -37,6 +38,7 @@ const Login = () => {
         monthlyPosted: false,
         yearlyPosted: false,
       });
+      test(createdUser.id);
     } catch (err) {
       console.log(err);
     }

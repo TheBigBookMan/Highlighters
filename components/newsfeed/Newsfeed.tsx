@@ -55,7 +55,7 @@ const Newsfeed = () => {
           userData = doc.data();
         });
         if (userData === undefined) return;
-        setFollowingData([...userData.following]);
+        setFollowingData([...userData?.following]);
       });
       return unsubscribe;
     } catch (err) {
