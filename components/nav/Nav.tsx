@@ -29,7 +29,7 @@ const Nav = () => {
   };
 
   return (
-    <div className="py-4 px-4 md:py-8 md:px-16 flex justify-between items-center w-auto">
+    <div className="py-4 px-4 md:py-8 md:px-8 flex gap-2 justify-between items-center w-auto">
       <Link href="/">
         <h1 className="font-lobster text-teal-500 text-xl md:text-3xl">
           Highlighters
@@ -47,6 +47,28 @@ const Nav = () => {
       ) : (
         <>
           <ul className="hidden md:flex items-center gap-4">
+            <li className="flex gap-2">
+              <input
+                onChange={(e) => setSearchInput(e.target.value)}
+                value={searchInput}
+                type="text"
+                className="w-full bg-gray-200 rounded-lg pl-2"
+                placeholder="Search..."
+              />
+              <Link
+                href={{
+                  pathname: "/search",
+                  query: { search: searchInput },
+                }}
+              >
+                <button
+                  onClick={() => setOpenNav(false)}
+                  className="bg-teal-500 py-2 w-[50px] h-[40px] px-4 rounded-xl text-white hover:bg-teal-600"
+                >
+                  <BsFillForwardFill className="text-xl " />
+                </button>
+              </Link>
+            </li>
             <li>
               <Link href="/profile">
                 <p

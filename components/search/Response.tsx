@@ -22,8 +22,6 @@ const Response = ({ search }: InputSearch) => {
     }
   };
 
-  console.log(searchResults);
-
   const getData = async () => {
     try {
       const collectionRef = collection(db, "users");
