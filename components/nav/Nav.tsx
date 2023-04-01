@@ -9,6 +9,7 @@ import { useState, useEffect } from "react";
 import { CgProfile } from "react-icons/cg";
 import { BiNews, BiEditAlt } from "react-icons/bi";
 import { FaUserFriends } from "react-icons/fa";
+import { BsFillForwardFill } from "react-icons/bs";
 
 const Nav = () => {
   const [openNav, setOpenNav] = useState<boolean>(false);
@@ -115,7 +116,7 @@ const Nav = () => {
               }`}
             />
             {openNav && (
-              <div className="flex flex-col justify-between p-2 gap-2 md:hidden absolute w-[180px] h-[240px] bg-white shadow-xl rounded-bl-xl top-16 -right-4 transition">
+              <div className="flex flex-col justify-between p-2 gap-2 md:hidden absolute w-[180px] h-[290px] bg-white shadow-xl rounded-bl-xl top-16 -right-4 transition">
                 <ul className="flex flex-col gap-4">
                   <li
                     className={`hover:bg-teal-100 p-1 pl-2 rounded-xl transition cursor-pointer ${
@@ -159,7 +160,7 @@ const Nav = () => {
                       <p>Friends</p>
                     </Link>
                   </li>
-                  <li>
+                  <li className="flex flex-col gap-2">
                     <input
                       onChange={(e) => setSearchInput(e.target.value)}
                       value={searchInput}
@@ -167,6 +168,19 @@ const Nav = () => {
                       className="w-full bg-gray-200 rounded-lg pl-2"
                       placeholder="Search..."
                     />
+                    <Link
+                      href={{
+                        pathname: "/search",
+                        query: { search: searchInput },
+                      }}
+                    >
+                      <button
+                        onClick={() => setOpenNav(false)}
+                        className="bg-teal-500 py-2 w-[50px] h-[40px] px-4 rounded-xl text-white hover:bg-teal-600"
+                      >
+                        <BsFillForwardFill className="text-xl " />
+                      </button>
+                    </Link>
                   </li>
                 </ul>
                 <div className="border-t pt-2 w-full">

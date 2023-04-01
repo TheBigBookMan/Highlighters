@@ -51,6 +51,7 @@ declare global {
   type Parameters = {
     post: string | null;
     user: string | null;
+    search: string | null;
   };
 
   interface Params {
