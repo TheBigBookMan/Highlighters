@@ -89,21 +89,23 @@ const UserPosts = ({ params }: Params) => {
             <Link key={post.id} href={`/post/${post.id}`}>
               <li className="group hover:bg-teal-100 cursor-pointer transition flex flex-col shadow-xl rounded-lg p-2 items-center gap-2 max-h-[600px] w-[300px]">
                 {/* !! might need to add in a ternary for if there is no photo and just leave blank without an image */}
-                <img src={post.image} alt={post.title} className="w-60 h-60" />
+                {post.image && (
+                  <img
+                    src={post.image}
+                    alt={post.title}
+                    className="w-60 h-60"
+                  />
+                )}
                 <h1 className="font-bold text-teal-500">{post.title}</h1>
                 <p className="text-sm">{post.date}</p>
                 <div className="flex items-center gap-4">
                   <div className="flex gap-1 items-center">
                     <SlSpeech className="text-xl" />
-                    <p>{post.comments}</p>
+                    <p>{post.comments.length}</p>
                   </div>
                   <div className="flex gap-1 items-center">
                     <FiThumbsUp className="text-lg " />
-                    <p>{post.likes}</p>
-                  </div>
-                  <div className="flex gap-1 items-center">
-                    <FiThumbsDown className="text-lg " />
-                    <p>{post.dislikes}</p>
+                    <p>{post.likedByUsers.length}</p>
                   </div>
                 </div>
                 <p className="max-h-[200px] overflow-y-auto scrollbar-thin scrollbar-thumb-rounded scrollbar-track-rounded scrollbar-thumb-teal-500 scrollbar-track-gray-200">

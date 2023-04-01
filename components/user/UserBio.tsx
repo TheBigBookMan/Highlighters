@@ -22,6 +22,8 @@ const UserBio = ({ params }: Params) => {
   const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
   const [isFollowing, setIsFollowing] = useState<boolean>(false);
   const [isFollowedBy, setIsFollowedBy] = useState<boolean>(false);
+  console.log(userId);
+  console.log(loggedInUser?.id);
 
   const getData = async () => {
     try {
@@ -166,13 +168,17 @@ const UserBio = ({ params }: Params) => {
                   Unfollow
                 </button>
               ) : (
-                <button
-                  onClick={followUser}
-                  className="flex gap-2 items-center bg-teal-500 w-[120px] py-1 px-4 rounded-xl text-white hover:bg-teal-600"
-                >
-                  <SlUserFollow />
-                  Follow
-                </button>
+                <>
+                  {userId != loggedInUser?.id && (
+                    <button
+                      onClick={followUser}
+                      className="flex gap-2 items-center bg-teal-500 w-[120px] py-1 px-4 rounded-xl text-white hover:bg-teal-600"
+                    >
+                      <SlUserFollow />
+                      Follow
+                    </button>
+                  )}
+                </>
               )}
               {isFollowedBy && <h1 className="text-sm">Follows You</h1>}
             </div>
