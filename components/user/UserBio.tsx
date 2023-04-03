@@ -22,8 +22,6 @@ const UserBio = ({ params }: Params) => {
   const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
   const [isFollowing, setIsFollowing] = useState<boolean>(false);
   const [isFollowedBy, setIsFollowedBy] = useState<boolean>(false);
-  console.log(userId);
-  console.log(loggedInUser?.id);
 
   const getData = async () => {
     try {

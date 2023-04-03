@@ -47,6 +47,7 @@ const Login = () => {
       weeklyTimer(createdUser.id);
       monthlyTimer(createdUser.id);
       yearlyTimer(createdUser.id);
+      return;
     } catch (err) {
       console.log(err);
     }

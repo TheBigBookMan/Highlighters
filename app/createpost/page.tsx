@@ -253,7 +253,7 @@ const CreatePostPage = () => {
           Create Highlight
         </button>
       </form>
-      <UsePost loggedInUser={loggedInUser} />
+      {loggedInUser && <UsePost loggedInUser={loggedInUser} />}
     </div>
   );
 };
