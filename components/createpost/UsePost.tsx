@@ -55,7 +55,6 @@ const UsePost = (loggedInUser: User | null) => {
 
   const updateUserInfo = async (userId: string) => {
     try {
-      console.log(userId);
       const docRef = doc(db, "users", userId);
       const docSnap = await getDoc(docRef);
       if (!docSnap) return;
@@ -84,6 +83,7 @@ const UsePost = (loggedInUser: User | null) => {
       const docSnap = await getDoc(docRef);
       if (!docSnap) return;
       const docData = docSnap.data();
+      if (!docData) return;
       const updatedData = { ...docData, timeframe: selectedUploadTimeframe };
       await updateDoc(docRef, updatedData);
       toast.success("Post successfully updated! ✅");
@@ -107,8 +107,6 @@ const UsePost = (loggedInUser: User | null) => {
   useEffect(() => {
     filteredTimeframe();
   }, [selectedTimeframe]);
-
-  console.log(loggedInUser);
 
   return (
     <div className="shadow-xl rounded-lg flex flex-col gap-2 p-2">

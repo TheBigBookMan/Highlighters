@@ -152,7 +152,7 @@ const Following = () => {
           className="max-w-[600px] h-[80px] border-b p-2 py-4 flex justify-between items-center gap-1"
         >
           <Link href={`/user/${user.id}`} key={user.id}>
-            <div className="flex w-5/6 gap-1">
+            <div className="flex gap-1">
               <img
                 src={user.image}
                 alt={user.displayName}
