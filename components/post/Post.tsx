@@ -22,10 +22,11 @@ const Post = ({ params }: Params) => {
   const [postData, setPostData] = useState<Post | null>(null);
   const [loggedInUser, setLoggedInUser] = useState<User | undefined>();
 
-  const likeButton = async (e) => {
+  const likeButton = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
       if (!postData) return;
+      if (!postId) return;
       const docRef = doc(db, "posts", postId);
       const updateLikes = [...postData?.likedByUsers, loggedInUser?.id];
 
@@ -36,9 +37,11 @@ const Post = ({ params }: Params) => {
     }
   };
 
-  const unlikeButton = async (e) => {
+  const unlikeButton = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
+      if (!postId) return;
+      if (!loggedInUser) return;
       const docRef = doc(db, "posts", postId);
       const currentLikes = postData?.likedByUsers;
       if (!currentLikes) return;
@@ -55,6 +58,7 @@ const Post = ({ params }: Params) => {
   useEffect(() => {
     const getData = async () => {
       try {
+        if (!postId) return;
         const docRef = doc(db, "posts", postId);
         const unsubscribe = onSnapshot(docRef, (snapshot) => {
           let postData = snapshot.data();
@@ -73,7 +77,7 @@ const Post = ({ params }: Params) => {
               userName: postData.userName,
               createdAt: postData.createdAt,
               friends: postData.friends,
-              id: postData.id,
+              id: postId,
             });
           }
         });
@@ -151,15 +155,13 @@ const Post = ({ params }: Params) => {
               </div>
               <div className="flex gap-1 items-center">
                 {postData?.likedByUsers.includes(loggedInUser?.id) ? (
-                  <FiThumbsUp
-                    onClick={unlikeButton}
-                    className="text-lg cursor-pointer text-teal-500 hover:text-black"
-                  />
+                  <button onClick={unlikeButton}>
+                    <FiThumbsUp className="text-lg cursor-pointer text-teal-500 hover:text-black" />
+                  </button>
                 ) : (
-                  <FiThumbsUp
-                    onClick={likeButton}
-                    className="text-lg cursor-pointer hover:text-teal-500"
-                  />
+                  <button onClick={likeButton}>
+                    <FiThumbsUp className="text-lg cursor-pointer hover:text-teal-500" />
+                  </button>
                 )}
 
                 <p>{postData?.likedByUsers.length}</p>

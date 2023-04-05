@@ -35,7 +35,7 @@ const MyPosts = () => {
         const collectionRef = collection(db, "posts");
         const q = query(
           collectionRef,
-          where("googleId", "==", user.uid),
+          where("googleId", "==", user?.uid),
           orderBy("createdAt", "desc")
         );
         const unsubscribe = onSnapshot(q, (snapshot) => {

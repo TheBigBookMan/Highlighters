@@ -18,7 +18,7 @@ const Nav = () => {
   const [user, loading] = useAuthState(auth);
   const [searchInput, setSearchInput] = useState<string>("");
 
-  const GoogleLogout = async (e) => {
+  const GoogleLogout = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
       await signOut(auth);
@@ -131,7 +131,7 @@ const Nav = () => {
             </Link>
             <img
               onClick={() => setOpenNav(!openNav)}
-              src={user.photoURL}
+              src={user?.photoURL}
               alt="profile pic"
               className={`w-12 h-12 rounded-full cursor-pointer shadow-xl hover:border-2 hover:border-teal-500 ${
                 openNav && "border-2 border-teal-500 hover:border-none"

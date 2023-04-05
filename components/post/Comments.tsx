@@ -32,6 +32,7 @@ const Comments = ({ params }: Params) => {
 
   const updatePostDoc = async (commentId: string) => {
     try {
+      if (!selectedPostId) return;
       const docRef = doc(db, "posts", selectedPostId);
       const docSnap = await getDoc(docRef);
       if (docSnap) {
@@ -45,7 +46,7 @@ const Comments = ({ params }: Params) => {
     }
   };
 
-  const createComment = async (e: MouseEvent<HTMLButtonElement>) => {
+  const createComment = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (writeComment === "") {
       toast.error("Need to input a comment.❌");
@@ -74,7 +75,7 @@ const Comments = ({ params }: Params) => {
   };
 
   const likeButton = async (
-    e: MouseEvent<HTMLButtonElement>,
+    e: React.MouseEvent<HTMLButtonElement>,
     commentId: string
   ) => {
     e.preventDefault();
@@ -93,7 +94,10 @@ const Comments = ({ params }: Params) => {
     }
   };
 
-  const unlikeButton = async (e, commentId: string) => {
+  const unlikeButton = async (
+    e: React.MouseEvent<HTMLButtonElement>,
+    commentId: string
+  ) => {
     e.preventDefault();
     try {
       const docRef = doc(db, "comments", commentId.id);
@@ -113,7 +117,10 @@ const Comments = ({ params }: Params) => {
     }
   };
 
-  const deleteComment = async (e, commentId: string) => {
+  const deleteComment = async (
+    e: React.MouseEvent<HTMLButtonElement>,
+    commentId: string
+  ) => {
     e.preventDefault();
     try {
       const docRef = doc(db, "comments", commentId.id);
@@ -248,24 +255,21 @@ const Comments = ({ params }: Params) => {
                   </h1>
                   <div className="flex gap-1 items-center">
                     {comment?.likedByUsers.includes(loggedInUser?.id) ? (
-                      <FiThumbsUp
-                        onClick={(e) => unlikeButton(e, comment.id)}
-                        className="text-lg cursor-pointer text-teal-500 hover:text-black"
-                      />
+                      <button onClick={(e) => unlikeButton(e, comment.id)}>
+                        <FiThumbsUp className="text-lg cursor-pointer text-teal-500 hover:text-black" />
+                      </button>
                     ) : (
-                      <FiThumbsUp
-                        onClick={(e) => likeButton(e, comment.id)}
-                        className="text-lg cursor-pointer hover:text-teal-500"
-                      />
+                      <button onClick={(e) => likeButton(e, comment.id)}>
+                        <FiThumbsUp className="text-lg cursor-pointer hover:text-teal-500" />
+                      </button>
                     )}
 
                     <p>{comment?.likedByUsers.length}</p>
                   </div>
                   {comment.userId === loggedInUser?.id && (
-                    <ImBin
-                      onClick={(e) => deleteComment(e, comment.id)}
-                      className="text-lg cursor-pointer hover:text-red-400"
-                    />
+                    <button onClick={(e) => deleteComment(e, comment.id)}>
+                      <ImBin className="text-lg cursor-pointer hover:text-red-400" />
+                    </button>
                   )}
                 </div>
                 <p className="text-sm text-gray-500">{comment.date}</p>

@@ -1,11 +1,5 @@
 "use client";
-import {
-  ChangeEvent,
-  FormEvent,
-  MouseEventHandler,
-  useEffect,
-  useState,
-} from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import UsePost from "@/components/createpost/UsePost";
 
@@ -66,7 +60,7 @@ const CreatePostPage = () => {
     }
   };
 
-  const getImageURL = async (e) => {
+  const getImageURL = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (imageChosen) {
       try {
@@ -110,7 +104,7 @@ const CreatePostPage = () => {
     }
   };
 
-  const createPost = async (e: MouseEvent<HTMLButtonElement>) => {
+  const createPost = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
       if (!postForm.title) {

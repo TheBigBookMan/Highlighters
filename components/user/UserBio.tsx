@@ -25,6 +25,7 @@ const UserBio = ({ params }: Params) => {
 
   const followedByUser = async () => {
     try {
+      if(!userId) return;
       const docRef = doc(db, "users", userId);
       const docSnap = await getDoc(docRef);
       const userInfo = docSnap.data();
@@ -41,6 +42,7 @@ const UserBio = ({ params }: Params) => {
 
   const unfollowedByUser = async () => {
     try {
+      if(!userId) return;
       const docRef = doc(db, "users", userId);
       const docSnap = await getDoc(docRef);
       const userInfo = docSnap.data();
@@ -54,9 +56,10 @@ const UserBio = ({ params }: Params) => {
     }
   };
 
-  const followUser = async (e: { preventDefault: () => void }) => {
+  const followUser = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
+      if(!loggedInUser) return;
       const docRef = doc(db, "users", loggedInUser?.id);
       const docSnap = await getDoc(docRef);
       const userInfo = docSnap.data();
@@ -72,9 +75,10 @@ const UserBio = ({ params }: Params) => {
     }
   };
 
-  const unfollowUser = async (e) => {
+  const unfollowUser = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
+      if(!loggedInUser) return;
       const docRef = doc(db, "users", loggedInUser?.id);
       const docSnap = await getDoc(docRef);
       const userInfo = docSnap.data();
@@ -138,6 +142,7 @@ const UserBio = ({ params }: Params) => {
 
     const getData = async () => {
       try {
+        if(!userId) return;
         const docRef = doc(db, "users", userId);
         const docSnap = await getDoc(docRef);
         if (docSnap) {

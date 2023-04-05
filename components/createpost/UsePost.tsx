@@ -45,9 +45,12 @@ const UsePost = (loggedInUser: User | null) => {
     }
   };
 
-  const updatePostTimeframe = async (e) => {
+  const updatePostTimeframe = async (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
     e.preventDefault();
     try {
+      if (!selectedPost) return;
       const docRef = doc(db, "posts", selectedPost);
       const docSnap = await getDoc(docRef);
       if (!docSnap) return;
@@ -61,10 +64,6 @@ const UsePost = (loggedInUser: User | null) => {
       console.log(err);
       toast.error("Post not successful, please try again.");
     }
-  };
-
-  const selectPostToUpdate = (e) => {
-    setSelectedPost(e.target.value);
   };
 
   useEffect(() => {
@@ -126,7 +125,7 @@ const UsePost = (loggedInUser: User | null) => {
           </select>
           <h1 className="font-bold text-teal-500">Select Post:</h1>
           <select
-            onChange={(e) => selectPostToUpdate(e)}
+            onChange={(e) => setSelectedPost(e.target.value)}
             className="w-full"
             value={selectedPost}
           >

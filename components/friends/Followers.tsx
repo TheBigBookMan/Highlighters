@@ -50,11 +50,12 @@ const Followers = () => {
   };
 
   const followUser = async (
-    e: { preventDefault: () => void },
+    e: React.MouseEvent<HTMLButtonElement>,
     userId: string
   ) => {
     e.preventDefault();
     try {
+      if(!loggedInUser) return;
       const docRef = doc(db, "users", loggedInUser?.id);
       const docSnap = await getDoc(docRef);
       const userInfo = docSnap.data();
@@ -71,11 +72,12 @@ const Followers = () => {
   };
 
   const unfollowUser = async (
-    e: { preventDefault: () => void },
+    e: React.MouseEvent<HTMLButtonElement>,
     userId: string
   ) => {
     e.preventDefault();
     try {
+      if(!loggedInUser) return ;
       const docRef = doc(db, "users", loggedInUser?.id);
       const docSnap = await getDoc(docRef);
       const userInfo = docSnap.data();

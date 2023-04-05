@@ -22,10 +22,11 @@ const Bio = () => {
   const [description, setDescription] = useState<string>("");
   const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
 
-  const addDescription = async (e) => {
+  const addDescription = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     //? add to user collection description
     try {
+      if (!loggedInUser) return;
       const docRef = doc(db, "users", loggedInUser?.id);
       const updatedData = { ...loggedInUser, description };
       await updateDoc(docRef, updatedData);
@@ -96,18 +97,18 @@ const Bio = () => {
                 <h1 className="font-bold text-teal-500">{user?.displayName}</h1>
               </div>
               {editMode ? (
-                <TiTickOutline
+                <button
                   onClick={(e) => {
                     setEditMode(false);
                     addDescription(e);
                   }}
-                  className="text-teal-500 hover:bg-gray-200 hover:text-3xl cursor-pointer hover:rounded-xl text-2xl"
-                />
+                >
+                  <TiTickOutline className="text-teal-500 hover:bg-gray-200 hover:text-3xl cursor-pointer hover:rounded-xl text-2xl" />
+                </button>
               ) : (
-                <BiEditAlt
-                  onClick={() => setEditMode(true)}
-                  className="text-teal-500 hover:bg-gray-200 hover:text-3xl cursor-pointer hover:rounded-xl text-2xl"
-                />
+                <button onClick={() => setEditMode(true)}>
+                  <BiEditAlt className="text-teal-500 hover:bg-gray-200 hover:text-3xl cursor-pointer hover:rounded-xl text-2xl" />
+                </button>
               )}
             </div>
             {!editMode ? (
