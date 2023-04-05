@@ -26,54 +26,53 @@ const MyPosts = () => {
   const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
   const [selectedFilter, setSelectedFilter] = useState<string>("Most Recent");
 
-  const filteredTimeframe = async () => {
-    if (posts.length > 0) {
-      const filteredList = posts.filter((post) => {
-        return post.timeframe === timeframe;
-      });
-      const returnFilteredLists = await userFilter(
-        filteredList,
-        selectedFilter
-      );
-      setFilteredPosts([...returnFilteredLists]);
-    }
-  };
-
-  const getData = async () => {
-    if (loading) return;
-    if (!user) return route.push("/auth");
-
-    try {
-      const collectionRef = collection(db, "posts");
-      const q = query(
-        collectionRef,
-        where("googleId", "==", user.uid),
-        orderBy("createdAt", "desc")
-      );
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        let lists: any = [];
-        snapshot.docs.forEach(async (doc) => {
-          await lists.push({ ...doc.data(), id: doc.id });
-        });
-        const filteredList = lists.filter((post: any) => {
-          return post.timeframe === "Daily";
-        });
-        setPosts([...lists]);
-        setFilteredPosts([...filteredList]);
-      });
-      return unsubscribe;
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   useEffect(() => {
+    const getData = async () => {
+      if (loading) return;
+      // if (!user) return route.push("/auth");
+
+      try {
+        const collectionRef = collection(db, "posts");
+        const q = query(
+          collectionRef,
+          where("googleId", "==", user.uid),
+          orderBy("createdAt", "desc")
+        );
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+          let lists: any = [];
+          snapshot.docs.forEach(async (doc) => {
+            await lists.push({ ...doc.data(), id: doc.id });
+          });
+          const filteredList = lists.filter((post: any) => {
+            return post.timeframe === "Daily";
+          });
+          setPosts([...lists]);
+          setFilteredPosts([...filteredList]);
+        });
+        return unsubscribe;
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
     getData();
-  }, [user, getData]);
+  }, [user, loading]);
 
   useEffect(() => {
+    const filteredTimeframe = async () => {
+      if (posts.length > 0) {
+        const filteredList = posts.filter((post) => {
+          return post.timeframe === timeframe;
+        });
+        const returnFilteredLists = await userFilter(
+          filteredList,
+          selectedFilter
+        );
+        setFilteredPosts([...returnFilteredLists]);
+      }
+    };
     filteredTimeframe();
-  }, [timeframe, selectedFilter, filteredTimeframe]);
+  }, [timeframe, selectedFilter, posts]);
 
   return (
     <div className="shadow-xl rounded-lg h-full w-full p-4 flex flex-col gap-4">

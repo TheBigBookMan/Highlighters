@@ -29,80 +29,77 @@ const Newsfeed = () => {
   const [selectedFilter, setSelectedFilter] = useState<string>("Most Recent");
   const [followingData, setFollowingData] = useState<string[]>([]);
 
-  const filteredTimeframe = async () => {
-    if (newsfeedData.length > 0) {
-      if (timeframe === "All") {
-        const userList = await userFilter(newsfeedData, selectedFilter);
-        setFilteredPosts([...userList]);
-      } else {
-        const filteredList = newsfeedData.filter((post) => {
-          return post.timeframe === timeframe;
-        });
-        const userList = await userFilter(filteredList, selectedFilter);
-        setFilteredPosts([...userList]);
-      }
-    }
-  };
-
-  const getUsersFollowingList = async () => {
-    try {
-      const collectionRef = collection(db, "users");
-      const q = query(collectionRef, where("googleId", "==", user?.uid));
-
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        let userData;
-        snapshot.docs.forEach(async (doc) => {
-          userData = doc.data();
-        });
-        if (userData === undefined) return;
-        setFollowingData([...userData?.following]);
-      });
-      return unsubscribe;
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const getData = async () => {
-    // if (loading) return;
-    // if (!user) return route.push("/auth/login");
-    try {
-      const collectionRef = collection(db, "posts");
-      const q = query(
-        collectionRef,
-        where("userId", "in", followingData),
-        orderBy("createdAt", "desc")
-      );
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        let lists: any = [];
-        snapshot.docs.forEach(async (doc) => {
-          await lists.push({ ...doc.data(), id: doc.id });
-        });
-
-        setNewsfeedData([...lists]);
-        setFilteredPosts([...lists]);
-      });
-      return unsubscribe;
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   useEffect(() => {
+    const getUsersFollowingList = async () => {
+      try {
+        const collectionRef = collection(db, "users");
+        const q = query(collectionRef, where("googleId", "==", user?.uid));
+
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+          let userData;
+          snapshot.docs.forEach(async (doc) => {
+            userData = doc.data();
+          });
+          if (!userData) return;
+          setFollowingData([...userData?.following]);
+        });
+        return unsubscribe;
+      } catch (err) {
+        console.log(err);
+      }
+    };
     if (user) {
       getUsersFollowingList();
     }
   }, [user, loading]);
 
   useEffect(() => {
+    const getData = async () => {
+      // if (loading) return;
+      // if (!user) return route.push("/auth/login");
+      try {
+        const collectionRef = collection(db, "posts");
+        const q = query(
+          collectionRef,
+          where("userId", "in", followingData),
+          orderBy("createdAt", "desc")
+        );
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+          let lists: any = [];
+          snapshot.docs.forEach(async (doc) => {
+            await lists.push({ ...doc.data(), id: doc.id });
+          });
+
+          setNewsfeedData([...lists]);
+          setFilteredPosts([...lists]);
+        });
+        return unsubscribe;
+      } catch (err) {
+        console.log(err);
+      }
+    };
     if (followingData.length > 0) {
       getData();
     }
   }, [followingData]);
 
   useEffect(() => {
+    const filteredTimeframe = async () => {
+      if (newsfeedData.length > 0) {
+        if (timeframe === "All") {
+          const userList = await userFilter(newsfeedData, selectedFilter);
+          setFilteredPosts([...userList]);
+        } else {
+          const filteredList = newsfeedData.filter((post) => {
+            return post.timeframe === timeframe;
+          });
+          const userList = await userFilter(filteredList, selectedFilter);
+          setFilteredPosts([...userList]);
+        }
+      }
+    };
     filteredTimeframe();
-  }, [timeframe, selectedFilter]);
+  }, [timeframe, selectedFilter, newsfeedData]);
 
   return (
     <div className="shadow-xl rounded-lg h-full w-full p-4 flex flex-col gap-4">

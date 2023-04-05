@@ -30,62 +30,6 @@ const Comments = ({ params }: Params) => {
   const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
   const [selectedFilter, setSelectedFilter] = useState<string>("Most Recent");
 
-  const getData = async () => {
-    try {
-      const collectionRef = collection(db, "comments");
-      const q = query(
-        collectionRef,
-        where("postId", "==", selectedPostId),
-        orderBy("createdAt", "desc")
-      );
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        let lists: any = [];
-        snapshot.docs.forEach(async (doc) => {
-          await lists.push({ ...doc.data(), id: doc });
-        });
-        setComments([...lists]);
-      });
-      return unsubscribe;
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const filterSelection = async () => {
-    const returnedList = await commentFilter(comments, selectedFilter);
-    setComments([...returnedList]);
-  };
-
-  const updateUser = async () => {
-    try {
-      const collectionUsersRef = collection(db, "users");
-      const q = query(collectionUsersRef, where("googleId", "==", user?.uid));
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        let userData;
-        snapshot.docs.forEach(async (doc) => {
-          userData = doc.data();
-          setLoggedInUser({
-            dailyPosted: userData.dailyPosted,
-            description: userData.description,
-            displayName: userData.displayName,
-            email: userData.email,
-            followedBy: userData.followedBy,
-            following: userData.following,
-            googleId: userData.googleId,
-            id: userData.id,
-            image: userData.image,
-            monthlyPosted: userData.monthlyPosted,
-            weeklyPosted: userData.weeklyPosted,
-            yearlyPosted: userData.yearlyPosted,
-          });
-        });
-      });
-      return unsubscribe;
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   const updatePostDoc = async (commentId: string) => {
     try {
       const docRef = doc(db, "posts", selectedPostId);
@@ -181,15 +125,70 @@ const Comments = ({ params }: Params) => {
   };
 
   useEffect(() => {
+    const filterSelection = async () => {
+      const returnedList = await commentFilter(comments, selectedFilter);
+      setComments([...returnedList]);
+    };
     filterSelection();
   }, [selectedFilter]);
 
   useEffect(() => {
+    const getData = async () => {
+      try {
+        const collectionRef = collection(db, "comments");
+        const q = query(
+          collectionRef,
+          where("postId", "==", selectedPostId),
+          orderBy("createdAt", "desc")
+        );
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+          let lists: any = [];
+          snapshot.docs.forEach(async (doc) => {
+            await lists.push({ ...doc.data(), id: doc });
+          });
+          setComments([...lists]);
+        });
+        return unsubscribe;
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    const updateUser = async () => {
+      try {
+        const collectionUsersRef = collection(db, "users");
+        const q = query(collectionUsersRef, where("googleId", "==", user?.uid));
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+          let userData;
+          snapshot.docs.forEach(async (doc) => {
+            userData = doc.data();
+            setLoggedInUser({
+              dailyPosted: userData.dailyPosted,
+              description: userData.description,
+              displayName: userData.displayName,
+              email: userData.email,
+              followedBy: userData.followedBy,
+              following: userData.following,
+              googleId: userData.googleId,
+              id: userData.id,
+              image: userData.image,
+              monthlyPosted: userData.monthlyPosted,
+              weeklyPosted: userData.weeklyPosted,
+              yearlyPosted: userData.yearlyPosted,
+            });
+          });
+        });
+        return unsubscribe;
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
     getData();
     if (user) {
       updateUser();
     }
-  }, [user]);
+  }, [user, selectedPostId]);
 
   return (
     <div className="shadow-xl rounded-lg max-w-[600px]  p-2 flex flex-col gap-2">

@@ -44,6 +44,7 @@ const CreatePostPage = () => {
     likedByUsers: [],
     userName: "",
     createdAt: "",
+    friends: "",
   });
 
   const handleChange = (
@@ -54,40 +55,6 @@ const CreatePostPage = () => {
   ) => {
     e.preventDefault();
     setPostForm({ ...postForm, [e.target.name]: e.target.value });
-  };
-  console.log(loggedInUser);
-  const updateLoggedInUser = async () => {
-    try {
-      const collectionRef = collection(db, "users");
-      const q = query(collectionRef, where("googleId", "==", user?.uid));
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        let userData;
-        snapshot.docs.forEach(async (doc) => {
-          userData = doc.data();
-          if (userData) {
-            console.log(userData);
-            // setLoggedInUser({ ...userData });
-            setLoggedInUser({
-              dailyPosted: userData.dailyPosted,
-              description: userData.description,
-              displayName: userData.displayName,
-              email: userData.email,
-              followedBy: userData.followedBy,
-              following: userData.following,
-              googleId: userData.googleId,
-              id: userData.id,
-              image: userData.image,
-              monthlyPosted: userData.monthlyPosted,
-              weeklyPosted: userData.weeklyPosted,
-              yearlyPosted: userData.yearlyPosted,
-            });
-          }
-        });
-      });
-      return unsubscribe;
-    } catch (err) {
-      console.log(err);
-    }
   };
 
   const fileChosen = (e: ChangeEvent<HTMLInputElement>) => {
@@ -171,10 +138,41 @@ const CreatePostPage = () => {
   // ? create a useeffect that checks the date everytime the user comes to post page and then compare it with the last post from each timeframe to see if the time range is out of the timeframe range
 
   useEffect(() => {
+    const updateLoggedInUser = async () => {
+      try {
+        const collectionRef = collection(db, "users");
+        const q = query(collectionRef, where("googleId", "==", user?.uid));
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+          let userData;
+          snapshot.docs.forEach(async (doc) => {
+            userData = doc.data();
+            if (userData) {
+              setLoggedInUser({
+                dailyPosted: userData.dailyPosted,
+                description: userData.description,
+                displayName: userData.displayName,
+                email: userData.email,
+                followedBy: userData.followedBy,
+                following: userData.following,
+                googleId: userData.googleId,
+                id: userData.id,
+                image: userData.image,
+                monthlyPosted: userData.monthlyPosted,
+                weeklyPosted: userData.weeklyPosted,
+                yearlyPosted: userData.yearlyPosted,
+              });
+            }
+          });
+        });
+        return unsubscribe;
+      } catch (err) {
+        console.log(err);
+      }
+    };
     if (user) {
       updateLoggedInUser();
     }
-  }, [user, updateLoggedInUser]);
+  }, [user]);
 
   return (
     <div className="p-2 flex flex-col gap-2 max-w-[700px]  mx-auto">

@@ -28,55 +28,6 @@ const Login = () => {
   const [user, loading] = useAuthState(auth);
   const googleProvider = new GoogleAuthProvider();
 
-  const createUserDoc = async () => {
-    try {
-      const collectionRef = collection(db, "users");
-      const createdUser = await addDoc(collectionRef, {
-        displayName: user?.displayName,
-        email: user?.email,
-        image: user?.photoURL,
-        followedBy: [],
-        following: [],
-        googleId: user?.uid,
-        dailyPosted: false,
-        weeklyPosted: false,
-        monthlyPosted: false,
-        yearlyPosted: false,
-      });
-      dailyTimer(createdUser.id);
-      weeklyTimer(createdUser.id);
-      monthlyTimer(createdUser.id);
-      yearlyTimer(createdUser.id);
-      return;
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const checkUser = async () => {
-    try {
-      const collectionRef = collection(db, "users");
-      const q = query(collectionRef, where("googleId", "==", user?.uid));
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        let userData;
-        snapshot.docs.forEach(async (doc) => {
-          userData = doc.data();
-          console.log(userData);
-        });
-
-        if (userData) {
-          return;
-        } else {
-          createUserDoc();
-        }
-      });
-
-      return unsubscribe;
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   const GoogleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
@@ -87,13 +38,62 @@ const Login = () => {
   };
 
   useEffect(() => {
+    const createUserDoc = async () => {
+      try {
+        const collectionRef = collection(db, "users");
+        const createdUser = await addDoc(collectionRef, {
+          displayName: user?.displayName,
+          email: user?.email,
+          image: user?.photoURL,
+          followedBy: [],
+          following: [],
+          googleId: user?.uid,
+          dailyPosted: false,
+          weeklyPosted: false,
+          monthlyPosted: false,
+          yearlyPosted: false,
+        });
+        dailyTimer(createdUser.id);
+        weeklyTimer(createdUser.id);
+        monthlyTimer(createdUser.id);
+        yearlyTimer(createdUser.id);
+        return;
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    const checkUser = async () => {
+      try {
+        const collectionRef = collection(db, "users");
+        const q = query(collectionRef, where("googleId", "==", user?.uid));
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+          let userData;
+          snapshot.docs.forEach(async (doc) => {
+            userData = doc.data();
+            console.log(userData);
+          });
+
+          if (userData) {
+            return;
+          } else {
+            createUserDoc();
+          }
+        });
+
+        return unsubscribe;
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
     if (user) {
       checkUser();
       route.push("/");
     } else {
       console.log("Login");
     }
-  }, [route, user, checkUser]);
+  }, [route, user]);
 
   return (
     <div className="shadow-xl mt-32 p-10 text-gray-700 rounded-lg">

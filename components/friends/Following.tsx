@@ -18,60 +18,6 @@ const Following = () => {
   const [followingData, setFollowingData] = useState<User[]>([]);
   const [loggedInUser, setLoggedInUser] = useState<User>();
 
-  const updateLoggedInUser = async () => {
-    try {
-      const collectionRef = collection(db, "users");
-      const q = query(collectionRef, where("googleId", "==", user?.uid));
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        let userData;
-        snapshot.docs.forEach(async (doc) => {
-          userData = doc.data();
-          setLoggedInUser({
-            dailyPosted: userData.dailyPosted,
-            description: userData.description,
-            displayName: userData.displayName,
-            email: userData.email,
-            followedBy: userData.followedBy,
-            following: userData.following,
-            googleId: userData.googleId,
-            id: userData.id,
-            image: userData.image,
-            monthlyPosted: userData.monthlyPosted,
-            weeklyPosted: userData.weeklyPosted,
-            yearlyPosted: userData.yearlyPosted,
-          });
-        });
-      });
-
-      return unsubscribe;
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const getData = async () => {
-    // if (loading) return;
-    // if (!user) return route.push("/auth/login");
-    try {
-      const collectionRef = collection(db, "users");
-      const q = query(
-        collectionRef,
-        where("followedBy", "array-contains", loggedInUser?.id)
-      );
-      // todo add in a query for having a friend related id
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        let lists: any = [];
-        snapshot.docs.forEach(async (doc) => {
-          await lists.push({ ...doc.data(), id: doc.id });
-        });
-
-        setFollowingData([...lists]);
-      });
-      return unsubscribe;
-    } catch (err) {
-      console.log(err);
-    }
-  };
   const followedByUser = async (userId: string) => {
     try {
       const docRef = doc(db, "users", userId);
@@ -148,14 +94,67 @@ const Following = () => {
   };
 
   useEffect(() => {
+    const updateLoggedInUser = async () => {
+      try {
+        const collectionRef = collection(db, "users");
+        const q = query(collectionRef, where("googleId", "==", user?.uid));
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+          let userData;
+          snapshot.docs.forEach(async (doc) => {
+            userData = doc.data();
+            setLoggedInUser({
+              dailyPosted: userData.dailyPosted,
+              description: userData.description,
+              displayName: userData.displayName,
+              email: userData.email,
+              followedBy: userData.followedBy,
+              following: userData.following,
+              googleId: userData.googleId,
+              id: userData.id,
+              image: userData.image,
+              monthlyPosted: userData.monthlyPosted,
+              weeklyPosted: userData.weeklyPosted,
+              yearlyPosted: userData.yearlyPosted,
+            });
+          });
+        });
+
+        return unsubscribe;
+      } catch (err) {
+        console.log(err);
+      }
+    };
     updateLoggedInUser();
-  }, [user, updateLoggedInUser]);
+  }, [user]);
 
   useEffect(() => {
+    const getData = async () => {
+      // if (loading) return;
+      // if (!user) return route.push("/auth/login");
+      try {
+        const collectionRef = collection(db, "users");
+        const q = query(
+          collectionRef,
+          where("followedBy", "array-contains", loggedInUser?.id)
+        );
+        // todo add in a query for having a friend related id
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+          let lists: any = [];
+          snapshot.docs.forEach(async (doc) => {
+            await lists.push({ ...doc.data(), id: doc.id });
+          });
+
+          setFollowingData([...lists]);
+        });
+        return unsubscribe;
+      } catch (err) {
+        console.log(err);
+      }
+    };
     if (loggedInUser) {
       getData();
     }
-  }, [loggedInUser, getData]);
+  }, [loggedInUser]);
 
   return (
     <ul className="flex flex-col gap-2">

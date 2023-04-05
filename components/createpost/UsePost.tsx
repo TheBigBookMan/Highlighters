@@ -22,37 +22,6 @@ const UsePost = (loggedInUser: User | null) => {
   const [usersPosts, setUsersPosts] = useState<Post[]>([]);
   const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
 
-  const filteredTimeframe = async () => {
-    if (usersPosts.length > 0) {
-      const filteredList = usersPosts.filter((post) => {
-        return post.timeframe === selectedTimeframe;
-      });
-
-      setFilteredPosts([...filteredList]);
-    }
-  };
-
-  const getData = async () => {
-    try {
-      const collectionRef = collection(db, "posts");
-      const q = query(collectionRef, where("googleId", "==", user?.uid));
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        let userData: any = [];
-        snapshot.docs.forEach(async (doc) => {
-          userData.push({ ...doc.data(), id: doc.id });
-        });
-        const filteredList = userData.filter((post: any) => {
-          return post.timeframe === "Daily";
-        });
-        setUsersPosts([...userData]);
-        setFilteredPosts([...filteredList]);
-      });
-      return unsubscribe;
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   const updateUserInfo = async (userId: string) => {
     try {
       const docRef = doc(db, "users", userId);
@@ -99,14 +68,44 @@ const UsePost = (loggedInUser: User | null) => {
   };
 
   useEffect(() => {
+    const getData = async () => {
+      try {
+        const collectionRef = collection(db, "posts");
+        const q = query(collectionRef, where("googleId", "==", user?.uid));
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+          let userData: any = [];
+          snapshot.docs.forEach(async (doc) => {
+            userData.push({ ...doc.data(), id: doc.id });
+          });
+          const filteredList = userData.filter((post: any) => {
+            return post.timeframe === "Daily";
+          });
+          setUsersPosts([...userData]);
+          setFilteredPosts([...filteredList]);
+        });
+        return unsubscribe;
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
     if (loggedInUser) {
       getData();
     }
-  }, [loggedInUser, getData]);
+  }, [loggedInUser, user]);
 
   useEffect(() => {
+    const filteredTimeframe = async () => {
+      if (usersPosts.length > 0) {
+        const filteredList = usersPosts.filter((post) => {
+          return post.timeframe === selectedTimeframe;
+        });
+
+        setFilteredPosts([...filteredList]);
+      }
+    };
     filteredTimeframe();
-  }, [selectedTimeframe, filteredTimeframe]);
+  }, [selectedTimeframe, usersPosts]);
 
   return (
     <div className="shadow-xl rounded-lg flex flex-col gap-2 p-2">

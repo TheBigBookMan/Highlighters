@@ -19,60 +19,13 @@ import { SlSpeech } from "react-icons/sl";
 const Post = ({ params }: Params) => {
   const [user, loading] = useAuthState(auth);
   const postId = params?.post;
-  const route = useRouter();
   const [postData, setPostData] = useState<Post | null>(null);
   const [loggedInUser, setLoggedInUser] = useState<User | undefined>();
-
-  const getData = async () => {
-    try {
-      const docRef = doc(db, "posts", postId);
-      const unsubscribe = onSnapshot(docRef, (snapshot) => {
-        setPostData({ ...snapshot.data() });
-      });
-      // const docSnap = await getDoc(docRef);
-      // if (docSnap) {
-      //   const docData = docSnap.data();
-      //   setPostData({ ...docData });
-      // }
-      return unsubscribe;
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const updateUser = async () => {
-    try {
-      const collectionUsersRef = collection(db, "users");
-      const q = query(collectionUsersRef, where("googleId", "==", user?.uid));
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        let userData;
-        snapshot.docs.forEach(async (doc) => {
-          userData = doc.data();
-          setLoggedInUser({
-            dailyPosted: userData.dailyPosted,
-            description: userData.description,
-            displayName: userData.displayName,
-            email: userData.email,
-            followedBy: userData.followedBy,
-            following: userData.following,
-            googleId: userData.googleId,
-            id: userData.id,
-            image: userData.image,
-            monthlyPosted: userData.monthlyPosted,
-            weeklyPosted: userData.weeklyPosted,
-            yearlyPosted: userData.yearlyPosted,
-          });
-        });
-      });
-      return unsubscribe;
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   const likeButton = async (e) => {
     e.preventDefault();
     try {
+      if (!postData) return;
       const docRef = doc(db, "posts", postId);
       const updateLikes = [...postData?.likedByUsers, loggedInUser?.id];
 
@@ -88,6 +41,7 @@ const Post = ({ params }: Params) => {
     try {
       const docRef = doc(db, "posts", postId);
       const currentLikes = postData?.likedByUsers;
+      if (!currentLikes) return;
       const indexOfId = currentLikes?.indexOf(loggedInUser?.id);
       if (indexOfId === undefined) return;
       currentLikes?.splice(indexOfId, 1);
@@ -99,11 +53,77 @@ const Post = ({ params }: Params) => {
   };
 
   useEffect(() => {
+    const getData = async () => {
+      try {
+        const docRef = doc(db, "posts", postId);
+        const unsubscribe = onSnapshot(docRef, (snapshot) => {
+          let postData = snapshot.data();
+          if (postData) {
+            setPostData({
+              title: postData.title,
+              image: postData.image,
+              description: postData.description,
+              location: postData.location,
+              date: postData.date,
+              timeframe: postData.timeframe,
+              userId: postData.userId,
+              googleId: postData.googleId,
+              likedByUsers: postData.likedByUsers,
+              comments: postData.comments,
+              userName: postData.userName,
+              createdAt: postData.createdAt,
+              friends: postData.friends,
+              id: postData.id,
+            });
+          }
+        });
+        // const docSnap = await getDoc(docRef);
+        // if (docSnap) {
+        //   const docData = docSnap.data();
+        //   setPostData({ ...docData });
+        // }
+        return unsubscribe;
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    const updateUser = async () => {
+      try {
+        const collectionUsersRef = collection(db, "users");
+        const q = query(collectionUsersRef, where("googleId", "==", user?.uid));
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+          let userData;
+          snapshot.docs.forEach(async (doc) => {
+            userData = doc.data();
+            setLoggedInUser({
+              dailyPosted: userData.dailyPosted,
+              description: userData.description,
+              displayName: userData.displayName,
+              email: userData.email,
+              followedBy: userData.followedBy,
+              following: userData.following,
+              googleId: userData.googleId,
+              id: userData.id,
+              image: userData.image,
+              monthlyPosted: userData.monthlyPosted,
+              weeklyPosted: userData.weeklyPosted,
+              yearlyPosted: userData.yearlyPosted,
+            });
+          });
+        });
+        return unsubscribe;
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
     getData();
+
     if (user) {
       updateUser();
     }
-  }, [user]);
+  }, [user, postId]);
 
   return (
     <div className="flex flex-col max-w-[600px]  gap-4 shadow-xl p-2 rounded-lg">
@@ -150,6 +170,7 @@ const Post = ({ params }: Params) => {
 
           <img
             src={postData?.image}
+            alt={postData.title}
             className="w-full max-w-[700px] rounded-xl shadow-xl"
           />
           <p>{postData?.description}</p>

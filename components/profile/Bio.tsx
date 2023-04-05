@@ -22,36 +22,6 @@ const Bio = () => {
   const [description, setDescription] = useState<string>("");
   const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
 
-  const updateLoggedInUser = async () => {
-    try {
-      const collectionRef = collection(db, "users");
-      const q = query(collectionRef, where("googleId", "==", user?.uid));
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        let userData;
-        snapshot.docs.forEach(async (doc) => {
-          userData = doc.data();
-          setLoggedInUser({
-            dailyPosted: userData.dailyPosted,
-            description: userData.description,
-            displayName: userData.displayName,
-            email: userData.email,
-            followedBy: userData.followedBy,
-            following: userData.following,
-            googleId: userData.googleId,
-            id: userData.id,
-            image: userData.image,
-            monthlyPosted: userData.monthlyPosted,
-            weeklyPosted: userData.weeklyPosted,
-            yearlyPosted: userData.yearlyPosted,
-          });
-        });
-      });
-      return unsubscribe;
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   const addDescription = async (e) => {
     e.preventDefault();
     //? add to user collection description
@@ -66,6 +36,35 @@ const Bio = () => {
   };
 
   useEffect(() => {
+    const updateLoggedInUser = async () => {
+      try {
+        const collectionRef = collection(db, "users");
+        const q = query(collectionRef, where("googleId", "==", user?.uid));
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+          let userData;
+          snapshot.docs.forEach(async (doc) => {
+            userData = doc.data();
+            setLoggedInUser({
+              dailyPosted: userData.dailyPosted,
+              description: userData.description,
+              displayName: userData.displayName,
+              email: userData.email,
+              followedBy: userData.followedBy,
+              following: userData.following,
+              googleId: userData.googleId,
+              id: userData.id,
+              image: userData.image,
+              monthlyPosted: userData.monthlyPosted,
+              weeklyPosted: userData.weeklyPosted,
+              yearlyPosted: userData.yearlyPosted,
+            });
+          });
+        });
+        return unsubscribe;
+      } catch (err) {
+        console.log(err);
+      }
+    };
     if (user) {
       updateLoggedInUser();
     }

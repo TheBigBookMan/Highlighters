@@ -23,63 +23,6 @@ const UserBio = ({ params }: Params) => {
   const [isFollowing, setIsFollowing] = useState<boolean>(false);
   const [isFollowedBy, setIsFollowedBy] = useState<boolean>(false);
 
-  const getData = async () => {
-    try {
-      const docRef = doc(db, "users", userId);
-      const docSnap = await getDoc(docRef);
-      if (docSnap) {
-        const docData = docSnap.data();
-        if (!docData) return;
-        setUserInfo({ ...docData });
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const updateUser = async () => {
-    try {
-      const collectionUsersRef = collection(db, "users");
-      const q = query(collectionUsersRef, where("googleId", "==", user?.uid));
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        let userData;
-        snapshot.docs.forEach(async (doc) => {
-          userData = doc.data();
-          setLoggedInUser({
-            dailyPosted: userData.dailyPosted,
-            description: userData.description,
-            displayName: userData.displayName,
-            email: userData.email,
-            followedBy: userData.followedBy,
-            following: userData.following,
-            googleId: userData.googleId,
-            id: userData.id,
-            image: userData.image,
-            monthlyPosted: userData.monthlyPosted,
-            weeklyPosted: userData.weeklyPosted,
-            yearlyPosted: userData.yearlyPosted,
-          });
-          const followingData = userData?.following;
-          if (followingData.includes(userId)) {
-            setIsFollowing(true);
-          } else {
-            setIsFollowing(false);
-          }
-
-          const followedByData = userData?.followedBy;
-          if (followedByData.includes(userId)) {
-            setIsFollowedBy(true);
-          } else {
-            setIsFollowedBy(false);
-          }
-        });
-      });
-      return unsubscribe;
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   const followedByUser = async () => {
     try {
       const docRef = doc(db, "users", userId);
@@ -150,11 +93,81 @@ const UserBio = ({ params }: Params) => {
   };
 
   useEffect(() => {
+    const updateUser = async () => {
+      try {
+        const collectionUsersRef = collection(db, "users");
+        const q = query(collectionUsersRef, where("googleId", "==", user?.uid));
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+          let userData;
+          snapshot.docs.forEach(async (doc) => {
+            userData = doc.data();
+            setLoggedInUser({
+              dailyPosted: userData.dailyPosted,
+              description: userData.description,
+              displayName: userData.displayName,
+              email: userData.email,
+              followedBy: userData.followedBy,
+              following: userData.following,
+              googleId: userData.googleId,
+              id: userData.id,
+              image: userData.image,
+              monthlyPosted: userData.monthlyPosted,
+              weeklyPosted: userData.weeklyPosted,
+              yearlyPosted: userData.yearlyPosted,
+            });
+            const followingData = userData?.following;
+            if (followingData.includes(userId)) {
+              setIsFollowing(true);
+            } else {
+              setIsFollowing(false);
+            }
+
+            const followedByData = userData?.followedBy;
+            if (followedByData.includes(userId)) {
+              setIsFollowedBy(true);
+            } else {
+              setIsFollowedBy(false);
+            }
+          });
+        });
+        return unsubscribe;
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    const getData = async () => {
+      try {
+        const docRef = doc(db, "users", userId);
+        const docSnap = await getDoc(docRef);
+        if (docSnap) {
+          const userData = docSnap.data();
+          if (!userData) return;
+          setUserInfo({
+            dailyPosted: userData.dailyPosted,
+            description: userData.description,
+            displayName: userData.displayName,
+            email: userData.email,
+            followedBy: userData.followedBy,
+            following: userData.following,
+            googleId: userData.googleId,
+            id: userData.id,
+            image: userData.image,
+            monthlyPosted: userData.monthlyPosted,
+            weeklyPosted: userData.weeklyPosted,
+            yearlyPosted: userData.yearlyPosted,
+          });
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
     if (user) {
       updateUser();
       getData();
     }
-  }, [user, updateUser, getData]);
+  }, [user, userId]);
 
   return (
     <div className="flex gap-4 md:px-16 h-[140px] w-full shadow-xl rounded-xl p-2">

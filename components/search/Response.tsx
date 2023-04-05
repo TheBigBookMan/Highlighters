@@ -11,44 +11,43 @@ const Response = ({ search }: InputSearch) => {
   const [listResults, setListResults] = useState<User[]>([]);
   const [searchResults, setSearchResults] = useState<User[]>([]);
 
-  const getSearchResults = async () => {
-    try {
-      const filteredResults = listResults.filter((user) => {
-        return user.displayName.toLowerCase() === search?.toLowerCase();
-      });
-      setSearchResults(filteredResults);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const getData = async () => {
-    try {
-      const collectionRef = collection(db, "users");
-      const unsubscribe = onSnapshot(collectionRef, (snapshot) => {
-        let lists: any = [];
-        snapshot.docs.forEach(async (doc) => {
-          await lists.push({ ...doc.data(), id: doc.id });
-        });
-        setListResults([...lists]);
-      });
-      return unsubscribe;
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   useEffect(() => {
+    const getSearchResults = async () => {
+      try {
+        const filteredResults = listResults.filter((user) => {
+          return user.displayName.toLowerCase() === search?.toLowerCase();
+        });
+        setSearchResults(filteredResults);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
     if (listResults.length > 0) {
       getSearchResults();
     }
-  }, [listResults, getSearchResults]);
+  }, [listResults, search]);
 
   useEffect(() => {
+    const getData = async () => {
+      try {
+        const collectionRef = collection(db, "users");
+        const unsubscribe = onSnapshot(collectionRef, (snapshot) => {
+          let lists: any = [];
+          snapshot.docs.forEach(async (doc) => {
+            await lists.push({ ...doc.data(), id: doc.id });
+          });
+          setListResults([...lists]);
+        });
+        return unsubscribe;
+      } catch (err) {
+        console.log(err);
+      }
+    };
     if (search) {
       getData();
     }
-  }, [search, getData]);
+  }, [search]);
 
   return (
     <div className="flex flex-col gap-4">

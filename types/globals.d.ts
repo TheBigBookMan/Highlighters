@@ -35,7 +35,7 @@ declare global {
     friends: string;
   }
   interface Post extends FormPost {
-    post: any;
+    // post: any;
     id: string;
   }
 
