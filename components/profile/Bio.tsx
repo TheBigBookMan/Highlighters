@@ -87,13 +87,15 @@ const Bio = () => {
         />
       ) : (
         <>
-          <Image
-            height={20}
-            width={20}
-            src={user?.photoURL}
-            alt={user?.displayName}
-            className="w-20 h-20 rounded-full"
-          />
+          {user?.photoURL && user.displayName && (
+            <Image
+              height={20}
+              width={20}
+              src={user?.photoURL}
+              alt={user?.displayName}
+              className="w-20 h-20 rounded-full"
+            />
+          )}
           <div className="flex flex-col w-full max-w-[400px]">
             <div className="flex justify-between items-center pr-4">
               <div className="flex flex-col gap-1">

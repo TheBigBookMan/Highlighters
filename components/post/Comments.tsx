@@ -77,10 +77,11 @@ const Comments = ({ params }: Params) => {
 
   const likeButton = async (
     e: React.MouseEvent<HTMLButtonElement>,
-    commentId: string
+    commentId: any
   ) => {
     e.preventDefault();
     try {
+      console.log(commentId);
       const docRef = doc(db, "comments", commentId.id);
       const docSnap = await getDoc(docRef);
       if (docSnap) {
@@ -97,7 +98,7 @@ const Comments = ({ params }: Params) => {
 
   const unlikeButton = async (
     e: React.MouseEvent<HTMLButtonElement>,
-    commentId: string
+    commentId: any
   ) => {
     e.preventDefault();
     try {
@@ -120,7 +121,7 @@ const Comments = ({ params }: Params) => {
 
   const deleteComment = async (
     e: React.MouseEvent<HTMLButtonElement>,
-    commentId: string
+    commentId: any
   ) => {
     e.preventDefault();
     try {
@@ -257,7 +258,8 @@ const Comments = ({ params }: Params) => {
                     {comment.userName}
                   </h1>
                   <div className="flex gap-1 items-center">
-                    {comment?.likedByUsers.includes(loggedInUser?.id) ? (
+                    {loggedInUser &&
+                    comment?.likedByUsers.includes(loggedInUser?.id) ? (
                       <button onClick={(e) => unlikeButton(e, comment.id)}>
                         <FiThumbsUp className="text-lg cursor-pointer text-teal-500 hover:text-black" />
                       </button>

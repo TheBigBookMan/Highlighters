@@ -130,16 +130,18 @@ const Nav = () => {
               <BiEditAlt className="text-black text-2xl" />
               <p>Post</p>
             </Link>
-            <Image
-              height={12}
-              width={12}
-              onClick={() => setOpenNav(!openNav)}
-              src={user?.photoURL}
-              alt="profile pic"
-              className={`w-12 h-12 rounded-full cursor-pointer shadow-xl hover:border-2 hover:border-teal-500 ${
-                openNav && "border-2 border-teal-500 hover:border-none"
-              }`}
-            />
+            {user.photoURL && (
+              <Image
+                height={12}
+                width={12}
+                onClick={() => setOpenNav(!openNav)}
+                src={user.photoURL}
+                alt="profile pic"
+                className={`w-12 h-12 rounded-full cursor-pointer shadow-xl hover:border-2 hover:border-teal-500 ${
+                  openNav && "border-2 border-teal-500 hover:border-none"
+                }`}
+              />
+            )}
             {openNav && (
               <div className="flex flex-col justify-between p-2 gap-2 md:hidden absolute w-[180px] h-[290px] bg-white shadow-xl rounded-bl-xl top-16 -right-4 transition">
                 <ul className="flex flex-col gap-4">

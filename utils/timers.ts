@@ -24,10 +24,17 @@ const resetTimer = async (userId: string, timeframe: string) => {
 };
 
 export const dailyTimer = (userId: string) => {
-  const now = new Date();
-  let millisTill11: any =
-    new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 0, 0) -
-    now;
+  const now: any = new Date();
+  const newDate: any = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+    23,
+    59,
+    0,
+    0
+  );
+  let millisTill11: any = newDate - now;
   if (millisTill11 < 0) {
     millisTill11 += 86400000; // it's after 11:59pm, try again tomorrow
   }

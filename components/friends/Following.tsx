@@ -184,7 +184,7 @@ const Following = () => {
               </div>
             </div>
           </Link>
-          {user.followedBy.includes(loggedInUser.id) ? (
+          {loggedInUser && user.followedBy.includes(loggedInUser.id) ? (
             <button
               onClick={(e) => unfollowUser(e, user.id)}
               className="flex gap-2 items-center bg-red-400 w-[120px] h-[40px] p-1 rounded-xl text-white hover:bg-red-600"

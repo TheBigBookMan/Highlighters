@@ -177,13 +177,15 @@ const UserBio = ({ params }: Params) => {
 
   return (
     <div className="flex gap-4 md:px-16 h-[140px] w-full shadow-xl rounded-xl p-2">
-      <Image
-        height={20}
-        width={20}
-        src={userInfo?.image}
-        alt={userInfo?.displayName}
-        className="w-20 h-20 rounded-full"
-      />
+      {userInfo?.image && userInfo.displayName && (
+        <Image
+          height={20}
+          width={20}
+          src={userInfo?.image}
+          alt={userInfo?.displayName}
+          className="w-20 h-20 rounded-full"
+        />
+      )}
       <div className="flex flex-col w-full max-w-[400px]">
         <div className="flex justify-between items-center pr-4">
           <div className="flex flex-col gap-1">

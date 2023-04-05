@@ -16,7 +16,6 @@ import {
   where,
 } from "firebase/firestore";
 import Link from "next/link";
-import Image from "next/image";
 import { userFilter } from "@/utils/filterposts";
 
 const MyPosts = () => {

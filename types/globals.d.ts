@@ -19,6 +19,10 @@ declare global {
     yearlyPosted: boolean;
   }
 
+  interface LoggedInUser {
+    loggedInUser: User;
+  }
+
   interface FormPost {
     title: string;
     image: string;

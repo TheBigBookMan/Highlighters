@@ -23,7 +23,7 @@ import {
 
 const CreatePostPage = () => {
   const [user, loading] = useAuthState(auth);
-  const [imageChosen, setImageChosen] = useState<ImageFile | null>(null);
+  const [imageChosen, setImageChosen] = useState<File | null>(null);
   const [loggedInUser, setLoggedInUser] = useState<User>();
   const [postForm, setPostForm] = useState<FormPost>({
     title: "",
@@ -128,8 +128,6 @@ const CreatePostPage = () => {
       console.log(err);
     }
   };
-
-  // ? create a useeffect that checks the date everytime the user comes to post page and then compare it with the last post from each timeframe to see if the time range is out of the timeframe range
 
   useEffect(() => {
     const updateLoggedInUser = async () => {

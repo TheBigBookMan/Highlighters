@@ -35,14 +35,14 @@ const Newsfeed = () => {
       try {
         const collectionRef = collection(db, "users");
         const q = query(collectionRef, where("googleId", "==", user?.uid));
-
         const unsubscribe = onSnapshot(q, (snapshot) => {
-          let userData;
+          let userData: User;
           snapshot.docs.forEach(async (doc) => {
-            userData = doc.data();
+            userData = doc.data() as User;
+            if (!userData) return;
+            const userDataFollowing = userData?.following;
+            setFollowingData([...userDataFollowing]);
           });
-          if (!userData) return;
-          setFollowingData([...userData?.following]);
         });
         return unsubscribe;
       } catch (err) {

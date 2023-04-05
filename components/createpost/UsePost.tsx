@@ -13,7 +13,7 @@ import { useState, useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { toast, ToastContainer } from "react-toastify";
 
-const UsePost = (loggedInUser: User | null) => {
+const UsePost = ({ loggedInUser }: LoggedInUser) => {
   const [user, loading] = useAuthState(auth);
   const [selectedPost, setSelectedPost] = useState<string>();
   const [selectedTimeframe, setSelectedTimeframe] = useState<string>("Daily");
