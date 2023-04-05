@@ -81,7 +81,6 @@ const Comments = ({ params }: Params) => {
   ) => {
     e.preventDefault();
     try {
-      console.log(commentId);
       const docRef = doc(db, "comments", commentId.id);
       const docSnap = await getDoc(docRef);
       if (docSnap) {
