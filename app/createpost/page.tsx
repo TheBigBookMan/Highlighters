@@ -30,7 +30,7 @@ import {
 const CreatePostPage = () => {
   const [user, loading] = useAuthState(auth);
   const [imageChosen, setImageChosen] = useState<ImageFile | null>(null);
-  const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
+  const [loggedInUser, setLoggedInUser] = useState<User>();
   const [postForm, setPostForm] = useState<FormPost>({
     title: "",
     image: "",
@@ -55,7 +55,7 @@ const CreatePostPage = () => {
     e.preventDefault();
     setPostForm({ ...postForm, [e.target.name]: e.target.value });
   };
-
+  console.log(loggedInUser);
   const updateLoggedInUser = async () => {
     try {
       const collectionRef = collection(db, "users");
@@ -64,7 +64,24 @@ const CreatePostPage = () => {
         let userData;
         snapshot.docs.forEach(async (doc) => {
           userData = doc.data();
-          setLoggedInUser({ ...userData, id: doc.id });
+          if (userData) {
+            console.log(userData);
+            // setLoggedInUser({ ...userData });
+            setLoggedInUser({
+              dailyPosted: userData.dailyPosted,
+              description: userData.description,
+              displayName: userData.displayName,
+              email: userData.email,
+              followedBy: userData.followedBy,
+              following: userData.following,
+              googleId: userData.googleId,
+              id: userData.id,
+              image: userData.image,
+              monthlyPosted: userData.monthlyPosted,
+              weeklyPosted: userData.weeklyPosted,
+              yearlyPosted: userData.yearlyPosted,
+            });
+          }
         });
       });
       return unsubscribe;
@@ -75,9 +92,11 @@ const CreatePostPage = () => {
 
   const fileChosen = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    if (e.target.files[0]) {
-      setImageChosen(e.target.files[0]);
-    } else return;
+    if (e.target.files) {
+      if (e.target.files[0]) {
+        setImageChosen(e.target.files[0]);
+      } else return;
+    }
   };
 
   const getImageURL = async (e) => {
@@ -102,6 +121,7 @@ const CreatePostPage = () => {
 
   const updateUserInfo = async () => {
     try {
+      if (!loggedInUser) return;
       const docRef = doc(db, "users", loggedInUser?.id);
       const docSnap = await getDoc(docRef);
       if (!docSnap) return;

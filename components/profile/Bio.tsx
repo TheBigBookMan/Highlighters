@@ -30,7 +30,20 @@ const Bio = () => {
         let userData;
         snapshot.docs.forEach(async (doc) => {
           userData = doc.data();
-          setLoggedInUser({ ...userData, id: doc.id });
+          setLoggedInUser({
+            dailyPosted: userData.dailyPosted,
+            description: userData.description,
+            displayName: userData.displayName,
+            email: userData.email,
+            followedBy: userData.followedBy,
+            following: userData.following,
+            googleId: userData.googleId,
+            id: userData.id,
+            image: userData.image,
+            monthlyPosted: userData.monthlyPosted,
+            weeklyPosted: userData.weeklyPosted,
+            yearlyPosted: userData.yearlyPosted,
+          });
         });
       });
       return unsubscribe;

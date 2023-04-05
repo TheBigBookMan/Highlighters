@@ -13,7 +13,6 @@ declare global {
     followedBy: string[];
     following: string[];
     description: string;
-    posts: number;
     dailyPosted: boolean;
     weeklyPosted: boolean;
     monthlyPosted: boolean;
@@ -41,7 +40,7 @@ declare global {
 
   interface ImageFile {
     lastModified: number;
-    lastModifiedDate: object;
+    // lastModifiedDate: object;
     name: string;
     size: number;
     type: string;
