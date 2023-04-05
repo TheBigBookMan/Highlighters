@@ -89,7 +89,9 @@ const UserPosts = ({ params }: Params) => {
               <li className="group hover:bg-teal-100 cursor-pointer transition flex flex-col shadow-xl rounded-lg p-2 items-center gap-2 max-h-[600px] w-[300px]">
                 {/* !! might need to add in a ternary for if there is no photo and just leave blank without an image */}
                 {post.image && (
-                  <img
+                  <Image
+                    height={60}
+                    width={60}
                     src={post.image}
                     alt={post.title}
                     className="w-60 h-60"

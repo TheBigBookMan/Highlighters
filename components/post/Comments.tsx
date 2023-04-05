@@ -14,6 +14,7 @@ import {
   where,
 } from "firebase/firestore";
 import Link from "next/link";
+import Image from "next/image";
 import { FiThumbsUp } from "react-icons/fi";
 import { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -242,7 +243,9 @@ const Comments = ({ params }: Params) => {
                 className="h-full  rounded"
                 href={`/user/${comment.userId}`}
               >
-                <img
+                <Image
+                  width={20}
+                  height={20}
                   src={comment.userImage}
                   alt={comment.userName}
                   className="h-full min-w-[100px] rounded"

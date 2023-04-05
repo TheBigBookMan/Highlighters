@@ -1,6 +1,7 @@
 import { db } from "@/utils/firebase";
 import { collection, onSnapshot } from "firebase/firestore";
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 type InputSearch = {
@@ -65,7 +66,9 @@ const Response = ({ search }: InputSearch) => {
             >
               <Link href={`/user/${user.id}`} key={user.id}>
                 <div className="flex gap-1">
-                  <img
+                  <Image
+                    height={20}
+                    width={20}
                     src={user.image}
                     alt={user.displayName}
                     className="w-20 h-20 rounded-lg"

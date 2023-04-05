@@ -11,6 +11,7 @@ import {
 import { useState, useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import Link from "next/link";
+import Image from "next/image";
 import { SlUserUnfollow, SlUserFollow } from "react-icons/sl";
 
 const Followers = () => {
@@ -55,7 +56,7 @@ const Followers = () => {
   ) => {
     e.preventDefault();
     try {
-      if(!loggedInUser) return;
+      if (!loggedInUser) return;
       const docRef = doc(db, "users", loggedInUser?.id);
       const docSnap = await getDoc(docRef);
       const userInfo = docSnap.data();
@@ -77,7 +78,7 @@ const Followers = () => {
   ) => {
     e.preventDefault();
     try {
-      if(!loggedInUser) return ;
+      if (!loggedInUser) return;
       const docRef = doc(db, "users", loggedInUser?.id);
       const docSnap = await getDoc(docRef);
       const userInfo = docSnap.data();
@@ -167,7 +168,9 @@ const Followers = () => {
         >
           <Link href={`/user/${user.id}`} key={user.id}>
             <div className="flex  gap-1">
-              <img
+              <Image
+                width={20}
+                height={20}
                 src={user.image}
                 alt={user.displayName}
                 className="w-20 h-20 rounded-lg"

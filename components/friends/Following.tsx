@@ -11,6 +11,7 @@ import {
 import { useState, useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import Link from "next/link";
+import Image from "next/image";
 import { SlUserUnfollow, SlUserFollow } from "react-icons/sl";
 
 const Following = () => {
@@ -98,6 +99,7 @@ const Following = () => {
   useEffect(() => {
     const updateLoggedInUser = async () => {
       try {
+        if (!user?.uid) return;
         const collectionRef = collection(db, "users");
         const q = query(collectionRef, where("googleId", "==", user?.uid));
         const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -167,7 +169,9 @@ const Following = () => {
         >
           <Link href={`/user/${user.id}`} key={user.id}>
             <div className="flex gap-1">
-              <img
+              <Image
+                height={20}
+                width={20}
                 src={user.image}
                 alt={user.displayName}
                 className="w-20 h-20 rounded-lg"

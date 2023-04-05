@@ -16,6 +16,7 @@ import {
 } from "firebase/firestore";
 import Link from "next/link";
 import { userFilter } from "@/utils/filterposts";
+import Image from "next/image";
 const hardcode = ["All", "Daily", "Weekly", "Monthly", "Yearly"];
 
 //? use this to get the database newsfeed stuff
@@ -138,7 +139,9 @@ const Newsfeed = () => {
           <Link key={post.id + idx} href={`/post/${post?.id}`}>
             <li className="flex flex-col shadow-xl rounded-lg p-2 items-center gap-2 max-h-[600px] w-[300px] group hover:bg-teal-100 cursor-pointer">
               {post.image && (
-                <img
+                <Image
+                  width={60}
+                  height={60}
                   src={post.image}
                   alt={post.title}
                   className="w-60 h-60 rounded-lg"

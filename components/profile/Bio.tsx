@@ -14,6 +14,7 @@ import { BiEditAlt } from "react-icons/bi";
 import { TiTickOutline } from "react-icons/ti";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Image from "next/image";
 import { Circles } from "react-loader-spinner";
 
 const Bio = () => {
@@ -86,7 +87,9 @@ const Bio = () => {
         />
       ) : (
         <>
-          <img
+          <Image
+            height={20}
+            width={20}
             src={user?.photoURL}
             alt={user?.displayName}
             className="w-20 h-20 rounded-full"

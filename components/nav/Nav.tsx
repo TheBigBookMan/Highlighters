@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { auth } from "../../utils/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { signOut } from "firebase/auth";
@@ -129,7 +130,9 @@ const Nav = () => {
               <BiEditAlt className="text-black text-2xl" />
               <p>Post</p>
             </Link>
-            <img
+            <Image
+              height={12}
+              width={12}
               onClick={() => setOpenNav(!openNav)}
               src={user?.photoURL}
               alt="profile pic"

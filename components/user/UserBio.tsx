@@ -13,6 +13,7 @@ import { useState, useEffect } from "react";
 import { SlUserFollow, SlUserUnfollow } from "react-icons/sl";
 import { auth } from "@/utils/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
+import Image from "next/image";
 
 // !!! fix params shouldnt be null on global for params
 const UserBio = ({ params }: Params) => {
@@ -25,7 +26,7 @@ const UserBio = ({ params }: Params) => {
 
   const followedByUser = async () => {
     try {
-      if(!userId) return;
+      if (!userId) return;
       const docRef = doc(db, "users", userId);
       const docSnap = await getDoc(docRef);
       const userInfo = docSnap.data();
@@ -42,7 +43,7 @@ const UserBio = ({ params }: Params) => {
 
   const unfollowedByUser = async () => {
     try {
-      if(!userId) return;
+      if (!userId) return;
       const docRef = doc(db, "users", userId);
       const docSnap = await getDoc(docRef);
       const userInfo = docSnap.data();
@@ -59,7 +60,7 @@ const UserBio = ({ params }: Params) => {
   const followUser = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
-      if(!loggedInUser) return;
+      if (!loggedInUser) return;
       const docRef = doc(db, "users", loggedInUser?.id);
       const docSnap = await getDoc(docRef);
       const userInfo = docSnap.data();
@@ -78,7 +79,7 @@ const UserBio = ({ params }: Params) => {
   const unfollowUser = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
-      if(!loggedInUser) return;
+      if (!loggedInUser) return;
       const docRef = doc(db, "users", loggedInUser?.id);
       const docSnap = await getDoc(docRef);
       const userInfo = docSnap.data();
@@ -142,7 +143,7 @@ const UserBio = ({ params }: Params) => {
 
     const getData = async () => {
       try {
-        if(!userId) return;
+        if (!userId) return;
         const docRef = doc(db, "users", userId);
         const docSnap = await getDoc(docRef);
         if (docSnap) {
@@ -176,7 +177,9 @@ const UserBio = ({ params }: Params) => {
 
   return (
     <div className="flex gap-4 md:px-16 h-[140px] w-full shadow-xl rounded-xl p-2">
-      <img
+      <Image
+        height={20}
+        width={20}
         src={userInfo?.image}
         alt={userInfo?.displayName}
         className="w-20 h-20 rounded-full"

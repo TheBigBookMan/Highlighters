@@ -9,6 +9,7 @@ import {
   updateDoc,
   where,
 } from "firebase/firestore";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -170,7 +171,9 @@ const Post = ({ params }: Params) => {
           </div>
           <p>{postData?.location}</p>
 
-          <img
+          <Image
+            height={80}
+            width={80}
             src={postData?.image}
             alt={postData.title}
             className="w-full max-w-[700px] rounded-xl shadow-xl"

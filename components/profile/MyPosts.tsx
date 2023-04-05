@@ -16,6 +16,7 @@ import {
   where,
 } from "firebase/firestore";
 import Link from "next/link";
+import Image from "next/image";
 import { userFilter } from "@/utils/filterposts";
 
 const MyPosts = () => {
@@ -118,7 +119,9 @@ const MyPosts = () => {
             <Link key={post.id} href={`/post/${post.id}`}>
               <li className="group hover:bg-teal-100 cursor-pointer transition flex flex-col shadow-xl rounded-lg p-2 items-center gap-2 max-h-[600px] w-[300px]">
                 {post.image && (
-                  <img
+                  <Image
+                    height={60}
+                    width={60}
                     src={post.image}
                     alt={post.title}
                     className="w-60 h-60 rounded-lg"
