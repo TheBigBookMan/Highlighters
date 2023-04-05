@@ -33,7 +33,7 @@ const Nav = () => {
     <div className="py-4 px-4 md:py-8 md:px-8 flex gap-2 justify-between items-center w-auto">
       <Link href="/">
         <h1 className="font-lobster text-teal-500 text-xl md:text-3xl">
-          Highlighters
+          Highlighterss
         </h1>
       </Link>
 
