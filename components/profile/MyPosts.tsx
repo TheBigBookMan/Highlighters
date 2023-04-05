@@ -69,11 +69,11 @@ const MyPosts = () => {
 
   useEffect(() => {
     getData();
-  }, [user]);
+  }, [user, getData]);
 
   useEffect(() => {
     filteredTimeframe();
-  }, [timeframe, selectedFilter]);
+  }, [timeframe, selectedFilter, filteredTimeframe]);
 
   return (
     <div className="shadow-xl rounded-lg h-full w-full p-4 flex flex-col gap-4">

@@ -174,7 +174,7 @@ const CreatePostPage = () => {
     if (user) {
       updateLoggedInUser();
     }
-  }, [user]);
+  }, [user, updateLoggedInUser]);
 
   return (
     <div className="p-2 flex flex-col gap-2 max-w-[700px]  mx-auto">
@@ -241,7 +241,7 @@ const CreatePostPage = () => {
         />
         <div className="flex flex-col ">
           <h1 className="font-bold text-teal-500">Timeframe:</h1>
-          <p className="text-sm">If option invalid then it's on cooldown</p>
+          <p className="text-sm">If option invalid then it is on cooldown</p>
         </div>
         <select
           onChange={(e) => handleChange(e)}

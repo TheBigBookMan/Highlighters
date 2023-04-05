@@ -54,11 +54,11 @@ const UserPosts = ({ params }: Params) => {
 
   useEffect(() => {
     getData();
-  }, [user, loading]);
+  }, [user, loading, getData]);
 
   useEffect(() => {
     filteredTimeframe();
-  }, [timeframe]);
+  }, [timeframe, filteredTimeframe]);
 
   return (
     <div className="shadow-xl rounded-lg h-full w-full p-4 flex flex-col gap-4">

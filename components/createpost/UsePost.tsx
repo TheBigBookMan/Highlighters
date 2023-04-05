@@ -102,11 +102,11 @@ const UsePost = (loggedInUser: User | null) => {
     if (loggedInUser) {
       getData();
     }
-  }, [loggedInUser]);
+  }, [loggedInUser, getData]);
 
   useEffect(() => {
     filteredTimeframe();
-  }, [selectedTimeframe]);
+  }, [selectedTimeframe, filteredTimeframe]);
 
   return (
     <div className="shadow-xl rounded-lg flex flex-col gap-2 p-2">

@@ -32,6 +32,7 @@ declare global {
     comments: string[];
     userName: string;
     createdAt: Date | string;
+    friends: string;
   }
   interface Post extends FormPost {
     post: any;

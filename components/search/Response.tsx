@@ -42,13 +42,13 @@ const Response = ({ search }: InputSearch) => {
     if (listResults.length > 0) {
       getSearchResults();
     }
-  }, [listResults]);
+  }, [listResults, getSearchResults]);
 
   useEffect(() => {
     if (search) {
       getData();
     }
-  }, [search]);
+  }, [search, getData]);
 
   return (
     <div className="flex flex-col gap-4">

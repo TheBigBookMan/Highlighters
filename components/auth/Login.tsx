@@ -93,7 +93,7 @@ const Login = () => {
     } else {
       console.log("Login");
     }
-  }, [route, user]);
+  }, [route, user, checkUser]);
 
   return (
     <div className="shadow-xl mt-32 p-10 text-gray-700 rounded-lg">

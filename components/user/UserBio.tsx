@@ -154,7 +154,7 @@ const UserBio = ({ params }: Params) => {
       updateUser();
       getData();
     }
-  }, [user]);
+  }, [user, updateUser, getData]);
 
   return (
     <div className="flex gap-4 md:px-16 h-[140px] w-full shadow-xl rounded-xl p-2">

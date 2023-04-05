@@ -150,13 +150,13 @@ const Followers = () => {
 
   useEffect(() => {
     updateLoggedInUser();
-  }, [user]);
+  }, [user, updateLoggedInUser]);
 
   useEffect(() => {
     if (loggedInUser) {
       getData();
     }
-  }, [loggedInUser]);
+  }, [loggedInUser, getData]);
 
   return (
     <ul className="flex flex-col gap-2">
