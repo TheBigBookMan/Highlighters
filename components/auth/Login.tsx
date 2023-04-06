@@ -10,8 +10,6 @@ import { toast, ToastContainer } from "react-toastify";
 import {
   addDoc,
   collection,
-  doc,
-  getDoc,
   onSnapshot,
   query,
   where,
@@ -28,6 +26,7 @@ const Login = () => {
   const [user, loading] = useAuthState(auth);
   const googleProvider = new GoogleAuthProvider();
 
+  // * Firebase google auth login popup
   const GoogleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
@@ -38,6 +37,7 @@ const Login = () => {
   };
 
   useEffect(() => {
+    // * Adds the user info to the database
     const createUserDoc = async () => {
       try {
         const collectionRef = collection(db, "users");
@@ -64,6 +64,7 @@ const Login = () => {
       }
     };
 
+    // * Checks if the user is already in the database
     const checkUser = async () => {
       try {
         const collectionRef = collection(db, "users");

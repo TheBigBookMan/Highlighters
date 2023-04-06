@@ -2,10 +2,8 @@
 import { auth, db } from "@/utils/firebase";
 import { useState, useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { FiThumbsUp, FiThumbsDown } from "react-icons/fi";
-import { HiThumbDown, HiThumbUp } from "react-icons/hi";
+import { FiThumbsUp } from "react-icons/fi";
 import { SlSpeech } from "react-icons/sl";
-import { useRouter } from "next/navigation";
 import {
   collection,
   getDoc,
@@ -19,10 +17,7 @@ import { userFilter } from "@/utils/filterposts";
 import Image from "next/image";
 const hardcode = ["All", "Daily", "Weekly", "Monthly", "Yearly"];
 
-//? use this to get the database newsfeed stuff
-
 const Newsfeed = () => {
-  const route = useRouter();
   const [user, loading] = useAuthState(auth);
   const [newsfeedData, setNewsfeedData] = useState<Post[]>([]);
   const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
@@ -31,6 +26,7 @@ const Newsfeed = () => {
   const [followingData, setFollowingData] = useState<string[]>([]);
 
   useEffect(() => {
+    // * Get user following list from database
     const getUsersFollowingList = async () => {
       try {
         const collectionRef = collection(db, "users");
@@ -55,6 +51,7 @@ const Newsfeed = () => {
   }, [user, loading]);
 
   useEffect(() => {
+    // * Get the posts from the following users list from database
     const getData = async () => {
       // if (loading) return;
       // if (!user) return route.push("/auth/login");
@@ -85,6 +82,7 @@ const Newsfeed = () => {
   }, [followingData]);
 
   useEffect(() => {
+    // * Update state based on selected timeframe
     const filteredTimeframe = async () => {
       if (newsfeedData.length > 0) {
         if (timeframe === "All") {

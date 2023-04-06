@@ -22,11 +22,10 @@ const Bio = () => {
   const [editMode, setEditMode] = useState<boolean>(false);
   const [description, setDescription] = useState<string>("");
   const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
-  console.log(loggedInUser);
 
+  // * Add description to user
   const addDescription = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    //? add to user collection description
     try {
       if (!loggedInUser) return;
       const docRef = doc(db, "users", loggedInUser?.id);
@@ -39,6 +38,7 @@ const Bio = () => {
   };
 
   useEffect(() => {
+    // * Update state for logged in user
     const updateLoggedInUser = async () => {
       try {
         const collectionRef = collection(db, "users");

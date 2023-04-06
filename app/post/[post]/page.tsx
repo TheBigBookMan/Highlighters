@@ -1,6 +1,7 @@
 import Post from "@/components/post/Post";
 import Comments from "@/components/post/Comments";
 
+// ? Params of the postID in the URL
 const PostPage = ({ params }: Params) => {
   return (
     <div className="p-4">

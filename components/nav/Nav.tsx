@@ -6,7 +6,7 @@ import { auth } from "../../utils/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { signOut } from "firebase/auth";
 import { useRouter, usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { CgProfile } from "react-icons/cg";
 import { BiNews, BiEditAlt } from "react-icons/bi";
 import { FaUserFriends } from "react-icons/fa";
@@ -19,6 +19,7 @@ const Nav = () => {
   const [user, loading] = useAuthState(auth);
   const [searchInput, setSearchInput] = useState<string>("");
 
+  // * Firebase function to logout user from gmail
   const GoogleLogout = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {

@@ -7,7 +7,6 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { FiThumbsUp, FiThumbsDown } from "react-icons/fi";
 import { SlSpeech } from "react-icons/sl";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import {
   collection,
   onSnapshot,
@@ -19,7 +18,6 @@ import Link from "next/link";
 import { userFilter } from "@/utils/filterposts";
 
 const MyPosts = () => {
-  const route = useRouter();
   const [user, loading] = useAuthState(auth);
   const [timeframe, setTimeframe] = useState<string>("Daily");
   const [posts, setPosts] = useState<Post[]>([]);
@@ -27,6 +25,7 @@ const MyPosts = () => {
   const [selectedFilter, setSelectedFilter] = useState<string>("Most Recent");
 
   useEffect(() => {
+    // * Get list of data from database
     const getData = async () => {
       if (loading) return;
       // if (!user) return route.push("/auth");
@@ -59,6 +58,7 @@ const MyPosts = () => {
   }, [user, loading]);
 
   useEffect(() => {
+    // * Set state for selected timeframe
     const filteredTimeframe = async () => {
       if (posts.length > 0) {
         const filteredList = posts.filter((post) => {

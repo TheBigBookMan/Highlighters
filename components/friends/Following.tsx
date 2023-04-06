@@ -19,6 +19,7 @@ const Following = () => {
   const [followingData, setFollowingData] = useState<User[]>([]);
   const [loggedInUser, setLoggedInUser] = useState<User>();
 
+  // * Update user database by adding new follower
   const followedByUser = async (userId: string) => {
     try {
       const docRef = doc(db, "users", userId);
@@ -35,6 +36,7 @@ const Following = () => {
     }
   };
 
+  // * Update user database by removing follower
   const unfollowedByUser = async (userId: string) => {
     try {
       const docRef = doc(db, "users", userId);
@@ -50,6 +52,7 @@ const Following = () => {
     }
   };
 
+  // * Update logged in user database by adding new user follow
   const followUser = async (
     e: React.MouseEvent<HTMLButtonElement>,
     userId: string
@@ -72,6 +75,7 @@ const Following = () => {
     }
   };
 
+  // * Update logged in user database by removed user follow
   const unfollowUser = async (
     e: React.MouseEvent<HTMLButtonElement>,
     userId: string
@@ -97,6 +101,7 @@ const Following = () => {
   };
 
   useEffect(() => {
+    // * Update logged in user state from database
     const updateLoggedInUser = async () => {
       try {
         if (!user?.uid) return;
@@ -132,6 +137,7 @@ const Following = () => {
   }, [user]);
 
   useEffect(() => {
+    // * Get logged in user data
     const getData = async () => {
       // if (loading) return;
       // if (!user) return route.push("/auth/login");

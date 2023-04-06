@@ -1,6 +1,7 @@
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "./firebase";
 
+// ? Function that resets the timer once the cooldown has ended
 const resetTimer = async (userId: string, timeframe: string) => {
   try {
     const docRef = doc(db, "users", userId);
@@ -23,6 +24,7 @@ const resetTimer = async (userId: string, timeframe: string) => {
   }
 };
 
+// ? Set the  daily timer
 export const dailyTimer = (userId: string) => {
   const now: any = new Date();
   const newDate: any = new Date(
@@ -48,6 +50,7 @@ export const dailyTimer = (userId: string) => {
   // }, 1000 * 60 * 1);
 };
 
+// ? Set the weekly timer
 export const weeklyTimer = (userId: string) => {
   const now = new Date();
   const sunday = new Date(
@@ -71,6 +74,7 @@ export const weeklyTimer = (userId: string) => {
   }, millisTillSunday);
 };
 
+// ? Set the monthly timer
 export const monthlyTimer = (userId: string) => {
   const now = new Date();
   const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
@@ -93,6 +97,7 @@ export const monthlyTimer = (userId: string) => {
   }, millisTillEndOfMonth);
 };
 
+// ? Set the yearly timer
 export const yearlyTimer = (userId: string) => {
   const now = new Date();
   const december31 = new Date(now.getFullYear(), 11, 31, 23, 59, 0, 0);

@@ -4,12 +4,14 @@ import { Inter, Poppins, Lobster } from "next/font/google";
 
 const inter = Inter({ subsets: ["latin"] });
 
+// ? Import Poppins font and config
 const poppins = Poppins({
   weight: ["400"],
   subsets: ["latin"],
   variable: "--font-poppins",
 });
 
+// ? Import Lobster font and config
 const lobster = Lobster({
   weight: ["400"],
   subsets: ["latin"],

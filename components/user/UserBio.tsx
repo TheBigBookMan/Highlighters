@@ -24,6 +24,7 @@ const UserBio = ({ params }: Params) => {
   const [isFollowing, setIsFollowing] = useState<boolean>(false);
   const [isFollowedBy, setIsFollowedBy] = useState<boolean>(false);
 
+  // * Update user by adding new follow
   const followedByUser = async () => {
     try {
       if (!userId) return;
@@ -41,6 +42,7 @@ const UserBio = ({ params }: Params) => {
     }
   };
 
+  // * Update user by removing follow
   const unfollowedByUser = async () => {
     try {
       if (!userId) return;
@@ -57,6 +59,7 @@ const UserBio = ({ params }: Params) => {
     }
   };
 
+  // * Update logged in user by adding new following
   const followUser = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
@@ -76,6 +79,7 @@ const UserBio = ({ params }: Params) => {
     }
   };
 
+  // * Update logged in user by removing following
   const unfollowUser = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
@@ -98,6 +102,7 @@ const UserBio = ({ params }: Params) => {
   };
 
   useEffect(() => {
+    // * Set state for logged in user
     const updateUser = async () => {
       try {
         const collectionUsersRef = collection(db, "users");
@@ -141,6 +146,7 @@ const UserBio = ({ params }: Params) => {
       }
     };
 
+    // * Get list of data for user
     const getData = async () => {
       try {
         if (!userId) return;

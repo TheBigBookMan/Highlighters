@@ -2,7 +2,6 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import UsePost from "@/components/createpost/UsePost";
-
 import { db, storage, auth } from "@/utils/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { uploadBytes, ref, getDownloadURL } from "firebase/storage";
@@ -41,6 +40,7 @@ const CreatePostPage = () => {
     friends: "",
   });
 
+  // * Change state on the form
   const handleChange = (
     e:
       | ChangeEvent<HTMLInputElement>
@@ -51,6 +51,7 @@ const CreatePostPage = () => {
     setPostForm({ ...postForm, [e.target.name]: e.target.value });
   };
 
+  // * Chase state for the image from uploading a file
   const fileChosen = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     if (e.target.files) {
@@ -60,6 +61,7 @@ const CreatePostPage = () => {
     }
   };
 
+  // * Add the loaded image file into a blob and then into firebase data
   const getImageURL = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (imageChosen) {
@@ -80,6 +82,7 @@ const CreatePostPage = () => {
     }
   };
 
+  // * Update the timeframe cooldown for the user after posting
   const updateUserInfo = async () => {
     try {
       if (!loggedInUser) return;
@@ -104,6 +107,7 @@ const CreatePostPage = () => {
     }
   };
 
+  // * Creating the post from the form state
   const createPost = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
@@ -111,7 +115,6 @@ const CreatePostPage = () => {
         toast.error("Post needs to have a title");
         return;
       }
-      console.log(loggedInUser);
       let today: Date | string = new Date();
       today = today.toLocaleDateString();
       const collectionRef = collection(db, "posts");
@@ -131,6 +134,7 @@ const CreatePostPage = () => {
   };
 
   useEffect(() => {
+    // * Updating logged in user state from the database
     const updateLoggedInUser = async () => {
       try {
         const collectionRef = collection(db, "users");
@@ -170,7 +174,6 @@ const CreatePostPage = () => {
   return (
     <div className="p-2 flex flex-col gap-2 max-w-[700px]  mx-auto">
       <ToastContainer limit={1} />
-
       <h1 className="font-bold text-teal-500 text-2xl">Post</h1>
       <p className="text-sm">
         Create a Highlight for your timeframe, or use an already made Highlight.
@@ -211,7 +214,6 @@ const CreatePostPage = () => {
           value={postForm.description}
         ></textarea>
         <h1 className="font-bold text-teal-500">Tag Friends:</h1>
-        {/* !! this one needs to be pushed to the friends thing??? */}
         <input
           onChange={(e) => handleChange(e)}
           className="bg-gray-100 rounded-xl pl-2"
@@ -221,7 +223,6 @@ const CreatePostPage = () => {
           value={postForm.friends}
         />
         <h1 className="font-bold text-teal-500">Location:</h1>
-        {/* !! This could be a search and upload suggestor thing */}
         <input
           onChange={(e) => handleChange(e)}
           className="bg-gray-100 rounded-xl pl-2"

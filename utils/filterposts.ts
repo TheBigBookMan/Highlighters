@@ -20,6 +20,7 @@ export const userFilter = async (list: Post[], selectedFilter: string) => {
   return list;
 };
 
+// * Comment filter
 export const commentFilter = async (
   list: Comment[],
   selectedFilter: string

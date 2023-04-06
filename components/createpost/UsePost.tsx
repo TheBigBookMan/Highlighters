@@ -22,6 +22,7 @@ const UsePost = ({ loggedInUser }: LoggedInUser) => {
   const [usersPosts, setUsersPosts] = useState<Post[]>([]);
   const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
 
+  // * Update the users timeframe cooldown based on what they select
   const updateUserInfo = async (userId: string) => {
     try {
       const docRef = doc(db, "users", userId);
@@ -45,6 +46,7 @@ const UsePost = ({ loggedInUser }: LoggedInUser) => {
     }
   };
 
+  // * Update state for timeframe
   const updatePostTimeframe = async (
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
@@ -67,6 +69,7 @@ const UsePost = ({ loggedInUser }: LoggedInUser) => {
   };
 
   useEffect(() => {
+    // * Get the posts data from database
     const getData = async () => {
       try {
         const collectionRef = collection(db, "posts");
@@ -94,6 +97,7 @@ const UsePost = ({ loggedInUser }: LoggedInUser) => {
   }, [loggedInUser, user]);
 
   useEffect(() => {
+    // * Change the filter of the timeframe on data and set state
     const filteredTimeframe = async () => {
       if (usersPosts.length > 0) {
         const filteredList = usersPosts.filter((post) => {

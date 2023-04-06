@@ -20,6 +20,7 @@ const UserPosts = ({ params }: Params) => {
   const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
 
   useEffect(() => {
+    // * Get data for the users posts
     const getData = async () => {
       if (loading) return;
       if (!user) return route.push("/auth");
@@ -47,6 +48,7 @@ const UserPosts = ({ params }: Params) => {
   }, [user, loading, route, userId]);
 
   useEffect(() => {
+    // * Set state for selected filter
     const filteredTimeframe = () => {
       if (posts.length > 0) {
         const filteredList = posts.filter((post) => {

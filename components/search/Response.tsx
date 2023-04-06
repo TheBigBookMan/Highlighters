@@ -13,6 +13,7 @@ const Response = ({ search }: InputSearch) => {
   const [searchResults, setSearchResults] = useState<User[]>([]);
 
   useEffect(() => {
+    // * Check the search result item
     const getSearchResults = async () => {
       try {
         const filteredResults = listResults.filter((user) => {
@@ -30,6 +31,7 @@ const Response = ({ search }: InputSearch) => {
   }, [listResults, search]);
 
   useEffect(() => {
+    // * Get data of users for the search
     const getData = async () => {
       try {
         const collectionRef = collection(db, "users");

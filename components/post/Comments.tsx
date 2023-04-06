@@ -31,6 +31,7 @@ const Comments = ({ params }: Params) => {
   const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
   const [selectedFilter, setSelectedFilter] = useState<string>("Most Recent");
 
+  // * Update post document with comment
   const updatePostDoc = async (commentId: string) => {
     try {
       if (!selectedPostId) return;
@@ -47,6 +48,7 @@ const Comments = ({ params }: Params) => {
     }
   };
 
+  // * Create a comment with form details
   const createComment = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (writeComment === "") {
@@ -75,6 +77,7 @@ const Comments = ({ params }: Params) => {
     }
   };
 
+  // * Add a like to the comment
   const likeButton = async (
     e: React.MouseEvent<HTMLButtonElement>,
     commentId: any
@@ -95,6 +98,7 @@ const Comments = ({ params }: Params) => {
     }
   };
 
+  // * Remove the like from a comment
   const unlikeButton = async (
     e: React.MouseEvent<HTMLButtonElement>,
     commentId: any
@@ -118,6 +122,7 @@ const Comments = ({ params }: Params) => {
     }
   };
 
+  // * Delete the comment
   const deleteComment = async (
     e: React.MouseEvent<HTMLButtonElement>,
     commentId: any
@@ -133,6 +138,7 @@ const Comments = ({ params }: Params) => {
   };
 
   useEffect(() => {
+    // * Change state based on selected filter for comments
     const filterSelection = async () => {
       const returnedList = await commentFilter(comments, selectedFilter);
       setComments([...returnedList]);
@@ -141,6 +147,7 @@ const Comments = ({ params }: Params) => {
   }, [selectedFilter]);
 
   useEffect(() => {
+    // * Get the list of comments for a post from database
     const getData = async () => {
       try {
         const collectionRef = collection(db, "comments");
@@ -162,6 +169,7 @@ const Comments = ({ params }: Params) => {
       }
     };
 
+    // * Set logged in user state
     const updateUser = async () => {
       try {
         const collectionUsersRef = collection(db, "users");

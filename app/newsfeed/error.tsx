@@ -1,6 +1,6 @@
 "use client";
 
-//? This is an error page that will load up with errors occur loading the profile page, there will be a button to reset as well
+//? This is an error page that will load up when errors occur loading the profile page, there will be a button to reload as well
 
 export default function Error({
   error,

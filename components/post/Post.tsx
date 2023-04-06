@@ -3,7 +3,6 @@ import { auth, db } from "@/utils/firebase";
 import {
   collection,
   doc,
-  getDoc,
   onSnapshot,
   query,
   updateDoc,
@@ -11,7 +10,6 @@ import {
 } from "firebase/firestore";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { FiThumbsUp } from "react-icons/fi";
@@ -23,6 +21,7 @@ const Post = ({ params }: Params) => {
   const [postData, setPostData] = useState<Post | null>(null);
   const [loggedInUser, setLoggedInUser] = useState<User | undefined>();
 
+  // * Like a post
   const likeButton = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
@@ -38,6 +37,7 @@ const Post = ({ params }: Params) => {
     }
   };
 
+  // * Remove like from post
   const unlikeButton = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     try {
@@ -57,6 +57,7 @@ const Post = ({ params }: Params) => {
   };
 
   useEffect(() => {
+    // * Get data about post from database
     const getData = async () => {
       try {
         if (!postId) return;
@@ -82,17 +83,13 @@ const Post = ({ params }: Params) => {
             });
           }
         });
-        // const docSnap = await getDoc(docRef);
-        // if (docSnap) {
-        //   const docData = docSnap.data();
-        //   setPostData({ ...docData });
-        // }
         return unsubscribe;
       } catch (err) {
         console.log(err);
       }
     };
 
+    // * Set state for logged in user
     const updateUser = async () => {
       try {
         const collectionUsersRef = collection(db, "users");
