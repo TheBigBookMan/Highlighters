@@ -22,6 +22,7 @@ const Bio = () => {
   const [editMode, setEditMode] = useState<boolean>(false);
   const [description, setDescription] = useState<string>("");
   const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
+  console.log(loggedInUser);
 
   const addDescription = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -45,7 +46,8 @@ const Bio = () => {
         const unsubscribe = onSnapshot(q, (snapshot) => {
           let userData;
           snapshot.docs.forEach(async (doc) => {
-            userData = doc.data();
+            userData = doc.data() as User;
+            console.log(userData.id);
             setLoggedInUser({
               dailyPosted: userData.dailyPosted,
               description: userData.description,

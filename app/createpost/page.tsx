@@ -111,6 +111,7 @@ const CreatePostPage = () => {
         toast.error("Post needs to have a title");
         return;
       }
+      console.log(loggedInUser);
       let today: Date | string = new Date();
       today = today.toLocaleDateString();
       const collectionRef = collection(db, "posts");

@@ -5,14 +5,20 @@ export default function Home() {
         <h1 className="font-lobster font-bold text-4xl text-teal-500">
           Highlighters
         </h1>
-        <h1>
-          Highlighters is a social media app where users upload a moment from
-          their life that they find was a highlight for that time period. For
-          example: if you went on a nice hike one week which you found really
+        <p className="text-sm">
+          Highlighters is a social media app where you can upload a moment from
+          your life that you find was a highlight for that time period. For
+          example: if you went on a nice hike one day which you found really
           made your mood better, you can upload an image of that hike with a
-          description. You can then look back on all the highlights you have had
-          from each week and remember how good life can be!
-        </h1>
+          description to the "daily" highlight timeframe. At the end of the week
+          you can look at the highlights you did for each "daily" of that week
+          and then choose which one you want to be your "weekly" highlight. You
+          then repeat this for each of the "weekly" highlights to choose your
+          "monthly" and then "monthly" for your "yearly". This makes you think
+          about all the good highlights you have had in the previous time
+          periods. You can then look back on all the highlights you have had
+          from each timeframe and remember how good life can be!
+        </p>
       </div>
     </main>
   );

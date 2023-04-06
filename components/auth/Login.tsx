@@ -53,6 +53,7 @@ const Login = () => {
           monthlyPosted: false,
           yearlyPosted: false,
         });
+        console.log(createdUser.id);
         dailyTimer(createdUser.id);
         weeklyTimer(createdUser.id);
         monthlyTimer(createdUser.id);
@@ -71,7 +72,6 @@ const Login = () => {
           let userData;
           snapshot.docs.forEach(async (doc) => {
             userData = doc.data();
-            console.log(userData);
           });
 
           if (userData) {
