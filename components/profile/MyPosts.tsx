@@ -16,6 +16,7 @@ import {
 } from "firebase/firestore";
 import Link from "next/link";
 import { userFilter } from "@/utils/filterposts";
+import { postsData } from "@/utils/getdata";
 
 const MyPosts = () => {
   const [user, loading] = useAuthState(auth);
@@ -26,35 +27,9 @@ const MyPosts = () => {
 
   useEffect(() => {
     // * Get list of data from database
-    const getData = async () => {
-      if (loading) return;
-      // if (!user) return route.push("/auth");
-
-      try {
-        const collectionRef = collection(db, "posts");
-        const q = query(
-          collectionRef,
-          where("googleId", "==", user?.uid),
-          orderBy("createdAt", "desc")
-        );
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-          let lists: any = [];
-          snapshot.docs.forEach(async (doc) => {
-            await lists.push({ ...doc.data(), id: doc.id });
-          });
-          const filteredList = lists.filter((post: any) => {
-            return post.timeframe === "Daily";
-          });
-          setPosts([...lists]);
-          setFilteredPosts([...filteredList]);
-        });
-        return unsubscribe;
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    getData();
+    if (user) {
+      postsData("posts", "googleId", user.uid, setPosts, setFilteredPosts);
+    }
   }, [user, loading]);
 
   useEffect(() => {

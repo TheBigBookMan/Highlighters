@@ -1,5 +1,6 @@
 "use client";
 import { auth, db } from "@/utils/firebase";
+import { postsData } from "@/utils/getdata";
 import {
   collection,
   doc,
@@ -70,29 +71,14 @@ const UsePost = ({ loggedInUser }: LoggedInUser) => {
 
   useEffect(() => {
     // * Get the posts data from database
-    const getData = async () => {
-      try {
-        const collectionRef = collection(db, "posts");
-        const q = query(collectionRef, where("googleId", "==", user?.uid));
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-          let userData: any = [];
-          snapshot.docs.forEach(async (doc) => {
-            userData.push({ ...doc.data(), id: doc.id });
-          });
-          const filteredList = userData.filter((post: any) => {
-            return post.timeframe === "Daily";
-          });
-          setUsersPosts([...userData]);
-          setFilteredPosts([...filteredList]);
-        });
-        return unsubscribe;
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
-    if (loggedInUser) {
-      getData();
+    if (user) {
+      postsData(
+        "posts",
+        "googleId",
+        user?.uid,
+        setUsersPosts,
+        setFilteredPosts
+      );
     }
   }, [loggedInUser, user]);
 

@@ -54,7 +54,6 @@ const Login = () => {
           monthlyPosted: false,
           yearlyPosted: false,
         });
-        console.log(createdUser.id);
         dailyTimer(createdUser.id);
         weeklyTimer(createdUser.id);
         monthlyTimer(createdUser.id);

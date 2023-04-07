@@ -10,6 +10,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import Link from "next/link";
+import { postsData } from "@/utils/getdata";
 
 const UserPosts = ({ params }: Params) => {
   const userId = params?.user;
@@ -21,30 +22,9 @@ const UserPosts = ({ params }: Params) => {
 
   useEffect(() => {
     // * Get data for the users posts
-    const getData = async () => {
-      if (loading) return;
-      if (!user) return route.push("/auth");
-
-      try {
-        const collectionRef = collection(db, "posts");
-        const q = query(collectionRef, where("userId", "==", userId));
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-          let lists: any = [];
-          snapshot.docs.forEach(async (doc) => {
-            await lists.push({ ...doc.data(), id: doc.id });
-          });
-          const filteredList = lists.filter((post: any) => {
-            return post.timeframe === "Daily";
-          });
-          setPosts([...lists]);
-          setFilteredPosts([...filteredList]);
-        });
-        return unsubscribe;
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    getData();
+    if (user && userId) {
+      postsData("posts", "userId", userId, setPosts, setFilteredPosts);
+    }
   }, [user, loading, route, userId]);
 
   useEffect(() => {
