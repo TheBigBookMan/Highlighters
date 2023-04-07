@@ -116,7 +116,7 @@ const Comments = ({ params }: Params) => {
   }, [user, selectedPostId]);
 
   return (
-    <div className="shadow-xl rounded-lg max-w-[640px] max-h-[600px] p-2 flex flex-col gap-2">
+    <div className="shadow-xl rounded-lg max-w-[640px] max-h-[540px] p-2 flex flex-col gap-2">
       <ToastContainer limit={1} />
       <div className="flex gap-2">
         <h1 className="font-bold text-teal-500 text-lg">Comments</h1>
@@ -150,7 +150,7 @@ const Comments = ({ params }: Params) => {
       {comments.length === 0 ? (
         <h1>No comments...</h1>
       ) : (
-        <ul className="flex flex-col gap-2 h-[250px] overflow-y-auto scrollbar-thin scrollbar-thumb-rounded scrollbar-track-rounded scrollbar-thumb-teal-500 scrollbar-track-gray-200">
+        <ul className="flex flex-col gap-2 h-[320px] overflow-y-auto scrollbar-thin scrollbar-thumb-rounded scrollbar-track-rounded scrollbar-thumb-teal-500 scrollbar-track-gray-200">
           {comments.map((comment, idx) => (
             <li
               className="border-2 rounded h-[100px]  flex gap-2 break-words"

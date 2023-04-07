@@ -114,11 +114,11 @@ const Post = ({ params }: Params) => {
           <p>{postData?.description}</p>
 
           <Image
-            height={20}
-            width={20}
+            height={40}
+            width={40}
             src={postData?.image}
             alt={postData.title}
-            className="w-full max-w-[600px] max-h-[600px] rounded-xl shadow-xl mx-auto"
+            className="w-full max-w-[600px] max-h-[800px] rounded-xl shadow-xl mx-auto"
           />
         </>
       )}
