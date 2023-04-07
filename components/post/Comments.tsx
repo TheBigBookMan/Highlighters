@@ -23,6 +23,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { commentFilter } from "@/utils/filterposts";
 import { ImBin } from "react-icons/im";
 import { updateLoggedInUser } from "@/utils/loggedinuser";
+import { likeButton, postsData, unlikeButton } from "@/utils/getdata";
 
 const Comments = ({ params }: Params) => {
   const [user, loading] = useAuthState(auth);
@@ -78,50 +79,29 @@ const Comments = ({ params }: Params) => {
     }
   };
 
-  // * Add a like to the comment
-  const likeButton = async (
-    e: React.MouseEvent<HTMLButtonElement>,
-    commentId: any
-  ) => {
-    e.preventDefault();
-    try {
-      const docRef = doc(db, "comments", commentId.id);
-      const docSnap = await getDoc(docRef);
-      if (docSnap) {
-        const data = docSnap.data();
-        const updatedLikes = [...data?.likedByUsers, loggedInUser?.id];
-        const updatedData = { ...data, likedByUsers: [...updatedLikes] };
-        await updateDoc(docRef, updatedData);
-      }
-      return;
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   // * Remove the like from a comment
-  const unlikeButton = async (
-    e: React.MouseEvent<HTMLButtonElement>,
-    commentId: any
-  ) => {
-    e.preventDefault();
-    try {
-      const docRef = doc(db, "comments", commentId.id);
-      const docSnap = await getDoc(docRef);
-      if (docSnap) {
-        const data = docSnap.data();
-        const currentLikes = data?.likedByUsers;
-        const indexOfId = currentLikes?.indexOf(loggedInUser?.id);
-        if (indexOfId === undefined) return;
-        currentLikes?.splice(indexOfId, 1);
-        const updatedData = { ...data, likedByUsers: [...currentLikes] };
-        await updateDoc(docRef, updatedData);
-      }
-      return;
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  // const unlikeButton = async (
+  //   e: React.MouseEvent<HTMLButtonElement>,
+  //   commentId: any
+  // ) => {
+  //   e.preventDefault();
+  //   try {
+  //     const docRef = doc(db, "comments", commentId.id);
+  //     const docSnap = await getDoc(docRef);
+  //     if (docSnap) {
+  //       const data = docSnap.data();
+  //       const currentLikes = data?.likedByUsers;
+  //       const indexOfId = currentLikes?.indexOf(loggedInUser?.id);
+  //       if (indexOfId === undefined) return;
+  //       currentLikes?.splice(indexOfId, 1);
+  //       const updatedData = { ...data, likedByUsers: [...currentLikes] };
+  //       await updateDoc(docRef, updatedData);
+  //     }
+  //     return;
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
 
   // * Delete the comment
   const deleteComment = async (
@@ -148,31 +128,14 @@ const Comments = ({ params }: Params) => {
   }, [selectedFilter]);
 
   useEffect(() => {
-    // * Get the list of comments for a post from database
-    const getData = async () => {
-      try {
-        const collectionRef = collection(db, "comments");
-        const q = query(
-          collectionRef,
-          where("postId", "==", selectedPostId),
-          orderBy("createdAt", "desc")
-        );
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-          let lists: any = [];
-          snapshot.docs.forEach(async (doc) => {
-            await lists.push({ ...doc.data(), id: doc });
-          });
-          setComments([...lists]);
-        });
-        return unsubscribe;
-      } catch (err) {
-        console.log(err);
-      }
-    };
     // * Set logged in user state
-    getData();
     if (user) {
       updateLoggedInUser(setLoggedInUser, user?.uid);
+    }
+
+    // * Get the list of comments for a post from database
+    if (selectedPostId) {
+      postsData("comments", "postId", selectedPostId, setComments, null);
     }
   }, [user, selectedPostId]);
 
@@ -237,11 +200,29 @@ const Comments = ({ params }: Params) => {
                   <div className="flex gap-1 items-center">
                     {loggedInUser &&
                     comment?.likedByUsers.includes(loggedInUser?.id) ? (
-                      <button onClick={(e) => unlikeButton(e, comment.id)}>
+                      <button
+                        onClick={(e) =>
+                          unlikeButton(
+                            e,
+                            "comments",
+                            comment.id,
+                            loggedInUser.id
+                          )
+                        }
+                      >
                         <FiThumbsUp className="text-lg cursor-pointer text-teal-500 hover:text-black" />
                       </button>
                     ) : (
-                      <button onClick={(e) => likeButton(e, comment.id)}>
+                      <button
+                        onClick={(e) =>
+                          likeButton(
+                            e,
+                            "comments",
+                            comment.id,
+                            loggedInUser?.id
+                          )
+                        }
+                      >
                         <FiThumbsUp className="text-lg cursor-pointer hover:text-teal-500" />
                       </button>
                     )}

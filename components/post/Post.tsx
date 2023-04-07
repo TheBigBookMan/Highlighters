@@ -1,5 +1,6 @@
 "use client";
 import { auth, db } from "@/utils/firebase";
+import { likeButton, unlikeButton } from "@/utils/getdata";
 import { updateLoggedInUser } from "@/utils/loggedinuser";
 import {
   collection,
@@ -21,41 +22,6 @@ const Post = ({ params }: Params) => {
   const postId = params?.post;
   const [postData, setPostData] = useState<Post | null>(null);
   const [loggedInUser, setLoggedInUser] = useState<User | undefined>();
-
-  // * Like a post
-  const likeButton = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    try {
-      if (!postData) return;
-      if (!postId) return;
-      const docRef = doc(db, "posts", postId);
-      const updateLikes = [...postData?.likedByUsers, loggedInUser?.id];
-
-      const updatedDoc = { ...postData, likedByUsers: [...updateLikes] };
-      await updateDoc(docRef, updatedDoc);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  // * Remove like from post
-  const unlikeButton = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    try {
-      if (!postId) return;
-      if (!loggedInUser) return;
-      const docRef = doc(db, "posts", postId);
-      const currentLikes = postData?.likedByUsers;
-      if (!currentLikes) return;
-      const indexOfId = currentLikes?.indexOf(loggedInUser?.id);
-      if (indexOfId === undefined) return;
-      currentLikes?.splice(indexOfId, 1);
-      const updatedDoc = { ...postData, likedByUsers: [...currentLikes] };
-      await updateDoc(docRef, updatedDoc);
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   useEffect(() => {
     // * Get data about post from database
@@ -123,11 +89,19 @@ const Post = ({ params }: Params) => {
               </div>
               <div className="flex gap-1 items-center">
                 {postData?.likedByUsers.includes(loggedInUser?.id) ? (
-                  <button onClick={unlikeButton}>
+                  <button
+                    onClick={(e) =>
+                      unlikeButton(e, "posts", postId, loggedInUser.id)
+                    }
+                  >
                     <FiThumbsUp className="text-lg cursor-pointer text-teal-500 hover:text-black" />
                   </button>
                 ) : (
-                  <button onClick={likeButton}>
+                  <button
+                    onClick={(e) =>
+                      likeButton(e, "posts", postId, loggedInUser.id)
+                    }
+                  >
                     <FiThumbsUp className="text-lg cursor-pointer hover:text-teal-500" />
                   </button>
                 )}
