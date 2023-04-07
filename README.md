@@ -18,6 +18,8 @@ https://highlighters.vercel.app/
 
 https://github.com/TheBigBookMan/highlighters
 
+![](/images/Highlighters.png)
+
 ## Functionality
 
 ### Initialization
