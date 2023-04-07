@@ -1,5 +1,4 @@
 import { auth, db } from "@/utils/firebase";
-import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { useState, useEffect } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import Link from "next/link";
@@ -7,11 +6,12 @@ import Image from "next/image";
 import { SlUserUnfollow, SlUserFollow } from "react-icons/sl";
 import { updateLoggedInUser } from "@/utils/loggedinuser";
 import { followUser, unFollowUser } from "@/utils/friends.";
+import { friendsData } from "@/utils/getdata";
 
 const Followers = () => {
   const [user, loading] = useAuthState(auth);
   const [followingData, setFollowingData] = useState<User[]>([]);
-  const [loggedInUser, setLoggedInUser] = useState<User | undefined>();
+  const [loggedInUser, setLoggedInUser] = useState<User>();
 
   useEffect(() => {
     // * Update the logged in users state from database
@@ -21,32 +21,9 @@ const Followers = () => {
   }, [user]);
 
   useEffect(() => {
-    // * Get data of followers from database
-    const getData = async () => {
-      // if (loading) return;
-      // if (!user) return route.push("/auth/login");
-      try {
-        const collectionRef = collection(db, "users");
-        const q = query(
-          collectionRef,
-          where("following", "array-contains", loggedInUser?.id)
-        );
-        // todo add in a query for having a friend related id
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-          let lists: any = [];
-          snapshot.docs.forEach(async (doc) => {
-            await lists.push({ ...doc.data(), id: doc.id });
-          });
-
-          setFollowingData([...lists]);
-        });
-        return unsubscribe;
-      } catch (err) {
-        console.log(err);
-      }
-    };
+    // * Get followers data for logged in user
     if (loggedInUser) {
-      getData();
+      friendsData(true, "following", loggedInUser, setFollowingData);
     }
   }, [loggedInUser]);
 
