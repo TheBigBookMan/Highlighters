@@ -1,4 +1,5 @@
 import {
+  WhereFilterOp,
   collection,
   doc,
   getDoc,
@@ -46,7 +47,8 @@ export const friendsData = async (
 export const postsData = async (
   collectionName: string,
   keyWhere: string,
-  selectedId: string,
+  operation: WhereFilterOp,
+  selectedId: string | string[],
   postState:
     | React.Dispatch<React.SetStateAction<Post[]>>
     | React.Dispatch<React.SetStateAction<Comment[]>>,
@@ -56,7 +58,7 @@ export const postsData = async (
     const collectionRef = collection(db, collectionName);
     const q = query(
       collectionRef,
-      where(keyWhere, "==", selectedId),
+      where(keyWhere, operation, selectedId),
       orderBy("createdAt", "desc")
     );
     const unsubscribe = onSnapshot(q, (snapshot) => {

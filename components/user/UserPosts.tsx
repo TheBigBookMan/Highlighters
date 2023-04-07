@@ -23,7 +23,7 @@ const UserPosts = ({ params }: Params) => {
   useEffect(() => {
     // * Get data for the users posts
     if (user && userId) {
-      postsData("posts", "userId", userId, setPosts, setFilteredPosts);
+      postsData("posts", "userId", "==", userId, setPosts, setFilteredPosts);
     }
   }, [user, loading, route, userId]);
 

@@ -28,7 +28,14 @@ const MyPosts = () => {
   useEffect(() => {
     // * Get list of data from database
     if (user) {
-      postsData("posts", "googleId", user.uid, setPosts, setFilteredPosts);
+      postsData(
+        "posts",
+        "googleId",
+        "==",
+        user.uid,
+        setPosts,
+        setFilteredPosts
+      );
     }
   }, [user, loading]);
 

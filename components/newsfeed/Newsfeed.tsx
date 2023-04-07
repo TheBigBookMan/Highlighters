@@ -15,6 +15,7 @@ import {
 import Link from "next/link";
 import { userFilter } from "@/utils/filterposts";
 import Image from "next/image";
+import { postsData } from "@/utils/getdata";
 const hardcode = ["All", "Daily", "Weekly", "Monthly", "Yearly"];
 
 const Newsfeed = () => {
@@ -52,32 +53,15 @@ const Newsfeed = () => {
 
   useEffect(() => {
     // * Get the posts from the following users list from database
-    const getData = async () => {
-      // if (loading) return;
-      // if (!user) return route.push("/auth/login");
-      try {
-        const collectionRef = collection(db, "posts");
-        const q = query(
-          collectionRef,
-          where("userId", "in", followingData),
-          orderBy("createdAt", "desc")
-        );
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-          let lists: any = [];
-          snapshot.docs.forEach(async (doc) => {
-            await lists.push({ ...doc.data(), id: doc.id });
-          });
-
-          setNewsfeedData([...lists]);
-          setFilteredPosts([...lists]);
-        });
-        return unsubscribe;
-      } catch (err) {
-        console.log(err);
-      }
-    };
     if (followingData.length > 0) {
-      getData();
+      postsData(
+        "posts",
+        "userId",
+        "in",
+        followingData,
+        setNewsfeedData,
+        setFilteredPosts
+      );
     }
   }, [followingData]);
 

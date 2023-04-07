@@ -79,30 +79,6 @@ const Comments = ({ params }: Params) => {
     }
   };
 
-  // * Remove the like from a comment
-  // const unlikeButton = async (
-  //   e: React.MouseEvent<HTMLButtonElement>,
-  //   commentId: any
-  // ) => {
-  //   e.preventDefault();
-  //   try {
-  //     const docRef = doc(db, "comments", commentId.id);
-  //     const docSnap = await getDoc(docRef);
-  //     if (docSnap) {
-  //       const data = docSnap.data();
-  //       const currentLikes = data?.likedByUsers;
-  //       const indexOfId = currentLikes?.indexOf(loggedInUser?.id);
-  //       if (indexOfId === undefined) return;
-  //       currentLikes?.splice(indexOfId, 1);
-  //       const updatedData = { ...data, likedByUsers: [...currentLikes] };
-  //       await updateDoc(docRef, updatedData);
-  //     }
-  //     return;
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
-
   // * Delete the comment
   const deleteComment = async (
     e: React.MouseEvent<HTMLButtonElement>,
@@ -135,7 +111,7 @@ const Comments = ({ params }: Params) => {
 
     // * Get the list of comments for a post from database
     if (selectedPostId) {
-      postsData("comments", "postId", selectedPostId, setComments, null);
+      postsData("comments", "postId", "==", selectedPostId, setComments, null);
     }
   }, [user, selectedPostId]);
 

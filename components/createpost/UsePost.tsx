@@ -75,6 +75,7 @@ const UsePost = ({ loggedInUser }: LoggedInUser) => {
       postsData(
         "posts",
         "googleId",
+        "==",
         user?.uid,
         setUsersPosts,
         setFilteredPosts
