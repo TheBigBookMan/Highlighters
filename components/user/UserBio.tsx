@@ -1,22 +1,14 @@
 "use client";
 import { db } from "@/utils/firebase";
-import {
-  collection,
-  doc,
-  getDoc,
-  onSnapshot,
-  query,
-  updateDoc,
-  where,
-} from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { useState, useEffect } from "react";
 import { SlUserFollow, SlUserUnfollow } from "react-icons/sl";
 import { auth } from "@/utils/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import Image from "next/image";
 import { updateLoggedInUser } from "@/utils/loggedinuser";
+import { followUser, unFollowUser } from "@/utils/friends.";
 
-// !!! fix params shouldnt be null on global for params
 const UserBio = ({ params }: Params) => {
   const [user, loading] = useAuthState(auth);
   const userId = params.user;
@@ -24,83 +16,6 @@ const UserBio = ({ params }: Params) => {
   const [loggedInUser, setLoggedInUser] = useState<User>();
   const [isFollowing, setIsFollowing] = useState<boolean>(false);
   const [isFollowedBy, setIsFollowedBy] = useState<boolean>(false);
-
-  // * Update user by adding new follow
-  const followedByUser = async () => {
-    try {
-      if (!userId) return;
-      const docRef = doc(db, "users", userId);
-      const docSnap = await getDoc(docRef);
-      const userInfo = docSnap.data();
-      const userFollowedBy = userInfo?.followedBy;
-      const updatedFollowedBy = {
-        ...userInfo,
-        followedBy: [...userFollowedBy, loggedInUser?.id],
-      };
-      await updateDoc(docRef, updatedFollowedBy);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  // * Update user by removing follow
-  const unfollowedByUser = async () => {
-    try {
-      if (!userId) return;
-      const docRef = doc(db, "users", userId);
-      const docSnap = await getDoc(docRef);
-      const userInfo = docSnap.data();
-      const userFollowedBy = userInfo?.followedBy;
-      const idIndex = userFollowedBy.indexOf(loggedInUser?.id);
-      userFollowedBy.splice(idIndex, 1);
-      const updatedInfo = { ...userInfo, followedBy: [...userFollowedBy] };
-      await updateDoc(docRef, updatedInfo);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  // * Update logged in user by adding new following
-  const followUser = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    try {
-      if (!loggedInUser) return;
-      const docRef = doc(db, "users", loggedInUser?.id);
-      const docSnap = await getDoc(docRef);
-      const userInfo = docSnap.data();
-      const userFollowing = userInfo?.following;
-      const updatedFollowing = {
-        ...loggedInUser,
-        following: [...userFollowing, userId],
-      };
-      await updateDoc(docRef, updatedFollowing);
-      followedByUser();
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  // * Update logged in user by removing following
-  const unfollowUser = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    try {
-      if (!loggedInUser) return;
-      const docRef = doc(db, "users", loggedInUser?.id);
-      const docSnap = await getDoc(docRef);
-      const userInfo = docSnap.data();
-      const userFollowing = userInfo?.following;
-      const idIndex = userFollowing.indexOf(userId);
-      userFollowing.splice(idIndex, 1);
-      const updatedInfo = {
-        ...loggedInUser,
-        following: [...userFollowing],
-      };
-      await updateDoc(docRef, updatedInfo);
-      unfollowedByUser();
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   useEffect(() => {
     // * Get list of data for user
@@ -181,9 +96,9 @@ const UserBio = ({ params }: Params) => {
               <h1 className="font-bold text-teal-500">
                 {userInfo?.displayName}
               </h1>
-              {isFollowing ? (
+              {isFollowing && userId ? (
                 <button
-                  onClick={unfollowUser}
+                  onClick={(e) => unFollowUser(e, userId, loggedInUser)}
                   className="flex gap-2 items-center bg-red-400 w-[120px] py-1 px-4 rounded-xl text-white hover:bg-red-600"
                 >
                   <SlUserUnfollow />
@@ -191,9 +106,9 @@ const UserBio = ({ params }: Params) => {
                 </button>
               ) : (
                 <>
-                  {userId != loggedInUser?.id && (
+                  {userId != loggedInUser?.id && userId && (
                     <button
-                      onClick={followUser}
+                      onClick={(e) => followUser(e, userId, loggedInUser)}
                       className="flex gap-2 items-center bg-teal-500 w-[120px] py-1 px-4 rounded-xl text-white hover:bg-teal-600"
                     >
                       <SlUserFollow />
