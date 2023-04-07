@@ -64,7 +64,7 @@ const Post = ({ params }: Params) => {
   }, [user, postId]);
 
   return (
-    <div className="flex flex-col max-w-[600px]  gap-4 shadow-xl p-2 rounded-lg">
+    <div className="flex flex-col w-full h-full gap-1 shadow-xl p-2 rounded-lg">
       {postData && loggedInUser && (
         <>
           <div className="flex gap-2 items-center">
@@ -111,15 +111,15 @@ const Post = ({ params }: Params) => {
             </div>
           </div>
           <p>{postData?.location}</p>
+          <p>{postData?.description}</p>
 
           <Image
-            height={80}
-            width={80}
+            height={20}
+            width={20}
             src={postData?.image}
             alt={postData.title}
-            className="w-full max-w-[700px] rounded-xl shadow-xl"
+            className="w-full max-w-[600px] max-h-[600px] rounded-xl shadow-xl mx-auto"
           />
-          <p>{postData?.description}</p>
         </>
       )}
     </div>

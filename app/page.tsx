@@ -1,11 +1,11 @@
 export default function Home() {
   return (
-    <main className="p-20 flex flex-col justify-center items-center">
+    <main className="p-8 flex flex-col justify-center items-center">
       <div className="flex justify-center items-center gap-4 flex-col">
         <h1 className="font-lobster font-bold text-4xl text-teal-500">
           Highlighters
         </h1>
-        <p className="text-sm">
+        <p className="text-sm max-w-[600px]">
           Highlighters is a social media app where you can upload a moment from
           your life that you find was a highlight for that time period. For
           example: if you went on a nice hike one day which you found really
