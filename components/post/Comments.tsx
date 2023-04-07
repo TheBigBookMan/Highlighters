@@ -22,13 +22,14 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { commentFilter } from "@/utils/filterposts";
 import { ImBin } from "react-icons/im";
+import { updateLoggedInUser } from "@/utils/loggedinuser";
 
 const Comments = ({ params }: Params) => {
   const [user, loading] = useAuthState(auth);
   const selectedPostId = params?.post;
   const [comments, setComments] = useState<Comment[]>([]);
   const [writeComment, setWriteComment] = useState<string>("");
-  const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
+  const [loggedInUser, setLoggedInUser] = useState<User>();
   const [selectedFilter, setSelectedFilter] = useState<string>("Most Recent");
 
   // * Update post document with comment
@@ -168,41 +169,10 @@ const Comments = ({ params }: Params) => {
         console.log(err);
       }
     };
-
     // * Set logged in user state
-    const updateUser = async () => {
-      try {
-        const collectionUsersRef = collection(db, "users");
-        const q = query(collectionUsersRef, where("googleId", "==", user?.uid));
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-          let userData;
-          snapshot.docs.forEach(async (doc) => {
-            userData = doc.data();
-            setLoggedInUser({
-              dailyPosted: userData.dailyPosted,
-              description: userData.description,
-              displayName: userData.displayName,
-              email: userData.email,
-              followedBy: userData.followedBy,
-              following: userData.following,
-              googleId: userData.googleId,
-              id: userData.id,
-              image: userData.image,
-              monthlyPosted: userData.monthlyPosted,
-              weeklyPosted: userData.weeklyPosted,
-              yearlyPosted: userData.yearlyPosted,
-            });
-          });
-        });
-        return unsubscribe;
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
     getData();
     if (user) {
-      updateUser();
+      updateLoggedInUser(setLoggedInUser, user?.uid);
     }
   }, [user, selectedPostId]);
 

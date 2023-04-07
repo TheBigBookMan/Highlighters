@@ -111,6 +111,7 @@ export const yearlyTimer = (userId: string) => {
   }, millisTillDecember31);
 };
 
+// ? Test function
 // export const test = (userId: string) => {
 //   setInterval(function () {
 //     resetDaily(userId);

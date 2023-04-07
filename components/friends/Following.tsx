@@ -13,6 +13,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import Link from "next/link";
 import Image from "next/image";
 import { SlUserUnfollow, SlUserFollow } from "react-icons/sl";
+import { updateLoggedInUser } from "@/utils/loggedinuser";
 
 const Following = () => {
   const [user, loading] = useAuthState(auth);
@@ -102,38 +103,9 @@ const Following = () => {
 
   useEffect(() => {
     // * Update logged in user state from database
-    const updateLoggedInUser = async () => {
-      try {
-        if (!user?.uid) return;
-        const collectionRef = collection(db, "users");
-        const q = query(collectionRef, where("googleId", "==", user?.uid));
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-          let userData;
-          snapshot.docs.forEach(async (doc) => {
-            userData = doc.data();
-            setLoggedInUser({
-              dailyPosted: userData.dailyPosted,
-              description: userData.description,
-              displayName: userData.displayName,
-              email: userData.email,
-              followedBy: userData.followedBy,
-              following: userData.following,
-              googleId: userData.googleId,
-              id: userData.id,
-              image: userData.image,
-              monthlyPosted: userData.monthlyPosted,
-              weeklyPosted: userData.weeklyPosted,
-              yearlyPosted: userData.yearlyPosted,
-            });
-          });
-        });
-
-        return unsubscribe;
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    updateLoggedInUser();
+    if (user) {
+      updateLoggedInUser(setLoggedInUser, user?.uid);
+    }
   }, [user]);
 
   useEffect(() => {

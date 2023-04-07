@@ -45,6 +45,7 @@ const Login = () => {
           displayName: user?.displayName,
           email: user?.email,
           image: user?.photoURL,
+          description: "",
           followedBy: [],
           following: [],
           googleId: user?.uid,

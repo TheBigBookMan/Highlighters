@@ -16,12 +16,13 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Image from "next/image";
 import { Circles } from "react-loader-spinner";
+import { updateLoggedInUser } from "@/utils/loggedinuser";
 
 const Bio = () => {
   const [user, loading] = useAuthState(auth);
   const [editMode, setEditMode] = useState<boolean>(false);
   const [description, setDescription] = useState<string>("");
-  const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
+  const [loggedInUser, setLoggedInUser] = useState<User>();
 
   // * Add description to user
   const addDescription = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -39,38 +40,8 @@ const Bio = () => {
 
   useEffect(() => {
     // * Update state for logged in user
-    const updateLoggedInUser = async () => {
-      try {
-        const collectionRef = collection(db, "users");
-        const q = query(collectionRef, where("googleId", "==", user?.uid));
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-          let userData;
-          snapshot.docs.forEach(async (doc) => {
-            userData = doc.data() as User;
-            console.log(userData.id);
-            setLoggedInUser({
-              dailyPosted: userData.dailyPosted,
-              description: userData.description,
-              displayName: userData.displayName,
-              email: userData.email,
-              followedBy: userData.followedBy,
-              following: userData.following,
-              googleId: userData.googleId,
-              id: userData.id,
-              image: userData.image,
-              monthlyPosted: userData.monthlyPosted,
-              weeklyPosted: userData.weeklyPosted,
-              yearlyPosted: userData.yearlyPosted,
-            });
-          });
-        });
-        return unsubscribe;
-      } catch (err) {
-        console.log(err);
-      }
-    };
     if (user) {
-      updateLoggedInUser();
+      updateLoggedInUser(setLoggedInUser, user?.uid);
     }
   }, [user]);
 

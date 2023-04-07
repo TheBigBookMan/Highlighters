@@ -1,5 +1,6 @@
 "use client";
 import { auth, db } from "@/utils/firebase";
+import { updateLoggedInUser } from "@/utils/loggedinuser";
 import {
   collection,
   doc,
@@ -89,41 +90,10 @@ const Post = ({ params }: Params) => {
       }
     };
 
-    // * Set state for logged in user
-    const updateUser = async () => {
-      try {
-        const collectionUsersRef = collection(db, "users");
-        const q = query(collectionUsersRef, where("googleId", "==", user?.uid));
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-          let userData;
-          snapshot.docs.forEach(async (doc) => {
-            userData = doc.data();
-            setLoggedInUser({
-              dailyPosted: userData.dailyPosted,
-              description: userData.description,
-              displayName: userData.displayName,
-              email: userData.email,
-              followedBy: userData.followedBy,
-              following: userData.following,
-              googleId: userData.googleId,
-              id: userData.id,
-              image: userData.image,
-              monthlyPosted: userData.monthlyPosted,
-              weeklyPosted: userData.weeklyPosted,
-              yearlyPosted: userData.yearlyPosted,
-            });
-          });
-        });
-        return unsubscribe;
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
     getData();
-
+    // * Set state for logged in user
     if (user) {
-      updateUser();
+      updateLoggedInUser(setLoggedInUser, user?.uid);
     }
   }, [user, postId]);
 

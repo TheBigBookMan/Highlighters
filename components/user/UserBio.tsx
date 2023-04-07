@@ -14,13 +14,14 @@ import { SlUserFollow, SlUserUnfollow } from "react-icons/sl";
 import { auth } from "@/utils/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import Image from "next/image";
+import { updateLoggedInUser } from "@/utils/loggedinuser";
 
 // !!! fix params shouldnt be null on global for params
 const UserBio = ({ params }: Params) => {
   const [user, loading] = useAuthState(auth);
   const userId = params.user;
   const [userInfo, setUserInfo] = useState<User | undefined>();
-  const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
+  const [loggedInUser, setLoggedInUser] = useState<User>();
   const [isFollowing, setIsFollowing] = useState<boolean>(false);
   const [isFollowedBy, setIsFollowedBy] = useState<boolean>(false);
 
@@ -102,50 +103,6 @@ const UserBio = ({ params }: Params) => {
   };
 
   useEffect(() => {
-    // * Set state for logged in user
-    const updateUser = async () => {
-      try {
-        const collectionUsersRef = collection(db, "users");
-        const q = query(collectionUsersRef, where("googleId", "==", user?.uid));
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-          let userData;
-          snapshot.docs.forEach(async (doc) => {
-            userData = doc.data();
-            setLoggedInUser({
-              dailyPosted: userData.dailyPosted,
-              description: userData.description,
-              displayName: userData.displayName,
-              email: userData.email,
-              followedBy: userData.followedBy,
-              following: userData.following,
-              googleId: userData.googleId,
-              id: userData.id,
-              image: userData.image,
-              monthlyPosted: userData.monthlyPosted,
-              weeklyPosted: userData.weeklyPosted,
-              yearlyPosted: userData.yearlyPosted,
-            });
-            const followingData = userData?.following;
-            if (followingData.includes(userId)) {
-              setIsFollowing(true);
-            } else {
-              setIsFollowing(false);
-            }
-
-            const followedByData = userData?.followedBy;
-            if (followedByData.includes(userId)) {
-              setIsFollowedBy(true);
-            } else {
-              setIsFollowedBy(false);
-            }
-          });
-        });
-        return unsubscribe;
-      } catch (err) {
-        console.log(err);
-      }
-    };
-
     // * Get list of data for user
     const getData = async () => {
       try {
@@ -176,10 +133,35 @@ const UserBio = ({ params }: Params) => {
     };
 
     if (user) {
-      updateUser();
+      // * Set state for logged in user
+      updateLoggedInUser(setLoggedInUser, user?.uid);
       getData();
     }
   }, [user, userId]);
+
+  useEffect(() => {
+    // * Check if user is already following
+    const checkIsFollowing = () => {
+      if (!loggedInUser) return;
+      if (!userId) return;
+      const followingData = loggedInUser?.following;
+      if (followingData.includes(userId)) {
+        setIsFollowing(true);
+      } else {
+        setIsFollowing(false);
+      }
+
+      // * Check if user is already being followed by
+      const followedByData = loggedInUser?.followedBy;
+      if (followedByData.includes(userId)) {
+        setIsFollowedBy(true);
+      } else {
+        setIsFollowedBy(false);
+      }
+    };
+
+    checkIsFollowing();
+  }, [loggedInUser]);
 
   return (
     <div className="flex gap-4 md:px-16 h-[140px] w-full shadow-xl rounded-xl p-2">
