@@ -3,6 +3,7 @@ import { collection, onSnapshot } from "firebase/firestore";
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { friendsData } from "@/utils/getdata";
 
 type InputSearch = {
   search: string | null;
@@ -11,6 +12,7 @@ type InputSearch = {
 const Response = ({ search }: InputSearch) => {
   const [listResults, setListResults] = useState<User[]>([]);
   const [searchResults, setSearchResults] = useState<User[]>([]);
+  const loggedInUser: undefined = undefined;
 
   useEffect(() => {
     // * Check the search result item
@@ -32,23 +34,8 @@ const Response = ({ search }: InputSearch) => {
 
   useEffect(() => {
     // * Get data of users for the search
-    const getData = async () => {
-      try {
-        const collectionRef = collection(db, "users");
-        const unsubscribe = onSnapshot(collectionRef, (snapshot) => {
-          let lists: any = [];
-          snapshot.docs.forEach(async (doc) => {
-            await lists.push({ ...doc.data(), id: doc.id });
-          });
-          setListResults([...lists]);
-        });
-        return unsubscribe;
-      } catch (err) {
-        console.log(err);
-      }
-    };
     if (search) {
-      getData();
+      friendsData(false, "", loggedInUser, setListResults);
     }
   }, [search]);
 
